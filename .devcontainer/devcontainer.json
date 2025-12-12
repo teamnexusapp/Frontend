@@ -1,0 +1,19 @@
+{
+  "name": "Frontend Flutter DevContainer",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/flutter:1": {
+      "version": "3.16.0" ,
+      "channel": "stable"
+    }
+  },
+  "postCreateCommand": "flutter config --no-analytics && flutter pub get && flutter gen-l10n",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Dart-Code.flutter",
+        "Dart-Code.dart-code"
+      ]
+    }
+  }
+}
