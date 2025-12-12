@@ -98,7 +98,7 @@
   "phoneRequired": "Ekwentị dị mkpa",
   "invalidPhoneForCountry": "Nọmba ekwentị ezighi ezi maka obodo a",
   "otpInfoMessage": "Anyị ga-ezigara gị OTP koodu iji kwenye nọmba ekwentị gị",
-  "continue": "Gaa n'ihu",
+  "continueText": "Gaa n'ihu",
   "verifyEmailTitle": "Kwenye Email",
   "verifyPhoneTitle": "Kwenye Nọmba Ekwentị",
   "codeSentToEmail": "Tinye koodu anyị zigara {email}",

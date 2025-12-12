@@ -236,7 +236,7 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
                               ),
                             )
                           : Text(
-                              AppLocalizations.of(context)!.next,
+                              AppLocalizations.of(context)!.continueText,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

@@ -98,7 +98,7 @@
   "phoneRequired": "Waya dole ne",
   "invalidPhoneForCountry": "Lambar waya bai dace ba ga wannan ƙasa",
   "otpInfoMessage": "Za mu aiko muku da OTP lambar don tabbatar da lambar wayar ku",
-  "continue": "Ci gaba",
+  "continueText": "Ci gaba",
   "verifyEmailTitle": "Tabbatar da Imel",
   "verifyPhoneTitle": "Tabbatar da Lambar Waya",
   "codeSentToEmail": "Shigar da lambar da muka aiko {email}",

@@ -312,7 +312,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               ),
                             )
                           : Text(
-                              AppLocalizations.of(context)!.continue,
+                              AppLocalizations.of(context)!.continueText,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

@@ -98,7 +98,7 @@
   "phoneRequired": "Phone is required",
   "invalidPhoneForCountry": "Invalid phone number for this country",
   "otpInfoMessage": "We'll send an OTP code to verify your phone number",
-  "continue": "Continue",
+  "continueText": "Continue",
   "verifyEmailTitle": "Verify Email",
   "verifyPhoneTitle": "Verify Phone Number",
   "codeSentToEmail": "Enter the code we sent to {email}",
