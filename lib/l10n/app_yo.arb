@@ -1,0 +1,80 @@
+{
+  "@@locale": "yo",
+  "appTitle": "Nexus Fertility",
+  "welcomeTitle": "Ẹ káàbọ̀ sí Nexus Fertility",
+  "welcomeSubtitle": "Alábàṣepọ̀ ìbísí rẹ tí ara ẹni",
+  "selectLanguage": "Yan Èdè",
+  "english": "English",
+  "yoruba": "Yorùbá",
+  "igbo": "Igbo",
+  "hausa": "Hausa",
+  "pidgin": "Pidgin",
+  "german": "Deutsch",
+  "next": "Tókàn",
+  "back": "Padà",
+  "skip": "Fò",
+  "done": "Parí",
+  "createAccount": "Ṣẹ̀dá Àkọọ́lẹ̀",
+  "signIn": "Wọlé",
+  "email": "Ímeèlì",
+  "phoneNumber": "Nọ́mbà Fóònù",
+  "password": "Ọ̀rọ̀ìpamọ́",
+  "confirmPassword": "Jẹ́rìísí Ọ̀rọ̀ìpamọ́",
+  "firstName": "Orúkọ Àkọ́kọ́",
+  "lastName": "Orúkọ Ìdílé",
+  "dateOfBirth": "Ọjọ́ Ìbí",
+  "selectDate": "Yan Ọjọ́",
+  "profilePicture": "Àwòrán Profaili",
+  "uploadPhoto": "Gbe Àwòrán Sókè",
+  "takePhoto": "Ya Àwòrán",
+  "chooseFromGallery": "Yan Láti Galẹ́rì",
+  "verifyEmail": "Jẹ́rìísí Ímeèlì",
+  "verifyPhone": "Jẹ́rìísí Fóònù",
+  "enterOTP": "Tẹ OTP",
+  "otpSentTo": "A fi OTP ránṣẹ́ sí {email}",
+  "@otpSentTo": {
+    "description": "Message shown after OTP is sent",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Tún Kóòdù Ránṣẹ́",
+  "codeExpires": "Kóòdù yóò parẹ́ ní {minutes}:{seconds}",
+  "@codeExpires": {
+    "description": "Timer for OTP expiration",
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "invalidEmail": "Jọ̀wọ́ tẹ àdírẹ́ẹ̀sì ímeèlì tó tọ́",
+  "invalidPhone": "Jọ̀wọ́ tẹ nọ́mbà fóònù tó tọ́",
+  "passwordMismatch": "Àwọn ọ̀rọ̀ìpamọ́ kò báramu",
+  "passwordTooShort": "Ọ̀rọ̀ìpamọ́ gbọdọ̀ jẹ́ ó kéré jù lẹ́tà 8",
+  "accountCreatedSuccessfully": "A ṣẹ̀dá àkọọ́lẹ̀ pẹ̀lú àṣeyọrí!",
+  "profileSetupComplete": "Àtòjọ profaili rẹ ti parí",
+  "termsAndConditions": "Mo gbà àwọn Òfin àti Ìpò",
+  "privacyPolicy": "Mo gbà Ìlànà Àṣírí",
+  "acceptTerms": "Jọ̀wọ́ gba àwọn òfin àti ìpò",
+  "emailAlreadyExists": "A ti forúkọsílẹ̀ ímeèlì náà tẹ́lẹ̀",
+  "phoneAlreadyExists": "A ti forúkọsílẹ̀ nọ́mbà fóònù náà tẹ́lẹ̀",
+  "verificationFailed": "Ìjẹ́rìísí kùnà. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i",
+  "tryAgain": "Gbìyànjú Lẹ́ẹ̀kan Sí i",
+  "loading": "Ń ṣiṣẹ́...",
+  "error": "Àṣìṣe",
+  "success": "Àṣeyọrí",
+  "cancel": "Fagílé",
+  "save": "Fipamọ́",
+  "logout": "Jáde",
+  "genderMale": "Ọkùnrin",
+  "genderFemale": "Obìnrin",
+  "genderOther": "Òmíràn",
+  "selectGender": "Yan Akọ tàbí Abo",
+  "welcomeToJourney": "Ẹ káàbọ̀ sí ìrìnàjò rẹ"
+}

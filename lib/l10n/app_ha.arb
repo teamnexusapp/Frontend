@@ -1,0 +1,80 @@
+{
+  "@@locale": "ha",
+  "appTitle": "Nexus Fertility",
+  "welcomeTitle": "Barka da zuwa Nexus Fertility",
+  "welcomeSubtitle": "Mataimaki na haihuwa na sirri",
+  "selectLanguage": "Zaɓi Harshe",
+  "english": "English",
+  "yoruba": "Yoruba",
+  "igbo": "Igbo",
+  "hausa": "Hausa",
+  "pidgin": "Pidgin",
+  "german": "Deutsch",
+  "next": "Na gaba",
+  "back": "Koma baya",
+  "skip": "Tsallake",
+  "done": "An gama",
+  "createAccount": "Ƙirƙiri Asusun",
+  "signIn": "Shiga",
+  "email": "Imel",
+  "phoneNumber": "Lambar Waya",
+  "password": "Kalmar Sirri",
+  "confirmPassword": "Tabbatar da Kalmar Sirri",
+  "firstName": "Sunan Farko",
+  "lastName": "Sunan Iyali",
+  "dateOfBirth": "Ranar Haihuwa",
+  "selectDate": "Zaɓi Ranar",
+  "profilePicture": "Hoton Bayanan Martaba",
+  "uploadPhoto": "Loda Hoto",
+  "takePhoto": "Ɗauki Hoto",
+  "chooseFromGallery": "Zaɓa Daga Gallery",
+  "verifyEmail": "Tabbatar da Imel",
+  "verifyPhone": "Tabbatar da Waya",
+  "enterOTP": "Shigar da OTP",
+  "otpSentTo": "An aika OTP zuwa {email}",
+  "@otpSentTo": {
+    "description": "Message shown after OTP is sent",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Sake Aika Lambar",
+  "codeExpires": "Lambar za ta ƙare a {minutes}:{seconds}",
+  "@codeExpires": {
+    "description": "Timer for OTP expiration",
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "invalidEmail": "Don Allah shigar da ingantaccen adireshin imel",
+  "invalidPhone": "Don Allah shigar da ingantaccen lambar waya",
+  "passwordMismatch": "Kalmomin sirri ba su dace ba",
+  "passwordTooShort": "Kalmar sirri dole ta kasance aƙalla haruffa 8",
+  "accountCreatedSuccessfully": "An ƙirƙiri asusun nasara!",
+  "profileSetupComplete": "An gama saitin bayanan ku",
+  "termsAndConditions": "Na yarda da Sharuɗɗa da Yanayi",
+  "privacyPolicy": "Na yarda da Manufar Sirri",
+  "acceptTerms": "Don Allah karɓi sharuɗɗa da yanayi",
+  "emailAlreadyExists": "An riga an yi rajistar imel",
+  "phoneAlreadyExists": "An riga an yi rajistar lambar waya",
+  "verificationFailed": "Tabbatarwa ta gaza. Don Allah sake gwadawa",
+  "tryAgain": "Sake Gwadawa",
+  "loading": "Ana Ɗorawa...",
+  "error": "Kuskure",
+  "success": "Nasara",
+  "cancel": "Soke",
+  "save": "Ajiye",
+  "logout": "Fita",
+  "genderMale": "Namiji",
+  "genderFemale": "Mace",
+  "genderOther": "Wani",
+  "selectGender": "Zaɓi Jinsi",
+  "welcomeToJourney": "Barka da zuwa tafiyarku"
+}

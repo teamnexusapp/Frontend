@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'account_type_selection_screen.dart';
 import 'login_screen.dart';
 
@@ -52,9 +53,9 @@ class WelcomeScreen extends StatelessWidget {
                     const SizedBox(height: 32),
 
                     // Welcome Text
-                    const Text(
-                      'Welcome to your journey',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.welcomeToJourney,
+                      style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,

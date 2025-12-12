@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'services/auth_service.dart';
 import 'services/localization_provider.dart';
 import 'screens/onboarding/language_selection_screen.dart';
@@ -50,7 +51,10 @@ class MyApp extends StatelessWidget {
             ),
             locale: localizationProvider.locale,
             supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              ...AppLocalizations.localizationsDelegates,
+            ],
             home: const LanguageSelectionScreen(),
             routes: {
               '/home': (context) => const HomeScreen(),

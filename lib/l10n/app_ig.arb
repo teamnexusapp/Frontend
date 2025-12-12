@@ -1,0 +1,80 @@
+{
+  "@@locale": "ig",
+  "appTitle": "Nexus Fertility",
+  "welcomeTitle": "Nnọọ na Nexus Fertility",
+  "welcomeSubtitle": "Onye enyemaka ọmụmụ gị nke onwe gị",
+  "selectLanguage": "Họrọ Asụsụ",
+  "english": "English",
+  "yoruba": "Yoruba",
+  "igbo": "Igbo",
+  "hausa": "Hausa",
+  "pidgin": "Pidgin",
+  "german": "Deutsch",
+  "next": "Osote",
+  "back": "Laghachi Azụ",
+  "skip": "Mafee",
+  "done": "Emechaa",
+  "createAccount": "Mepụta Akaụntụ",
+  "signIn": "Banye",
+  "email": "Email",
+  "phoneNumber": "Nọmba Ekwentị",
+  "password": "Paswọọdụ",
+  "confirmPassword": "Kwenye Paswọọdụ",
+  "firstName": "Aha Mbụ",
+  "lastName": "Aha Ikpeazụ",
+  "dateOfBirth": "Ụbọchị Ọmụmụ",
+  "selectDate": "Họrọ Ụbọchị",
+  "profilePicture": "Foto Profaịlụ",
+  "uploadPhoto": "Bulite Foto",
+  "takePhoto": "See Foto",
+  "chooseFromGallery": "Họrọ Site na Gallery",
+  "verifyEmail": "Kwenye Email",
+  "verifyPhone": "Kwenye Ekwentị",
+  "enterOTP": "Tinye OTP",
+  "otpSentTo": "E zigara OTP na {email}",
+  "@otpSentTo": {
+    "description": "Message shown after OTP is sent",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Zigharia Koodu Ọzọ",
+  "codeExpires": "Koodu ga-agwụ na {minutes}:{seconds}",
+  "@codeExpires": {
+    "description": "Timer for OTP expiration",
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "invalidEmail": "Biko tinye adreesị email ziri ezi",
+  "invalidPhone": "Biko tinye nọmba ekwentị ziri ezi",
+  "passwordMismatch": "Paswọọdụ adabaghị",
+  "passwordTooShort": "Paswọọdụ ga-abụrịrị opekata mpe mkpụrụedemede 8",
+  "accountCreatedSuccessfully": "E mepụtara akaụntụ nke ọma!",
+  "profileSetupComplete": "Ntọala profaịlụ gị zuru ezu",
+  "termsAndConditions": "Ekwenyere m na Usoro na Ọnọdụ",
+  "privacyPolicy": "Ekwenyere m na Iwu Nzuzo",
+  "acceptTerms": "Biko nabata usoro na ọnọdụ",
+  "emailAlreadyExists": "E debanyela email aha",
+  "phoneAlreadyExists": "E debanyela nọmba ekwentị aha",
+  "verificationFailed": "Nkwenye dara ada. Biko nwaa ọzọ",
+  "tryAgain": "Nwaa Ọzọ",
+  "loading": "Na-ebu...",
+  "error": "Njehie",
+  "success": "Ihe Ịga Nke Ọma",
+  "cancel": "Kagbuo",
+  "save": "Chekwa",
+  "logout": "Pụọ",
+  "genderMale": "Nwoke",
+  "genderFemale": "Nwanyị",
+  "genderOther": "Ndị Ọzọ",
+  "selectGender": "Họrọ Okike",
+  "welcomeToJourney": "Nnọọ na njem gị"
+}
