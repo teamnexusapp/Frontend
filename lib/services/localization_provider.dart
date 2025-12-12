@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
+class LocalizationProvider extends ChangeNotifier {
+  Locale _locale = const Locale('en');
 
-class AppLocalizations {
+  Locale get locale => _locale;
+
   static const supportedLocales = [
     Locale('en'),
     Locale('yo'), // Yoruba
@@ -10,20 +12,8 @@ class AppLocalizations {
     Locale('ha'), // Hausa
   ];
 
-  static const localizationsDelegates = [
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-  ];
-}
-
-class LocalizationProvider extends ChangeNotifier {
-  Locale _locale = const Locale('en');
-
-  Locale get locale => _locale;
-
   void setLocale(Locale locale) {
-    if (AppLocalizations.supportedLocales.contains(locale)) {
+    if (supportedLocales.contains(locale)) {
       _locale = locale;
       notifyListeners();
     }

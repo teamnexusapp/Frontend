@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
             locale: localizationProvider.locale,
-            supportedLocales: AppLocalizations.supportedLocales,
+            supportedLocales: loc_provider.LocalizationProvider.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             home: const LanguageSelectionScreen(),
             routes: {

@@ -77,8 +77,8 @@
   "genderOther": "Other",
   "selectGender": "Select Gender",
   "welcomeToJourney": "Welcome to your journey",
-  "choosePreferredLanguage": "Choose your preferred language"
-  ,"choosePreferredMethod": "Choose your preferred method",
+  "choosePreferredLanguage": "Choose your preferred language",
+  "choosePreferredMethod": "Choose your preferred method",
   "createAccountWithEmail": "Create account with email",
   "createAccountWithPhone": "Create account with phone",
   "emailSignupTitle": "Create Account with Email",
