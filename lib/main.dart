@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import 'services/auth_service.dart';
-import 'services/localization_provider.dart';
+import 'services/localization_provider.dart' as loc_provider;
 import 'screens/onboarding/language_selection_screen.dart';
 import 'screens/home_screen.dart';
 
@@ -18,14 +18,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<LocalizationProvider>(
-          create: (_) => LocalizationProvider(),
+        ChangeNotifierProvider<loc_provider.LocalizationProvider>(
+          create: (_) => loc_provider.LocalizationProvider(),
         ),
         ChangeNotifierProvider<AuthServiceImpl>(
           create: (_) => AuthServiceImpl(),
         ),
       ],
-      child: Consumer<LocalizationProvider>(
+      child: Consumer<loc_provider.LocalizationProvider>(
         builder: (context, localizationProvider, _) {
           return MaterialApp(
             title: 'Nexus Fertility',
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: [
               AppLocalizations.delegate,
-              ...AppLocalizations.localizationsDelegates,
+              ...?AppLocalizations.localizationsDelegates,
             ],
             home: const LanguageSelectionScreen(),
             routes: {
