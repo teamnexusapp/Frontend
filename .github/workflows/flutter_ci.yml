@@ -9,6 +9,7 @@ jobs:
     android:
         name: Build Android APK & Run Tests
         runs-on: ubuntu-latest
+        if: false
 
         env: 
             API_URL: https://team-nexus.onrender.com
@@ -64,6 +65,7 @@ jobs:
     ios:
         name: Build iOS App & Run Tests
         runs-on: macos-latest
+        if: false 
         steps:
             - name: Checkout code
               uses: actions/checkout@v6

@@ -3,7 +3,6 @@ services:
     name: fertility-frontend
     runtime: static
     rootDir: .
-    plan: free
     autoDeploy: true
     branch: main
     # WORKING FLUTTER INSTALL + BUILD
