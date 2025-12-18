@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: fertility-frontend
+    name: fertipath
     runtime: static
     rootDir: .
     autoDeploy: true
@@ -16,7 +16,7 @@ services:
     staticPublishPath: build/web
     envVars:
       - key: API_URL
-        value: "https://team-nexus.onrender.com"
+        value: "https://fertipath.onrender.com"
 
 # Flutter Mobile Service (Android) - iOS coming soon
 #  - type: web

@@ -12,7 +12,7 @@ jobs:
         if: false
 
         env: 
-            API_URL: https://team-nexus.onrender.com
+            API_URL: https://fertipath.onrender.com
         steps:
             - name: Checkout code
               uses: actions/checkout@v6
