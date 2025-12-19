@@ -65,7 +65,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Select preferred Language',
+                      'Select Preferred Language',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w400,
@@ -115,7 +115,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 50),
+                        padding: const EdgeInsets.only(left: 10),
                         child: SizedBox(
                         width: 99,
                         height: 47,

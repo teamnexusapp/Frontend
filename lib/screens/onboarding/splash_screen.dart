@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'language_selection_screen.dart';
+import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen>
         Future.delayed(const Duration(milliseconds: 300), () {
           if (mounted) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const LanguageSelectionScreen()),
+              MaterialPageRoute(builder: (_) => const WelcomeScreen()),
             );
           }
         });
