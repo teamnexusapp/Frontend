@@ -75,82 +75,81 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Select preferred Language',
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                    fontFamily: 'Poppins',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                ...langs.map((lang) {
-                  final isSelected = _selectedCode == lang['code'];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: SizedBox(
-                      width: 250,
-                      height: 52,
-                      child: ElevatedButton(
-                        onPressed: () => _handleSelect(lang['code']!),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF224D2D),
-                          side: BorderSide(
-                            color: isSelected
-                                ? const Color(0xFF224D2D)
-                                : const Color(0x33224D2D),
+                    Text(
+                      'Select preferred Language',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                        fontFamily: 'Poppins',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 32),
+                    ...langs.map((lang) {
+                      final isSelected = _selectedCode == lang['code'];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: SizedBox(
+                          width: 250,
+                          height: 52,
+                          child: ElevatedButton(
+                            onPressed: () => _handleSelect(lang['code']!),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFF224D2D),
+                              side: BorderSide(
+                                color: isSelected
+                                    ? const Color(0xFF224D2D)
+                                    : const Color(0x33224D2D),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              elevation: isSelected ? 6 : 2,
+                            ),
+                            child: Text(
+                              lang['name']!,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: isSelected ? 6 : 2,
                         ),
-                        child: Text(
-                          lang['name']!,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Poppins',
+                      );
+                    }).toList(),
+                    const SizedBox(height: 32),
+                    Align(
+                      alignment: const Alignment(0.25, 0),
+                      child: SizedBox(
+                        width: 99,
+                        height: 47,
+                        child: ElevatedButton(
+                          onPressed: () => _handleNext(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFA8D497),
+                            foregroundColor: const Color(0xFF224D2D),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'Next',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Poppins',
+                              color: Color(0xFF224D2D),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  );
-                }).toList(),
-                const SizedBox(height: 32),
-                Align(
-                  alignment: const Alignment(0.25, 0),
-                  child: SizedBox(
-                    width: 99,
-                    height: 47,
-                    child: ElevatedButton(
-                      onPressed: () => _handleNext(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFA8D497),
-                        foregroundColor: const Color(0xFF224D2D),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        'Next',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Poppins',
-                          color: Color(0xFF224D2D),
-                        ),
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
