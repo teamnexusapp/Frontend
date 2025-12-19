@@ -23,5 +23,11 @@ class LocalizationProvider extends ChangeNotifier {
   void setLocaleByLanguageCode(String languageCode) {
     setLocale(Locale(languageCode));
   }
+
+  // Dummy translate method for build compatibility
+  // Returns the key as-is; actual translations should use AppLocalizations
+  String translate(String key) {
+    return key;
+  }
 }
 
