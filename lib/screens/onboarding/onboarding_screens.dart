@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/localization_provider.dart' as loc_provider;
 import 'language_selection_screen.dart';
-import 'email_signup_screen.dart';
+import 'phone_signup_screen.dart';
 
 class OnboardingScreens extends StatefulWidget {
   const OnboardingScreens({super.key});
@@ -34,7 +34,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
 
   void _navigateToRegister() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const EmailSignupScreen()),
+      MaterialPageRoute(builder: (_) => const PhoneSignupScreen()),
     );
   }
 
