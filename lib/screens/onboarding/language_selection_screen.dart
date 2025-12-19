@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/localization_provider.dart' as loc_provider;
-import 'welcome_screen.dart';
+import 'onboarding_screens.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -34,7 +34,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     }
     context.read<loc_provider.LocalizationProvider>().setLocaleByLanguageCode(_selectedCode!);
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+      MaterialPageRoute(builder: (_) => const OnboardingScreens()),
     );
   }
 
@@ -115,7 +115,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(right: 30),
                         child: SizedBox(
                         width: 99,
                         height: 47,
