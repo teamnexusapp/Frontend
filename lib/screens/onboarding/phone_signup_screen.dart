@@ -48,274 +48,10 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
       },
     );
   }
-}
-
-class _VerifyModalContent extends StatefulWidget {
-  final TextEditingController otp1Controller;
-  final TextEditingController otp2Controller;
-  final TextEditingController otp3Controller;
-  final TextEditingController otp4Controller;
-
-  const _VerifyModalContent({
-    required this.otp1Controller,
-    required this.otp2Controller,
-    required this.otp3Controller,
-    required this.otp4Controller,
-  });
-
-  @override
-  State<_VerifyModalContent> createState() => _VerifyModalContentState();
-}
-
-class _VerifyModalContentState extends State<_VerifyModalContent> {
-  int secondsRemaining = 180;
-  bool timerStarted = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Start timer when widget is initialized
-    Future.delayed(const Duration(milliseconds: 100), () {
-      _startTimer();
-    });
-  }
-
-  void _startTimer() {
-    if (timerStarted) return;
-    timerStarted = true;
-    
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted && secondsRemaining > 0) {
-        setState(() {
-          secondsRemaining--;
-        });
-        timerStarted = false;
-        _startTimer();
-      }
-    });
-  }
-
-  void _resetTimer() {
-    setState(() {
-      secondsRemaining = 180;
-      timerStarted = false;
-    });
-    _startTimer();
-  }
-
-  String _formatTime(int seconds) {
-    int minutes = seconds ~/ 60;
-    int remainingSeconds = seconds % 60;
-    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
-  }
 
   @override
   Widget build(BuildContext context) {
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          width: 363,
-          height: 430,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.check_circle_outline,
-                  size: 72,
-                  color: Color(0xFF2E683D),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Verify Your Account',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Poppins',
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'A verification code has been sent to your phone number. Please enter it to continue.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Poppins',
-                    color: Colors.black54,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                // OTP Input Fields
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildOTPField(widget.otp1Controller),
-
-                    _buildOTPField(widget.otp1Controller),
-                    const SizedBox(width: 10),
-                    _buildOTPField(widget.otp2Controller),
-                    const SizedBox(width: 10),
-                    _buildOTPField(widget.otp3Controller),
-                    const SizedBox(width: 10),
-                    _buildOTPField(widget.otp4Controller),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                // Resend and Timer
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: secondsRemaining == 0 ? _resetTimer : null,
-                      child: Text(
-                        'Resend',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Poppins',
-                          color: secondsRemaining == 0
-                              ? const Color(0xFF2E683D)
-                              : Colors.grey.shade400,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      _formatTime(secondsRemaining),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Poppins',
-                        color: Color(0xFF2E683D),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: 315,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      // Navigate to login screen
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2E683D),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: const Text(
-                      'Verify',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Poppins',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOTPField(TextEditingController controller) {
-    return Container(
-      width: 60,
-      height: 66,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: const Color(0xFFA8D497),
-          width: 2,
-        ),
-      ),
-      child: TextField(
-        controller: controller,
-        maxLength: 1,
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          counterText: '',
-        ),
-        style: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Poppins',
-          color: Color(0xFF2E683D),
-        ),
-      ),
-    );
-  }
-}
-
-class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
-  final _fullNameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-
-  bool _showPassword = false;
-  bool _showConfirmPassword = false;
-
-  @override
-  void dispose() {
-    _fullNameController.dispose();
-    _phoneController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
-  }
-
-  void _showVerifyModal() {
-    final otp1Controller = TextEditingController();
-    final otp2Controller = TextEditingController();
-    final otp3Controller = TextEditingController();
-    final otp4Controller = TextEditingController();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return _VerifyModalContent(
-          otp1Controller: otp1Controller,
-          otp2Controller: otp2Controller,
-          otp3Controller: otp3Controller,
-          otp4Controller: otp4Controller,
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
+    return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -551,6 +287,200 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
       ),
     );
   }
+}
+
+class _VerifyModalContent extends StatefulWidget {
+  final TextEditingController otp1Controller;
+  final TextEditingController otp2Controller;
+  final TextEditingController otp3Controller;
+  final TextEditingController otp4Controller;
+
+  const _VerifyModalContent({
+    required this.otp1Controller,
+    required this.otp2Controller,
+    required this.otp3Controller,
+    required this.otp4Controller,
+  });
+
+  @override
+  State<_VerifyModalContent> createState() => _VerifyModalContentState();
+}
+
+class _VerifyModalContentState extends State<_VerifyModalContent> {
+  int secondsRemaining = 180;
+  bool timerStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start timer when widget is initialized
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _startTimer();
+    });
+  }
+
+  void _startTimer() {
+    if (timerStarted) return;
+    timerStarted = true;
+    
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted && secondsRemaining > 0) {
+        setState(() {
+          secondsRemaining--;
+        });
+        timerStarted = false;
+        _startTimer();
+      }
+    });
+  }
+
+  void _resetTimer() {
+    setState(() {
+      secondsRemaining = 180;
+      timerStarted = false;
+    });
+    _startTimer();
+  }
+
+  String _formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: 363,
+          height: 430,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.check_circle_outline,
+                  size: 72,
+                  color: Color(0xFF2E683D),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Verify Your Account',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Poppins',
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'A verification code has been sent to your phone number. Please enter it to continue.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins',
+                    color: Colors.black54,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                // OTP Input Fields
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildOTPField(widget.otp1Controller),
+
+                    _buildOTPField(widget.otp1Controller),
+                    const SizedBox(width: 10),
+                    _buildOTPField(widget.otp2Controller),
+                    const SizedBox(width: 10),
+                    _buildOTPField(widget.otp3Controller),
+                    const SizedBox(width: 10),
+                    _buildOTPField(widget.otp4Controller),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Resend and Timer
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: secondsRemaining == 0 ? _resetTimer : null,
+                      child: Text(
+                        'Resend',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Poppins',
+                          color: secondsRemaining == 0
+                              ? const Color(0xFF2E683D)
+                              : Colors.grey.shade400,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      _formatTime(secondsRemaining),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins',
+                        color: Color(0xFF2E683D),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 315,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      // Navigate to login screen
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (_) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2E683D),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: const Text(
+                      'Verify',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _buildOTPField(TextEditingController controller) {
     return Container(
@@ -582,5 +512,4 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
       ),
     );
   }
-
 }
