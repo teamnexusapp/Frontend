@@ -477,3 +477,5 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
       ),
     );
   }
+
+}
