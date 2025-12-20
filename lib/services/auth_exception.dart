@@ -19,5 +19,8 @@ class AuthErrorCodes {
   static const String invalidOtpFormat = 'AUTH_INVALID_OTP_FORMAT';
   static const String userNotFound = 'AUTH_USER_NOT_FOUND';
   static const String noUserLoggedIn = 'AUTH_NO_USER_LOGGED_IN';
+  static const String invalidCredentials = 'AUTH_INVALID_CREDENTIALS';
+  static const String accountDisabled = 'AUTH_ACCOUNT_DISABLED';
+  static const String serverError = 'AUTH_SERVER_ERROR';
 }
 

@@ -1,17 +1,30 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../models/user.dart';
 import 'auth_exception.dart';
+import 'api_service.dart';
 
 abstract class AuthService {
   Future<User?> signUpWithEmail({
     required String email,
+    required String username,
+    required String firstName,
+    required String lastName,
     required String password,
+    required String phoneNumber,
+    String? preferredLanguage,
   });
 
   Future<User?> signUpWithPhone({
     required String phoneNumber,
+    required String email,
+    required String username,
+    required String firstName,
+    required String lastName,
+    required String password,
+    String? preferredLanguage,
   });
 
   Future<bool> verifyEmailOTP({
@@ -35,6 +48,7 @@ abstract class AuthService {
     DateTime? dateOfBirth,
     String? gender,
     String? profileImagePath,
+    String? preferredLanguage,
   });
 
   Future<User?> signIn({
@@ -55,6 +69,8 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
   User? _currentUser;
   final StreamController<User?> _authStateController =
       StreamController<User?>.broadcast();
+  final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
+  final ApiService _apiService = ApiService();
 
   User? get currentUser => _currentUser;
 
@@ -136,7 +152,12 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
   @override
   Future<User?> signUpWithEmail({
     required String email,
+    required String username,
+    required String firstName,
+    required String lastName,
     required String password,
+    required String phoneNumber,
+    String? preferredLanguage,
   }) async {
     try {
       // Validate email format
@@ -149,28 +170,42 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
         throw AuthException(AuthErrorCodes.passwordTooShort);
       }
 
-      // Check if user already exists
-      await _ensurePrefs();
-      final existingUser = _getString('user_$email');
-      if (existingUser != null) {
-        throw AuthException(AuthErrorCodes.emailAlreadyRegistered);
-      }
+      // Send OTP via API
+      await _apiService.sendOtp(
+        email: email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+        phoneNumber: phoneNumber,
+        languagePreference: preferredLanguage,
+      );
 
-      // Create user object
+      // Create temporary user object for local tracking
       final user = User(
         email: email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
         emailVerified: false,
+        phoneVerified: false,
+        preferredLanguage: preferredLanguage,
         createdAt: DateTime.now(),
       );
 
       // Store temporary user for verification
-      await _setString('temp_user_$email', _jsonEncode(user.toJson()));
-      await _setString('user_password_$email', password);
+      await _setString('temp_user_$phoneNumber', _jsonEncode(user.toJson()));
 
-      // In production, send OTP via email
-      debugPrint('Sending OTP to $email');
+      debugPrint('OTP sent to $phoneNumber for user: $email');
 
       return user;
+    } on ApiException catch (e) {
+      debugPrint('API sign up error: ${e.message}');
+      if (e.message.toLowerCase().contains('already')) {
+        throw AuthException(AuthErrorCodes.emailAlreadyRegistered);
+      }
+      throw AuthException(AuthErrorCodes.serverError, details: e.message);
     } catch (e) {
       debugPrint('Sign up error: $e');
       rethrow;
@@ -180,6 +215,12 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
   @override
   Future<User?> signUpWithPhone({
     required String phoneNumber,
+    required String email,
+    required String username,
+    required String firstName,
+    required String lastName,
+    required String password,
+    String? preferredLanguage,
   }) async {
     try {
       // Validate phone format
@@ -187,28 +228,42 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
         throw AuthException(AuthErrorCodes.invalidPhone);
       }
 
-      // Check if phone already registered
-      await _ensurePrefs();
-      final existingUser = _getString('user_$phoneNumber');
-      if (existingUser != null) {
-        throw AuthException(AuthErrorCodes.phoneAlreadyRegistered);
-      }
+      // Send OTP via API
+      await _apiService.sendOtp(
+        email: email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+        phoneNumber: phoneNumber,
+        languagePreference: preferredLanguage,
+      );
 
-      // Create user object
+      // Create temporary user object
       final user = User(
-        email: '', // Will be set later
+        email: email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
         phoneNumber: phoneNumber,
         phoneVerified: false,
+        emailVerified: false,
+        preferredLanguage: preferredLanguage,
         createdAt: DateTime.now(),
       );
 
       // Store temporary user
       await _setString('temp_user_$phoneNumber', _jsonEncode(user.toJson()));
 
-      // In production, send OTP via SMS
-      debugPrint('Sending OTP to $phoneNumber');
+      debugPrint('OTP sent to $phoneNumber, Language: $preferredLanguage');
 
       return user;
+    } on ApiException catch (e) {
+      debugPrint('API sign up error: ${e.message}');
+      if (e.message.toLowerCase().contains('already')) {
+        throw AuthException(AuthErrorCodes.phoneAlreadyRegistered);
+      }
+      throw AuthException(AuthErrorCodes.serverError, details: e.message);
     } catch (e) {
       debugPrint('Sign up error: $e');
       rethrow;
@@ -260,31 +315,40 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     required String otp,
   }) async {
     try {
-      if (otp.length != 6) {
-        throw AuthException(AuthErrorCodes.invalidOtpFormat);
-      }
-
-      debugPrint('Verifying OTP: $otp for phone: $phoneNumber');
-
-      // Get temporary user
-      await _ensurePrefs();
-      final tempUserJson = _getString('temp_user_$phoneNumber');
-      if (tempUserJson == null) {
-        throw AuthException(AuthErrorCodes.userNotFound);
-      }
-
-      // Update user with verified phone
-      final user = User(
-        email: '',
+      // Verify OTP via API
+      final response = await _apiService.verifyOtp(
         phoneNumber: phoneNumber,
-        phoneVerified: true,
-        createdAt: DateTime.now(),
+        otp: otp,
       );
 
-      await _saveUserToPrefs(user);
-      await _removeString('temp_user_$phoneNumber');
+      debugPrint('OTP verified for: $phoneNumber');
+
+      // Get temporary user data
+      await _ensurePrefs();
+      final tempUserJson = _getString('temp_user_$phoneNumber');
+      
+      User? user;
+      if (tempUserJson != null && response['user'] != null) {
+        // Parse user from API response
+        user = User.fromJson(response['user']);
+      } else if (response['user'] != null) {
+        user = User.fromJson(response['user']);
+      }
+
+      if (user != null) {
+        // Save verified user
+        await _saveUserToPrefs(user);
+        await _removeString('temp_user_$phoneNumber');
+      }
 
       return true;
+    } on ApiException catch (e) {
+      debugPrint('API verify OTP error: ${e.message}');
+      if (e.message.toLowerCase().contains('invalid') || 
+          e.message.toLowerCase().contains('expired')) {
+        throw AuthException(AuthErrorCodes.invalidOtpFormat);
+      }
+      throw AuthException(AuthErrorCodes.serverError, details: e.message);
     } catch (e) {
       debugPrint('OTP verification error: $e');
       rethrow;
@@ -331,6 +395,7 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     DateTime? dateOfBirth,
     String? gender,
     String? profileImagePath,
+    String? preferredLanguage,
   }) async {
     try {
       if (_currentUser == null) {
@@ -343,6 +408,7 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
         dateOfBirth: dateOfBirth,
         gender: gender,
         profileImageUrl: profileImagePath,
+        preferredLanguage: preferredLanguage,
         updatedAt: DateTime.now(),
       );
 
@@ -361,14 +427,30 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     required String password,
   }) async {
     try {
-      // In production, call backend authentication
-      await _ensurePrefs();
-      final userJson = _getString('user_$email');
-      if (userJson == null) {
+      // Login via API (username can be email or actual username)
+      final response = await _apiService.login(
+        username: email,
+        password: password,
+      );
+
+      debugPrint('User logged in: $email');
+
+      // Fetch user profile after login
+      final profileData = await _apiService.getProfile();
+      final user = User.fromJson(profileData);
+
+      // Store user locally
+      await _saveUserToPrefs(user);
+
+      return user;
+    } on ApiException catch (e) {
+      debugPrint('API login error: ${e.message}');
+      if (e.statusCode == 401 || e.message.toLowerCase().contains('credentials')) {
+        throw AuthException(AuthErrorCodes.invalidCredentials);
+      } else if (e.message.toLowerCase().contains('not found')) {
         throw AuthException(AuthErrorCodes.userNotFound);
       }
-      _loadUserFromPrefs();
-      return _currentUser;
+      throw AuthException(AuthErrorCodes.serverError, details: e.message);
     } catch (e) {
       debugPrint('Sign in error: $e');
       rethrow;
@@ -378,14 +460,24 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
   @override
   Future<void> signOut() async {
     try {
+      // Logout from API
+      await _apiService.logout();
+      
       _currentUser = null;
       await _ensurePrefs();
       await _removeString('user');
       _authStateController.add(null);
       notifyListeners();
+      
+      debugPrint('User signed out successfully');
     } catch (e) {
       debugPrint('Sign out error: $e');
-      rethrow;
+      // Clear local data even if API call fails
+      _currentUser = null;
+      await _ensurePrefs();
+      await _removeString('user');
+      _authStateController.add(null);
+      notifyListeners();
     }
   }
 

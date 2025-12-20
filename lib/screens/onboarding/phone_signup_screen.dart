@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:provider/provider.dart';
+import '../../services/auth_service.dart';
+import '../../services/localization_provider.dart' as loc_provider;
 import 'onboarding_screens.dart';
 import 'login_screen.dart';
 
@@ -12,6 +15,7 @@ class PhoneSignupScreen extends StatefulWidget {
 
 class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
   final _fullNameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -23,6 +27,7 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
   @override
   void dispose() {
     _fullNameController.dispose();
+    _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -30,6 +35,27 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
   }
 
   void _showVerifyModal() {
+    // Validate form first
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    // Get the selected language from LocalizationProvider
+    final localizationProvider = context.read<loc_provider.LocalizationProvider>();
+    final selectedLanguage = localizationProvider.selectedLanguageCode ?? 'en';
+
+    // Parse full name into first and last name
+    final nameParts = _fullNameController.text.trim().split(' ');
+    final firstName = nameParts.first;
+    final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+
     final otp1Controller = TextEditingController();
     final otp2Controller = TextEditingController();
     final otp3Controller = TextEditingController();
@@ -44,6 +70,12 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
           otp2Controller: otp2Controller,
           otp3Controller: otp3Controller,
           otp4Controller: otp4Controller,
+          phoneNumber: _phoneController.text,
+          email: _emailController.text,
+          firstName: firstName,
+          lastName: lastName,
+          password: _passwordController.text,
+          selectedLanguage: selectedLanguage,
         );
       },
     );
@@ -81,6 +113,14 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
                     label: 'Full Name',
                     controller: _fullNameController,
                     keyboardType: TextInputType.name,
+                  ),
+                  const SizedBox(height: 5),
+
+                  // Email Field
+                  _buildInputField(
+                    label: 'Email',
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 5),
 
@@ -294,12 +334,24 @@ class _VerifyModalContent extends StatefulWidget {
   final TextEditingController otp2Controller;
   final TextEditingController otp3Controller;
   final TextEditingController otp4Controller;
+  final String phoneNumber;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String password;
+  final String selectedLanguage;
 
   const _VerifyModalContent({
     required this.otp1Controller,
     required this.otp2Controller,
     required this.otp3Controller,
     required this.otp4Controller,
+    required this.phoneNumber,
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    required this.password,
+    required this.selectedLanguage,
   });
 
   @override
@@ -443,14 +495,58 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                   width: 315,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      // Navigate to login screen
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ),
-                      );
+                    onPressed: () async {
+                      // Get OTP from controllers
+                      final otp = widget.otp1Controller.text +
+                          widget.otp2Controller.text +
+                          widget.otp3Controller.text +
+                          widget.otp4Controller.text;
+
+                      if (otp.length == 4) {
+                        try {
+                          // Call auth service to register with phone
+                          final authService = context.read<AuthServiceImpl>();
+                          
+                          // Generate username from email (part before @)
+                          final username = widget.email.split('@').first;
+                          
+                          await authService.signUpWithPhone(
+                            phoneNumber: widget.phoneNumber,
+                            email: widget.email,
+                            username: username,
+                            firstName: widget.firstName,
+                            lastName: widget.lastName,
+                            password: widget.password,
+                            preferredLanguage: widget.selectedLanguage,
+                          );
+
+                          // Verify OTP
+                          await authService.verifyPhoneOTP(
+                            phoneNumber: widget.phoneNumber,
+                            otp: otp,
+                          );
+
+                          if (mounted) {
+                            Navigator.of(context).pop();
+                            // Navigate to login screen
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (_) => const LoginScreen(),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Verification failed: $e')),
+                            );
+                          }
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please enter complete OTP')),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E683D),

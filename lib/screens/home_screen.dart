@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import '../services/auth_service.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -167,8 +168,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
+                              children: [
+                                // Welcome message with user's name
+                                Consumer<AuthServiceImpl>(
+                                  builder: (context, authService, child) {
+                                    final user = authService.currentUser;
+                                    final userName = user?.firstName ?? user?.username ?? 'User';
+                                    return Text(
+                                      'Welcome back, $userName!',
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Poppins',
+                                        color: Color(0xFFA8D497),
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 12),
+                                const Text(
                                   "Today's fertility\ninsight",
                                   style: TextStyle(
                                     fontSize: 28,
@@ -178,8 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
-                                SizedBox(height: 8),
-                                Text(
+                                const SizedBox(height: 8),
+                                const Text(
                                   'Your next fertility\nwindow is from\nDec 23-27',
                                   style: TextStyle(
                                     fontSize: 18,
