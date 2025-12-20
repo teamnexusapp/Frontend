@@ -399,8 +399,6 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildOTPField(widget.otp1Controller),
-
-                    _buildOTPField(widget.otp1Controller),
                     const SizedBox(width: 10),
                     _buildOTPField(widget.otp2Controller),
                     const SizedBox(width: 10),

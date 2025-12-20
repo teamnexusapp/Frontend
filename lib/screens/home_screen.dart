@@ -129,16 +129,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         // Decorative semicolon background
                         Positioned(
-                          bottom: 70,
-                          right: -100,
+                          bottom: 50,
+                          right: -40,
                           child: Transform.rotate(
                             angle: -0.3, // ~17 degrees tilt
                             child: Opacity(
-                              opacity: 0.2,
+                              opacity: 0.15,
                               child: Text(
                                 ';',
                                 style: TextStyle(
-                                  fontSize: 350,
+                                  fontSize: 320,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Poppins',
                                   color: Colors.white,
@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: const [
                                 Text(
-                                  "Today's fertility insight",
+                                  "Today's fertility\ninsight",
                                   style: TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.w600,
@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Your next fertility window is from\nDec 23-27',
+                                  'Your next fertility\nwindow is from\nDec 23-27',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w400,
