@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../models/user.dart';
 import 'auth_exception.dart';
 import 'api_service.dart';
+import '../config/feature_flags.dart';
 
 abstract class AuthService {
   Future<User?> signUpWithEmail({
@@ -75,6 +77,7 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
   // For Firebase phone verification
   String? _verificationId;
   int? _resendToken;
+  firebase_auth.ConfirmationResult? _webConfirmationResult;
 
   User? get currentUser => _currentUser;
   String? get verificationId => _verificationId;
@@ -144,9 +147,7 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
       final userJson = _getString('user');
       if (userJson != null) {
         try {
-          _currentUser = User.fromJson(Map<String, dynamic>.from(
-            (userJson as dynamic) as Map,
-          ));
+          _currentUser = User.fromJson(_jsonDecode(userJson));
         } catch (e) {
           debugPrint('Error loading user: $e');
         }
@@ -165,8 +166,14 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
   }
 
   String _jsonEncode(Map<String, dynamic> data) {
-    // Simple JSON encoding - in production use json package
-    return data.toString();
+    return jsonEncode(data);
+  }
+
+  Map<String, dynamic> _jsonDecode(String data) {
+    final decoded = jsonDecode(data);
+    return decoded is Map<String, dynamic>
+        ? decoded
+        : Map<String, dynamic>.from(decoded as Map);
   }
 
   @override
@@ -261,26 +268,45 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
       
       await _setString('registration_data_$phoneNumber', _jsonEncode(registrationData));
 
-      // Send OTP via Firebase
-      await _firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (firebase_auth.PhoneAuthCredential credential) {
-          debugPrint('Phone verification auto-completed');
-        },
-        verificationFailed: (firebase_auth.FirebaseAuthException e) {
-          debugPrint('Phone verification failed: ${e.message}');
-          throw AuthException(AuthErrorCodes.serverError, details: e.message);
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          _verificationId = verificationId;
-          _resendToken = resendToken;
-          debugPrint('OTP sent to $phoneNumber, verification ID: ${verificationId.substring(0, 10)}...');
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          _verificationId = verificationId;
-          debugPrint('OTP auto-retrieval timed out');
-        },
-      );
+      // Send OTP via Firebase or backend based on feature flag
+      if (FeatureFlags.enableFirebaseAuth) {
+        if (kIsWeb) {
+          _webConfirmationResult = await _firebaseAuth.signInWithPhoneNumber(phoneNumber);
+          debugPrint('OTP sent to $phoneNumber via Firebase (web)');
+        } else {
+          await _firebaseAuth.verifyPhoneNumber(
+            phoneNumber: phoneNumber,
+            verificationCompleted: (firebase_auth.PhoneAuthCredential credential) {
+              debugPrint('Phone verification auto-completed');
+            },
+            verificationFailed: (firebase_auth.FirebaseAuthException e) {
+              debugPrint('Phone verification failed: ${e.message}');
+              throw AuthException(AuthErrorCodes.serverError, details: e.message);
+            },
+            codeSent: (String verificationId, int? resendToken) {
+              _verificationId = verificationId;
+              _resendToken = resendToken;
+              debugPrint('OTP sent to $phoneNumber, verification ID: ${verificationId.substring(0, 10)}...');
+            },
+            codeAutoRetrievalTimeout: (String verificationId) {
+              _verificationId = verificationId;
+              debugPrint('OTP auto-retrieval timed out');
+            },
+          );
+        }
+      } else {
+        // Use backend OTP flow
+        await _apiService.sendOtp(
+          email: email,
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          phoneNumber: phoneNumber,
+          languagePreference: preferredLanguage,
+        );
+        debugPrint('OTP sent to $phoneNumber via backend');
+      }
 
       // Create temporary user object
       final user = User(
@@ -349,19 +375,31 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     required String otp,
   }) async {
     try {
-      if (_verificationId == null) {
-        throw AuthException(AuthErrorCodes.invalidOtpFormat, 
-          details: 'Verification ID not found. Please request OTP again.');
+      firebase_auth.UserCredential? userCredential;
+      if (FeatureFlags.enableFirebaseAuth) {
+        if (kIsWeb) {
+          if (_webConfirmationResult == null) {
+            throw AuthException(AuthErrorCodes.invalidOtpFormat,
+                details: 'No confirmation result. Please request OTP again.');
+          }
+          userCredential = await _webConfirmationResult!.confirm(otp);
+        } else {
+          if (_verificationId == null) {
+            throw AuthException(AuthErrorCodes.invalidOtpFormat, 
+              details: 'Verification ID not found. Please request OTP again.');
+          }
+          // Create credential from OTP
+          final credential = firebase_auth.PhoneAuthProvider.credential(
+            verificationId: _verificationId!,
+            smsCode: otp,
+          );
+          // Sign in with phone credential
+          userCredential = await _firebaseAuth.signInWithCredential(credential);
+        }
+      } else {
+        // Backend OTP verification
+        await _apiService.verifyOtp(phoneNumber: phoneNumber, otp: otp);
       }
-
-      // Create credential from OTP
-      final credential = firebase_auth.PhoneAuthProvider.credential(
-        verificationId: _verificationId!,
-        smsCode: otp,
-      );
-
-      // Sign in with phone credential
-      final userCredential = await _firebaseAuth.signInWithCredential(credential);
 
       debugPrint('Phone verified for: $phoneNumber');
 
@@ -372,9 +410,7 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
       if (registrationDataJson != null) {
         try {
           // Register user with FastAPI backend after Firebase verification
-          final regData = Map<String, dynamic>.from(
-            (registrationDataJson as dynamic) as Map,
-          );
+          final regData = _jsonDecode(registrationDataJson);
           
           await _apiService.sendOtp(
             email: regData['email'],
@@ -388,14 +424,14 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
 
           // Create user object
           final user = User(
-            id: userCredential.user?.uid,
+            id: userCredential?.user?.uid,
             email: regData['email'],
             username: regData['username'],
             firstName: regData['firstName'],
             lastName: regData['lastName'],
             phoneNumber: phoneNumber,
             phoneVerified: true,
-            emailVerified: userCredential.user?.emailVerified ?? false,
+            emailVerified: userCredential?.user?.emailVerified ?? false,
             preferredLanguage: regData['preferredLanguage'],
             createdAt: DateTime.now(),
           );
@@ -451,24 +487,9 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
 
       // Only use resend token on native platforms (not web)
       if (kIsWeb) {
-        // On web, request OTP again without resend token
-        await _firebaseAuth.verifyPhoneNumber(
-          phoneNumber: phoneNumber,
-          verificationCompleted: (firebase_auth.PhoneAuthCredential credential) {
-            debugPrint('Phone verification auto-completed on resend (web)');
-          },
-          verificationFailed: (firebase_auth.FirebaseAuthException e) {
-            debugPrint('Phone verification resend failed (web): ${e.message}');
-          },
-          codeSent: (String verificationId, int? resendToken) {
-            _verificationId = verificationId;
-            _resendToken = resendToken;
-            debugPrint('OTP resent to $phoneNumber (web)');
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            _verificationId = verificationId;
-          },
-        );
+        // On web, request OTP again using signInWithPhoneNumber
+        _webConfirmationResult = await _firebaseAuth.signInWithPhoneNumber(phoneNumber);
+        debugPrint('OTP resent to $phoneNumber (web)');
       } else {
         // On native platforms, use the resend token
         await _firebaseAuth.verifyPhoneNumber(
