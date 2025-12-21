@@ -34,7 +34,7 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
     super.dispose();
   }
 
-  void _showVerifyModal() {
+  void _showVerifyModal() async {
     // Validate form first
     if (!_formKey.currentState!.validate()) {
       return;
@@ -54,32 +54,72 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
     // Parse full name into first and last name
     final nameParts = _fullNameController.text.trim().split(' ');
     final firstName = nameParts.first;
-    final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+    final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : nameParts.first;
 
-    final otp1Controller = TextEditingController();
-    final otp2Controller = TextEditingController();
-    final otp3Controller = TextEditingController();
-    final otp4Controller = TextEditingController();
+    // Generate username from email (part before @)
+    final username = _emailController.text.split('@').first;
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return _VerifyModalContent(
-          otp1Controller: otp1Controller,
-          otp2Controller: otp2Controller,
-          otp3Controller: otp3Controller,
-          otp4Controller: otp4Controller,
-          phoneNumber: _phoneController.text,
-          email: _emailController.text,
-          firstName: firstName,
-          lastName: lastName,
-          password: _passwordController.text,
-          selectedLanguage: selectedLanguage,
+    // Register and send OTP before showing modal
+    try {
+      final authService = context.read<AuthService>();
+      
+      // Show loading indicator
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sending verification code...'),
+            duration: Duration(seconds: 2),
+          ),
         );
-      },
-    );
-  }
+      }
+
+      await authService.signUpWithPhone(
+        phoneNumber: _phoneController.text,
+        email: _emailController.text,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        password: _passwordController.text,
+        preferredLanguage: selectedLanguage,
+      );
+
+      if (!mounted) return;
+
+      // OTP sent successfully, show verification modal
+      final otp1Controller = TextEditingController();
+      final otp2Controller = TextEditingController();
+      final otp3Controller = TextEditingController();
+      final otp4Controller = TextEditingController();
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return _VerifyModalContent(
+            otp1Controller: otp1Controller,
+            otp2Controller: otp2Controller,
+            otp3Controller: otp3Controller,
+            otp4Controller: otp4Controller,
+            phoneNumber: _phoneController.text,
+            email: _emailController.text,
+            firstName: firstName,
+            lastName: lastName,
+            password: _passwordController.text,
+            selectedLanguage: selectedLanguage,
+          );
+        },
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to send verification code: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -502,23 +542,9 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
 
                       if (otp.length == 4) {
                         try {
-                          // Call auth service to register with phone
+                          // Verify OTP (signup was already called when modal opened)
                           final authService = context.read<AuthService>();
                           
-                          // Generate username from email (part before @)
-                          final username = widget.email.split('@').first;
-                          
-                          await authService.signUpWithPhone(
-                            phoneNumber: widget.phoneNumber,
-                            email: widget.email,
-                            username: username,
-                            firstName: widget.firstName,
-                            lastName: widget.lastName,
-                            password: widget.password,
-                            preferredLanguage: widget.selectedLanguage,
-                          );
-
-                          // Verify OTP
                           await authService.verifyPhoneOTP(
                             phoneNumber: widget.phoneNumber,
                             otp: otp,

@@ -88,12 +88,8 @@ class ApiService {
     try {
       final headers = await _getHeaders();
       final url = Uri.parse('$baseUrl/auth/send-otp');
-      debugPrint('Sending OTP request to: $url');
       
-      final response = await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode({
+        final requestBody = {
           'email': email,
           'username': username,
           'first_name': firstName,
@@ -102,7 +98,15 @@ class ApiService {
           'phone_number': phoneNumber,
           'language_preference': (languagePreference ?? 'en').toLowerCase(),
           'role': 'user',
-        }),
+        };
+      
+      debugPrint('Sending OTP request to: $url');
+        debugPrint('Request body: ${jsonEncode(requestBody)}');
+      
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
       ).timeout(
         const Duration(seconds: 30),
         onTimeout: () {
