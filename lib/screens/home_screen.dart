@@ -15,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool _showSideMenu = false;
+  int? _selectedCalendarDay;
 
   void _toggleSideMenu() {
     setState(() {
@@ -405,26 +406,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Day labels row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-                        .map((day) => Expanded(
-                              child: Center(
-                                child: Text(
-                                  day,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
-                            ))
-                        .toList(),
+                  // Day labels row with horizontal padding and 2px gap below
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('S', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
+                        Text('M', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
+                        Text('T', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
+                        Text('W', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
+                        Text('T', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
+                        Text('F', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
+                        Text('S', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 2),
                   // Calendar grid
                   _buildCalendarGridInGreen(),
                 ],
@@ -450,6 +448,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
+                    // Cycle summaries
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Cycle summaries',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildCycleSummary(),
+                    const SizedBox(height: 24),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -477,55 +490,206 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildCycleSummary() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Column(
+        children: [
+          // Row 1: Abnormalities
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'Abnormalities',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                'None',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF2E683D),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          // Row 2: Fertile window
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'Fertile window',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                '21st - 27 Dec',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          // Row 3: Gender specific
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'Fertile Window (Gender specific)',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                '—',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          // Row 4: AI insights
+          Row(
+            children: [
+              Container(
+                width: 20,
+                height: 20,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFA8D497),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.smart_toy,
+                    size: 14,
+                    color: Color(0xFF2E683D),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'AI',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF2E683D),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Icon(
+                Icons.lock,
+                size: 16,
+                color: Colors.grey.shade500,
+              ),
+              const SizedBox(width: 8),
+              const Expanded(
+                child: Text(
+                  'Unlock detailed insights and chat with verified doctors',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCalendarGridInGreen() {
     // December 2025 starts on Monday (day 1), so Sunday (0) is from previous month
     final startDay = 1; // 0=Sunday, 1=Monday for Dec 1
     final daysInMonth = 31;
     final daysInPrevMonth = 30; // November has 30 days
     
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 7,
-        childAspectRatio: 1,
-        crossAxisSpacing: 5,
-        mainAxisSpacing: 5,
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          childAspectRatio: 1,
+          crossAxisSpacing: 2,
+          mainAxisSpacing: 2,
+        ),
+        itemCount: 35,
+        itemBuilder: (context, index) {
+          if (index < startDay) {
+            // Previous month days
+            final prevDay = daysInPrevMonth - startDay + index + 1;
+            return Center(
+              child: Text(
+                '$prevDay',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade400,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+            );
+          } else if (index < startDay + daysInMonth) {
+            // Current month days
+            final day = index - startDay + 1;
+            final bool isSelected = _selectedCalendarDay == day;
+            return Center(
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedCalendarDay = day;
+                  });
+                },
+                child: Container
+                (
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected ? const Color(0xFFA8D497) : Colors.transparent,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    '$day',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isSelected ? const Color(0xFF2E683D) : Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
       ),
-      itemCount: 35,
-      itemBuilder: (context, index) {
-        if (index < startDay) {
-          // Previous month days
-          final prevDay = daysInPrevMonth - startDay + index + 1;
-          return Center(
-            child: Text(
-              '$prevDay',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade400,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Poppins',
-              ),
-            ),
-          );
-        } else if (index < startDay + daysInMonth) {
-          // Current month days
-          final day = index - startDay + 1;
-          return Center(
-            child: Text(
-              '$day',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins',
-              ),
-            ),
-          );
-        } else {
-          return const SizedBox();
-        }
-      },
     );
   }
 
@@ -632,7 +796,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 height: 110,
-                margin: const EdgeInsets.only(top: 50, bottom: 16),
+                margin: const EdgeInsets.only(bottom: 16),
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 decoration: const BoxDecoration(
                   color: Color(0xFF2E683D),
