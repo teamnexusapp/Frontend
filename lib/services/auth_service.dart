@@ -285,9 +285,15 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
       );
 
       return user;
+    } on ApiException catch (e) {
+      debugPrint('API error during sign up: ${e.message}');
+      throw AuthException(AuthErrorCodes.serverError, 
+        details: 'Failed to send verification code: ${e.message}');
     } catch (e) {
       debugPrint('Sign up error: $e');
-      rethrow;
+      throw AuthException(AuthErrorCodes.serverError,
+        details: 'An unexpected error occurred: $e');
+    }
     }
   }
 
@@ -351,45 +357,32 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
       // Backend OTP verification via API using email
       await _apiService.verifyOtp(email: email, otp: otp);
 
-      debugPrint('Email verified for: $email (phone: $phoneNumber)');
+      debugPrint('OTP verified for: $email (phone: $phoneNumber)');
 
-      // Registration data already retrieved above
-      try {
-        // Register user with FastAPI backend after email verification
-          
-          await _apiService.sendOtp(
-            email: regData['email'],
-            username: regData['username'],
-            firstName: regData['firstName'],
-            lastName: regData['lastName'],
-            password: regData['password'],
-            phoneNumber: regData['phoneNumber'],
-            languagePreference: regData['preferredLanguage'],
-          );
+      // Fetch the latest user data from backend and update local state
+      final userData = await _apiService.getUser();
+      final fetchedUser = User.fromJson(userData);
 
-          // Create user object
-          final user = User(
-            email: regData['email'],
-            username: regData['username'],
-            firstName: regData['firstName'],
-            lastName: regData['lastName'],
-            phoneNumber: phoneNumber,
-            phoneVerified: true,
-            emailVerified: false,
-            preferredLanguage: regData['preferredLanguage'],
-            createdAt: DateTime.now(),
-          );
+      // Persist language, email and name from server response
+      final updatedUser = (_currentUser ?? fetchedUser).copyWith(
+        email: fetchedUser.email,
+        firstName: fetchedUser.firstName,
+        lastName: fetchedUser.lastName,
+        preferredLanguage: fetchedUser.preferredLanguage,
+        phoneNumber: fetchedUser.phoneNumber ?? phoneNumber,
+        emailVerified: fetchedUser.emailVerified,
+        phoneVerified: true,
+        role: fetchedUser.role,
+        id: fetchedUser.id,
+        profileImageUrl: fetchedUser.profileImageUrl,
+        gender: fetchedUser.gender,
+        dateOfBirth: fetchedUser.dateOfBirth,
+      );
 
-          // Save user
-          await _saveUserToPrefs(user);
-          await _removeString('registration_data_$phoneNumber');
-          
-          return true;
-        } catch (e) {
-          debugPrint('Backend registration error: $e');
-          throw AuthException(AuthErrorCodes.serverError, 
-            details: 'Email verified but registration incomplete: $e');
-        }
+      await _saveUserToPrefs(updatedUser);
+      await _removeString('registration_data_$phoneNumber');
+
+      return true;
     } catch (e) {
       debugPrint('OTP verification error: $e');
       if (e is ApiException) {

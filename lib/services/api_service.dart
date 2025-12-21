@@ -87,8 +87,11 @@ class ApiService {
   }) async {
     try {
       final headers = await _getHeaders();
+      final url = Uri.parse('$baseUrl/auth/send-otp');
+      debugPrint('Sending OTP request to: $url');
+      
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/send-otp'),
+        url,
         headers: headers,
         body: jsonEncode({
           'email': email,
@@ -97,10 +100,16 @@ class ApiService {
           'last_name': lastName,
           'password': password,
           'phone_number': phoneNumber,
-          if (languagePreference != null) 
-            'language_preference': languagePreference.toUpperCase(),
-          if (role != null) 'role': role,
+          // Send chosen language code in lowercase (default 'en')
+          'language_preference': (languagePreference ?? 'en').toLowerCase(),
+          // Temporarily force role to 'user'
+          'role': 'user',
         }),
+      ).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('OTP request timed out after 30 seconds');
+        },
       );
 
       debugPrint('Send OTP Response: ${response.statusCode}');
@@ -114,6 +123,9 @@ class ApiService {
           message: _extractErrorMessage(response),
         );
       }
+    } on TimeoutException catch (e) {
+      debugPrint('Send OTP timeout error: $e');
+      rethrow;
     } catch (e) {
       debugPrint('Send OTP error: $e');
       rethrow;
@@ -127,13 +139,21 @@ class ApiService {
   }) async {
     try {
       final headers = await _getHeaders();
+      final url = Uri.parse('$baseUrl/auth/verify-otp');
+      debugPrint('Verifying OTP request to: $url');
+      
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/verify-otp'),
+        url,
         headers: headers,
         body: jsonEncode({
           'email': email,
           'otp': otp,
         }),
+      ).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('OTP verification request timed out after 30 seconds');
+        },
       );
 
       debugPrint('Verify OTP Response: ${response.statusCode}');
@@ -147,11 +167,14 @@ class ApiService {
           message: _extractErrorMessage(response),
         );
       }
+    } on TimeoutException catch (e) {
+      debugPrint('Verify OTP timeout error: $e');
+      rethrow;
     } catch (e) {
       debugPrint('Verify OTP error: $e');
       rethrow;
     }
-  }
+  }}
 
   // Login
   Future<Map<String, dynamic>> login({
@@ -288,7 +311,7 @@ class ApiService {
       if (lastName != null) body['last_name'] = lastName;
       if (phoneNumber != null) body['phone_number'] = phoneNumber;
       if (languagePreference != null) {
-        body['language_preference'] = languagePreference.toUpperCase();
+        body['language_preference'] = languagePreference.toLowerCase();
       }
       if (profileImageUrl != null) body['profile_image_url'] = profileImageUrl;
 

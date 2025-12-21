@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/localization_provider.dart';
+import '../../services/api_service.dart';
+import '../onboarding/onboarding_screens.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -303,7 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             value: selectedLanguage,
             underline: const SizedBox(),
             isDense: true,
-            items: ['English', 'Spanish', 'French', 'Portuguese', 'Hausa', 'Igbo', 'Yoruba']
+            items: ['English', 'Igbo', 'Hausa', 'Yoruba']
                 .map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -508,9 +510,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
-                // Add delete account logic here
+                try {
+                  // Call backend to delete user
+                  await ApiService().deleteUser();
+                  // Clear local auth state
+                  final auth = Provider.of<AuthServiceImpl>(context, listen: false);
+                  await auth.signOut();
+                  // Navigate back to onboarding screens
+                  if (mounted) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const OnboardingScreens()),
+                      (route) => false,
+                    );
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to delete account: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
               },
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
