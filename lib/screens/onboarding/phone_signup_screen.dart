@@ -121,6 +121,8 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
       }
     }
 
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
