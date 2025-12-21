@@ -49,10 +49,9 @@ abstract class AuthService {
     String? lastName,
     DateTime? dateOfBirth,
     String? gender,
-          if (FeatureFlags.firebaseAuthAvailable) {
     String? preferredLanguage,
   });
-          if (FeatureFlags.firebaseAuthAvailable) {
+
   Future<User?> signIn({
     required String email,
     required String password,
@@ -493,22 +492,23 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
           debugPrint('OTP resent to $phoneNumber (web)');
         } else {
           // On native platforms, use the resend token
-          await _firebaseAuth.verifyPhoneNumber(
-            phoneNumber: phoneNumber,
-            resendToken: _resendToken,
-            verificationCompleted: (firebase_auth.PhoneAuthCredential credential) {
-              debugPrint('Phone verification auto-completed on resend (native)');
-            },
-            verificationFailed: (firebase_auth.FirebaseAuthException e) {
-              debugPrint('Phone verification resend failed (native): ${e.message}');
-            },
-            codeSent: (String verificationId, int? resendToken) {
-              _verificationId = verificationId;
-              _resendToken = resendToken;
-              debugPrint('OTP resent to $phoneNumber (native)');
-            },
-            codeAutoRetrievalTimeout: (String verificationId) {
-              _verificationId = verificationId;
+          if (_resendToken != null) {
+            await _firebaseAuth.verifyPhoneNumber(
+              phoneNumber: phoneNumber,
+              resendToken: _resendToken,
+              verificationCompleted: (firebase_auth.PhoneAuthCredential credential) {
+                debugPrint('Phone verification auto-completed on resend (native)');
+              },
+              verificationFailed: (firebase_auth.FirebaseAuthException e) {
+                debugPrint('Phone verification resend failed (native): ${e.message}');
+              },
+              codeSent: (String verificationId, int? resendToken) {
+                _verificationId = verificationId;
+                _resendToken = resendToken;
+                debugPrint('OTP resent to $phoneNumber (native)');
+              },
+              codeAutoRetrievalTimeout: (String verificationId) {
+                _verificationId = verificationId;
             },
           );
         }
@@ -538,7 +538,7 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     String? preferredLanguage,
   }) async {
     try {
-            _webConfirmationResult = await _firebaseAuth.signInWithPhoneNumber(phoneNumber);
+      if (_currentUser == null) {
         throw AuthException(AuthErrorCodes.noUserLoggedIn);
       }
 
