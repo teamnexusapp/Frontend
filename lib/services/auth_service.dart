@@ -224,7 +224,6 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       throw AuthException(AuthErrorCodes.serverError,
         details: 'An unexpected error occurred: $e');
     }
-    }
   }
 
   Future<bool> verifyEmailOTP({
