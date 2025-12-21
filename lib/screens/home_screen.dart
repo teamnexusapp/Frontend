@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool _showSideMenu = false;
-  int? _selectedCalendarDay;
+  Set<int> _selectedCalendarDays = {};
 
   void _toggleSideMenu() {
     setState(() {
@@ -365,127 +365,103 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCalendarTab() {
-    final size = MediaQuery.of(context).size;
-    final greenHeight = size.height * 0.65;
-    
     return Scaffold(
       backgroundColor: const Color(0xFF2E683D),
-      body: Stack(
-        children: [
-          // Top green area with calendar header
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Back arrow
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedIndex = 0; // Navigate to home
-                      });
-                    },
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  // Month and year centered
-                  Center(
-                    child: const Text(
-                      'December 2025',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Day labels row with horizontal padding and 2px gap below
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('S', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
-                        Text('M', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
-                        Text('T', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
-                        Text('W', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
-                        Text('T', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
-                        Text('F', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
-                        Text('S', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white, fontFamily: 'Poppins')),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  // Calendar grid
-                  _buildCalendarGridInGreen(),
-                ],
-              ),
-            ),
-          ),
-          // White container from middle to bottom
-          Positioned(
-            top: greenHeight,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-              ),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
-                    // Cycle summaries
-                    Align(
-                      alignment: Alignment.centerLeft,
+                    // Back arrow
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = 0; // Navigate to home
+                        });
+                      },
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Month and year centered
+                    Center(
                       child: const Text(
-                        'Cycle summaries',
+                        'December 2025',
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontFamily: 'Poppins',
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    _buildCycleSummary(),
-                    const SizedBox(height: 24),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppLocalizations.of(context)!.loggedSymptoms,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildLoggedSymptomItem(AppLocalizations.of(context)!.bleeding, 7),
-                    _buildLoggedSymptomItem(AppLocalizations.of(context)!.mood, 14),
-                    _buildLoggedSymptomItem(AppLocalizations.of(context)!.cervicalMucus, 21),
-                    _buildLoggedSymptomItem(AppLocalizations.of(context)!.pain, 28),
-                    _buildLoggedSymptomItem(AppLocalizations.of(context)!.notes, 30),
+                    const SizedBox(height: 20),
+                    // Day labels row aligned with grid
+                    _buildCalendarGridInGreen(),
                   ],
                 ),
               ),
-            ),
+              // White container - 5px higher by using negative margin
+              Container(
+                margin: const EdgeInsets.only(top: 5),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      // Cycle summaries
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: const Text(
+                          'Cycle summaries',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _buildCycleSummary(),
+                      const SizedBox(height: 24),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppLocalizations.of(context)!.loggedSymptoms,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.bleeding, 7),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.mood, 14),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.cervicalMucus, 21),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.pain, 28),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.notes, 30),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -629,70 +605,107 @@ class _HomeScreenState extends State<HomeScreen> {
     final daysInMonth = 31;
     final daysInPrevMonth = 30; // November has 30 days
     
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 7,
-          childAspectRatio: 1,
-          crossAxisSpacing: 2,
-          mainAxisSpacing: 2,
-        ),
-        itemCount: 35,
-        itemBuilder: (context, index) {
-          if (index < startDay) {
-            // Previous month days
-            final prevDay = daysInPrevMonth - startDay + index + 1;
-            return Center(
-              child: Text(
-                '$prevDay',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade400,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Poppins',
-                ),
-              ),
-            );
-          } else if (index < startDay + daysInMonth) {
-            // Current month days
-            final day = index - startDay + 1;
-            final bool isSelected = _selectedCalendarDay == day;
-            return Center(
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedCalendarDay = day;
-                  });
-                },
-                child: Container
-                (
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isSelected ? const Color(0xFFA8D497) : Colors.transparent,
+    return Column(
+      children: [
+        // Day labels row using GridView-like spacing
+        Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 2),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7,
+              childAspectRatio: 1,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 0,
+            ),
+            itemCount: 7,
+            itemBuilder: (context, index) {
+              const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+              return Center(
+                child: Text(
+                  dayLabels[index],
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontFamily: 'Poppins',
                   ),
-                  alignment: Alignment.center,
+                ),
+              );
+            },
+          ),
+        ),
+        // Calendar grid
+        Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7,
+              childAspectRatio: 1,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 2,
+            ),
+            itemCount: 35,
+            itemBuilder: (context, index) {
+              if (index < startDay) {
+                // Previous month days
+                final prevDay = daysInPrevMonth - startDay + index + 1;
+                return Center(
                   child: Text(
-                    '$day',
+                    '$prevDay',
                     style: TextStyle(
                       fontSize: 14,
-                      color: isSelected ? const Color(0xFF2E683D) : Colors.white,
-                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade400,
+                      fontWeight: FontWeight.w400,
                       fontFamily: 'Poppins',
                     ),
                   ),
-                ),
-              ),
-            );
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
+                );
+              } else if (index < startDay + daysInMonth) {
+                // Current month days
+                final day = index - startDay + 1;
+                final bool isSelected = _selectedCalendarDays.contains(day);
+                return Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (_selectedCalendarDays.contains(day)) {
+                          _selectedCalendarDays.remove(day);
+                        } else {
+                          _selectedCalendarDays.add(day);
+                        }
+                      });
+                    },
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSelected ? const Color(0xFFA8D497) : Colors.transparent,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '$day',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: isSelected ? const Color(0xFF2E683D) : Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 
