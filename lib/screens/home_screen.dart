@@ -31,8 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
             index: _selectedIndex,
             children: [
               _buildHomeTab(),
-              _buildCalendarTab(),
               _buildLearnHubTab(),
+              _buildCalendarTab(),
+              _buildCommunityTab(),
             ],
           ),
           // Side menu overlay
@@ -84,18 +85,27 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() => _selectedIndex = index),
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color(0xFF2E683D),
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: false,
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: AppLocalizations.of(context)!.home,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.calendar_today),
-            label: AppLocalizations.of(context)!.calendar,
+            label: _selectedIndex == 0 ? AppLocalizations.of(context)!.home : '',
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.school),
-            label: AppLocalizations.of(context)!.learn,
+            label: _selectedIndex == 1 ? AppLocalizations.of(context)!.learn : '',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.timeline),
+            label: _selectedIndex == 2 ? 'Track' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.favorite),
+            label: _selectedIndex == 3 ? 'Community' : '',
           ),
         ],
       ),
@@ -169,24 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Welcome message with user's name
-                                Consumer<AuthServiceImpl>(
-                                  builder: (context, authService, child) {
-                                    final user = authService.currentUser;
-                                    final userName = user?.firstName ?? user?.username ?? 'User';
-                                    return Text(
-                                      'Welcome back, $userName!',
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFFA8D497),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: 12),
                                 const Text(
                                   "Today's fertility\ninsight",
                                   style: TextStyle(
@@ -271,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontFamily: 'Poppins',
                 color: Color(0xFF2E683D),
               ),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
           ),
           const SizedBox(height: 15),
@@ -317,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 120,
         decoration: BoxDecoration(
           color: const Color(0xFF2E683D),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.zero,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.15),
@@ -332,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Icon(
               icon,
               color: const Color(0xFFA8D497),
-              size: 40,
+              size: 24,
             ),
             const SizedBox(height: 8),
             Text(
@@ -563,6 +555,43 @@ class _HomeScreenState extends State<HomeScreen> {
             const Spacer(),
             Icon(Icons.arrow_forward_ios,
                 size: 16, color: Colors.grey.shade400),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCommunityTab() {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.favorite,
+              size: 64,
+              color: const Color(0xFF2E683D),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Community',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Poppins',
+                color: Color(0xFF2E683D),
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Coming soon',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Poppins',
+                color: Colors.grey,
+              ),
+            ),
           ],
         ),
       ),
