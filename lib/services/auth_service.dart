@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 import 'auth_exception.dart';
 import 'api_service.dart';
-import '../config/feature_flags.dart';
+// Feature flags not used here
 
 class AuthService extends ChangeNotifier {
-  SharedPreferences? _prefs;
+  // Removed SharedPreferences; using in-memory storage for simplicity
   final Map<String, String> _inMemoryPrefs = {};
   User? _currentUser;
   final StreamController<User?> _authStateController =
@@ -29,64 +28,7 @@ class AuthService extends ChangeNotifier {
     } catch (_) {}
   }
 
-  // Load stored token from SharedPreferences and set it in ApiService
-  Future<void> _loadStoredToken() async {
-    try {
-      final token = await _apiService.getStoredToken();
-      if (token != null) {
-        debugPrint('Restored access token from storage');
-      }
-    } catch (e) {
-      debugPrint('Error loading stored token: $e');
-    }
-  }
-
-  Future<void> _ensurePrefs() async {
-    if (_prefs != null) return;
-    try {
-      _prefs = await SharedPreferences.getInstance();
-    } catch (e) {
-      debugPrint('SharedPreferences ensure error: $e');
-      // Fall back to in-memory prefs when SharedPreferences is unavailable
-      _prefs = null;
-    }
-  }
-
-  String? _getString(String key) {
-    if (_prefs != null) return _prefs!.getString(key);
-    return _inMemoryPrefs[key];
-  }
-
-  Future<void> _setString(String key, String value) async {
-    if (_prefs != null) {
-      await _prefs!.setString(key, value);
-      return;
-    }
-    _inMemoryPrefs[key] = value;
-  }
-
-  Future<void> _removeString(String key) async {
-    if (_prefs != null) {
-      await _prefs!.remove(key);
-      return;
-    }
-    _inMemoryPrefs.remove(key);
-  }
-
-  void _loadUserFromPrefs() {
-    try {
-      final userJson = _getString('user');
-      if (userJson != null) {
-        try {
-          _currentUser = User.fromJson(_jsonDecode(userJson));
-        } catch (e) {
-          debugPrint('Error loading user: $e');
-        }
-      }
-    } catch (e) {
-      debugPrint('Load user prefs error: $e');
-    }
-  }
+  // Removed persistent storage helpers
 
   Future<void> _saveUserToPrefs(User user) async {
     _currentUser = user;
@@ -152,8 +94,7 @@ class AuthService extends ChangeNotifier {
         createdAt: DateTime.now(),
       );
 
-      // Store temporary user for verification
-      await _setString('temp_user_$phoneNumber', _jsonEncode(user.toJson()));
+      _inMemoryPrefs['temp_user_$email'] = _jsonEncode(user.toJson());
 
       debugPrint('OTP sent to $phoneNumber for user: $email');
 
@@ -252,8 +193,7 @@ class AuthService extends ChangeNotifier {
       debugPrint('Verifying OTP: $otp for email: $email');
 
       // Get temporary user
-      await _ensurePrefs();
-      final tempUserJson = _getString('temp_user_$email');
+      final tempUserJson = _inMemoryPrefs['temp_user_$email'];
       if (tempUserJson == null) {
         throw AuthException(AuthErrorCodes.userNotFound);
       }
@@ -267,7 +207,7 @@ class AuthService extends ChangeNotifier {
 
       // Save verified user
       await _saveUserToPrefs(user);
-      await _removeString('temp_user_$email');
+      _inMemoryPrefs.remove('temp_user_$email');
 
       return true;
     } catch (e) {
@@ -318,13 +258,14 @@ class AuthService extends ChangeNotifier {
       );
 
       await _saveUserToPrefs(updatedUser);
-      await _removeString('registration_data_$phoneNumber');
+      _inMemoryPrefs.remove('registration_data_$phoneNumber');
 
       return true;
     } catch (e) {
       debugPrint('OTP verification error: $e');
       if (e is ApiException) {
-        if (e.message.toLowerCase().contains('invalid') || e.message.toLowerCase().contains('verification')) {
+        final msg = e.message.toLowerCase();
+        if (msg.contains('invalid') || msg.contains('verification')) {
           throw AuthException(AuthErrorCodes.invalidOtpFormat);
         }
         throw AuthException(AuthErrorCodes.serverError, details: e.message);
@@ -355,12 +296,10 @@ class AuthService extends ChangeNotifier {
       }
 
       // Get registration data to resend OTP to email
-      await _ensurePrefs();
-      final registrationDataJson = _getString('registration_data_$phoneNumber');
+      final registrationDataJson = _inMemoryPrefs['registration_data_$phoneNumber'];
       
       if (registrationDataJson != null) {
         final regData = _jsonDecode(registrationDataJson);
-        
         // Resend OTP via backend API to email
         if (regData['email'] != null && regData['username'] != null && regData['firstName'] != null && regData['lastName'] != null && regData['password'] != null) {
           await _apiService.sendOtp(
@@ -373,7 +312,6 @@ class AuthService extends ChangeNotifier {
             languagePreference: regData['preferredLanguage'],
           );
         }
-        
         debugPrint('OTP resent successfully to email: ${regData['email']}');
         return true;
       } else {
