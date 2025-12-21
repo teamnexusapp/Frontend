@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<loc_provider.LocalizationProvider>(
           create: (_) => loc_provider.LocalizationProvider(),
         ),
-        ChangeNotifierProvider<AuthServiceImpl>(
-          create: (_) => AuthServiceImpl(),
+        ChangeNotifierProvider<AuthService>(
+          create: (_) => AuthService(),
         ),
             ChangeNotifierProvider<TtsService>(
           create: (_) => TtsService(),

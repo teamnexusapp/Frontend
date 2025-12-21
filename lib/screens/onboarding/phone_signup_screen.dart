@@ -503,7 +503,7 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                       if (otp.length == 4) {
                         try {
                           // Call auth service to register with phone
-                          final authService = context.read<AuthServiceImpl>();
+                          final authService = context.read<AuthService>();
                           
                           // Generate username from email (part before @)
                           final username = widget.email.split('@').first;

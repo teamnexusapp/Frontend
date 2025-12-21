@@ -19,7 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthServiceImpl>(context);
+    final auth = Provider.of<AuthService>(context);
     final loc = Provider.of<LocalizationProvider>(context);
     final user = auth.currentUser;
 
@@ -516,7 +516,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Call backend to delete user
                   await ApiService().deleteUser();
                   // Clear local auth state
-                  final auth = Provider.of<AuthServiceImpl>(context, listen: false);
+                  final auth = Provider.of<AuthService>(context, listen: false);
                   await auth.signOut();
                   // Navigate back to onboarding screens
                   if (mounted) {

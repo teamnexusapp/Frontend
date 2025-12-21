@@ -7,63 +7,7 @@ import 'auth_exception.dart';
 import 'api_service.dart';
 import '../config/feature_flags.dart';
 
-abstract class AuthService {
-  Future<User?> signUpWithEmail({
-    required String email,
-    required String username,
-    required String firstName,
-    required String lastName,
-    required String password,
-    required String phoneNumber,
-    String? preferredLanguage,
-  });
-
-  Future<User?> signUpWithPhone({
-    required String phoneNumber,
-    required String email,
-    required String username,
-    required String firstName,
-    required String lastName,
-    required String password,
-    String? preferredLanguage,
-  });
-
-  Future<bool> verifyEmailOTP({
-    required String email,
-    required String otp,
-  });
-
-  Future<bool> verifyPhoneOTP({
-    required String phoneNumber,
-    required String otp,
-  });
-
-  Future<bool> resendEmailOTP({required String email});
-
-  Future<bool> resendPhoneOTP({required String phoneNumber});
-
-  Future<User?> updateUserProfile({
-    required String userId,
-    String? firstName,
-    String? lastName,
-    DateTime? dateOfBirth,
-    String? gender,
-    String? preferredLanguage,
-  });
-
-  Future<User?> signIn({
-    required String email,
-    required String password,
-  });
-
-  Future<void> signOut();
-
-  Future<User?> getCurrentUser();
-
-  Stream<User?> authStateChanges();
-}
-
-class AuthServiceImpl extends ChangeNotifier implements AuthService {
+class AuthService extends ChangeNotifier {
   SharedPreferences? _prefs;
   final Map<String, String> _inMemoryPrefs = {};
   User? _currentUser;
@@ -73,7 +17,7 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
 
   User? get currentUser => _currentUser;
 
-  AuthServiceImpl() {
+  AuthService() {
     _initialize();
   }
 
@@ -167,14 +111,13 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
         : Map<String, dynamic>.from(decoded as Map);
   }
 
-  @override
   Future<User?> signUpWithEmail({
     required String email,
-    required String username,
-    required String firstName,
-    required String lastName,
     required String password,
-    required String phoneNumber,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
     String? preferredLanguage,
   }) async {
     try {
@@ -188,16 +131,18 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
         throw AuthException(AuthErrorCodes.passwordTooShort);
       }
 
-      // Send OTP via API
-      await _apiService.sendOtp(
-        email: email,
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
-        password: password,
-        phoneNumber: phoneNumber,
-        languagePreference: preferredLanguage,
-      );
+      // Optionally send OTP via API when full details are provided
+      if (username != null && firstName != null && lastName != null && phoneNumber != null) {
+        await _apiService.sendOtp(
+          email: email,
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          phoneNumber: phoneNumber,
+          languagePreference: preferredLanguage,
+        );
+      }
 
       // Create temporary user object for local tracking
       final user = User(
@@ -230,14 +175,13 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<User?> signUpWithPhone({
     required String phoneNumber,
-    required String email,
-    required String username,
-    required String firstName,
-    required String lastName,
-    required String password,
+    String? email,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? password,
     String? preferredLanguage,
   }) async {
     try {
@@ -257,23 +201,25 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
         'preferredLanguage': preferredLanguage,
       };
       
-      await _setString('registration_data_$email', _jsonEncode(registrationData));
+      await _setString('registration_data_$phoneNumber', _jsonEncode(registrationData));
 
       // Send OTP via backend API to email
-      await _apiService.sendOtp(
-        email: email,
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
-        password: password,
-        phoneNumber: phoneNumber,
-        languagePreference: preferredLanguage,
-      );
+      if (email != null && username != null && firstName != null && lastName != null && password != null) {
+        await _apiService.sendOtp(
+          email: email,
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          phoneNumber: phoneNumber,
+          languagePreference: preferredLanguage,
+        );
+      }
       debugPrint('OTP sent to email: $email via backend');
 
       // Create temporary user object
       final user = User(
-        email: email,
+        email: email ?? '',
         username: username,
         firstName: firstName,
         lastName: lastName,
@@ -297,7 +243,6 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<bool> verifyEmailOTP({
     required String email,
     required String otp,
@@ -336,7 +281,6 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<bool> verifyPhoneOTP({
     required String phoneNumber,
     required String otp,
@@ -395,7 +339,6 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<bool> resendEmailOTP({required String email}) async {
     try {
       if (!_isValidEmail(email)) {
@@ -411,7 +354,6 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<bool> resendPhoneOTP({required String phoneNumber}) async {
     try {
       if (!_isValidPhoneNumber(phoneNumber)) {
@@ -426,15 +368,17 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
         final regData = _jsonDecode(registrationDataJson);
         
         // Resend OTP via backend API to email
-        await _apiService.sendOtp(
-          email: regData['email'],
-          username: regData['username'],
-          firstName: regData['firstName'],
-          lastName: regData['lastName'],
-          password: regData['password'],
-          phoneNumber: phoneNumber,
-          languagePreference: regData['preferredLanguage'],
-        );
+        if (regData['email'] != null && regData['username'] != null && regData['firstName'] != null && regData['lastName'] != null && regData['password'] != null) {
+          await _apiService.sendOtp(
+            email: regData['email'],
+            username: regData['username'],
+            firstName: regData['firstName'],
+            lastName: regData['lastName'],
+            password: regData['password'],
+            phoneNumber: phoneNumber,
+            languagePreference: regData['preferredLanguage'],
+          );
+        }
         
         debugPrint('OTP resent successfully to email: ${regData['email']}');
         return true;
@@ -450,7 +394,6 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<User?> updateUserProfile({
     required String userId,
     String? firstName,
@@ -484,7 +427,6 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<User?> signIn({
     required String email,
     required String password,
@@ -520,7 +462,6 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<void> signOut() async {
     try {
       // Logout from API
@@ -544,12 +485,10 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
     }
   }
 
-  @override
   Future<User?> getCurrentUser() async {
     return _currentUser;
   }
 
-  @override
   Stream<User?> authStateChanges() {
     return _authStateController.stream;
   }

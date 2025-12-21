@@ -449,7 +449,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     });
 
     try {
-      final authService = Provider.of<AuthServiceImpl>(context, listen: false);
+      final authService = Provider.of<AuthService>(context, listen: false);
       final currentUser = authService.currentUser;
 
       if (currentUser == null) {

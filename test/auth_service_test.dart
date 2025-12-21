@@ -4,10 +4,10 @@ import 'package:nexus_fertility_app/services/auth_service.dart';
 
 void main() {
   group('AuthService Tests', () {
-    late AuthServiceImpl authService;
+    late AuthService authService;
 
     setUp(() {
-      authService = AuthServiceImpl();
+      authService = AuthService();
     });
 
     test('Sign up with email should create user', () async {
@@ -170,10 +170,10 @@ void main() {
   });
 
   group('Email Validation Tests', () {
-    late AuthServiceImpl authService;
+    late AuthService authService;
 
     setUp(() {
-      authService = AuthServiceImpl();
+      authService = AuthService();
     });
 
     test('Valid emails should be accepted', () async {
@@ -215,10 +215,10 @@ void main() {
   });
 
   group('Phone Validation Tests', () {
-    late AuthServiceImpl authService;
+    late AuthService authService;
 
     setUp(() {
-      authService = AuthServiceImpl();
+      authService = AuthService();
     });
 
     test('Valid phone numbers should be accepted', () async {

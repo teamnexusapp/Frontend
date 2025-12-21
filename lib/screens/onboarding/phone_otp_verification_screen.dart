@@ -244,7 +244,7 @@ class _PhoneOTPVerificationScreenState
     });
 
     try {
-      final authService = Provider.of<AuthServiceImpl>(context, listen: false);
+      final authService = Provider.of<AuthService>(context, listen: false);
       await authService.verifyPhoneOTP(
         phoneNumber: widget.phoneNumber,
         otp: otp,
@@ -277,7 +277,7 @@ class _PhoneOTPVerificationScreenState
 
   Future<void> _handleResend() async {
     try {
-      final authService = Provider.of<AuthServiceImpl>(context, listen: false);
+      final authService = Provider.of<AuthService>(context, listen: false);
       await authService.resendPhoneOTP(phoneNumber: widget.phoneNumber);
 
       if (mounted) {
