@@ -142,9 +142,18 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         createdAt: DateTime.now(),
       );
 
-      _inMemoryPrefs['temp_user_$email'] = _jsonEncode(user.toJson());
+      // Store registration data for later verification (keyed by email)
+      await _setString('registration_data_$email', _jsonEncode({
+        'email': email,
+        'username': username,
+        'firstName': firstName,
+        'lastName': lastName,
+        'password': password,
+        'phoneNumber': phoneNumber,
+        'preferredLanguage': preferredLanguage,
+      }));
 
-      debugPrint('OTP sent to $phoneNumber for user: $email');
+      debugPrint('OTP sent to email $email for user with phone $phoneNumber');
 
       return user;
     } on ApiException catch (e) {
@@ -268,46 +277,71 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     required String otp,
   }) async {
     try {
-      // Get registration data using phone number to find associated email
-      final registrationDataJson = _inMemoryPrefs['registration_data_$phoneNumber'];
+      // Search through registration data to find the email associated with this phone
+      await _ensurePrefs();
+      String? registrationDataJson;
+      String? foundEmail;
       
-      if (registrationDataJson == null) {
+      final allKeys = _prefs.getKeys();
+      for (final key in allKeys) {
+        if (key.startsWith('registration_data_')) {
+          final dataJson = _prefs.getString(key);
+          if (dataJson != null) {
+            try {
+              final data = _jsonDecode(dataJson);
+              if (data['phoneNumber'] == phoneNumber) {
+                registrationDataJson = dataJson;
+                foundEmail = data['email'];
+                break;
+              }
+            } catch (e) {
+              debugPrint('Error parsing registration data: $e');
+            }
+          }
+        }
+      }
+      
+      if (registrationDataJson == null || foundEmail == null) {
         throw AuthException(AuthErrorCodes.userNotFound,
           details: 'Registration data not found. Please start signup again.');
       }
 
       final regData = _jsonDecode(registrationDataJson);
-      final email = regData['email'];
+      final email = foundEmail;
       
-      // Backend OTP verification via API using email
+      // Verify OTP with backend API using email
       await _apiService.verifyOtp(email: email, otp: otp);
 
-      debugPrint('OTP verified for: $email (phone: $phoneNumber)');
+      debugPrint('OTP verified successfully for: $email (phone: $phoneNumber)');
 
-      // Fetch the latest user data from backend and update local state
-      final userData = await _apiService.getUser();
-      final fetchedUser = User.fromJson(userData);
+      // Create user object after successful verification
+      try {
+        final user = User(
+          email: regData['email'],
+          username: regData['username'],
+          firstName: regData['firstName'],
+          lastName: regData['lastName'],
+          phoneNumber: phoneNumber,
+          phoneVerified: true,
+          emailVerified: true,
+          preferredLanguage: regData['preferredLanguage'],
+          createdAt: DateTime.now(),
+        );
 
-      // Persist language, email and name from server response
-      final updatedUser = (_currentUser ?? fetchedUser).copyWith(
-        email: fetchedUser.email,
-        firstName: fetchedUser.firstName,
-        lastName: fetchedUser.lastName,
-        preferredLanguage: fetchedUser.preferredLanguage,
-        phoneNumber: fetchedUser.phoneNumber ?? phoneNumber,
-        emailVerified: fetchedUser.emailVerified,
-        phoneVerified: true,
-        role: fetchedUser.role,
-        id: fetchedUser.id,
-        profileImageUrl: fetchedUser.profileImageUrl,
-        gender: fetchedUser.gender,
-        dateOfBirth: fetchedUser.dateOfBirth,
-      );
-
-      await _saveUserToPrefs(updatedUser);
-      _inMemoryPrefs.remove('registration_data_$phoneNumber');
-
-      return true;
+        // Save user to local storage
+        await _saveUserToPrefs(user);
+        
+        // Clean up registration data
+        await _removeString('registration_data_$email');
+        
+        debugPrint('User successfully registered and OTP verified');
+        
+        return true;
+        } catch (e) {
+          debugPrint('Backend registration error: $e');
+          throw AuthException(AuthErrorCodes.serverError, 
+            details: 'Email verified but registration incomplete: $e');
+        }
     } catch (e) {
       debugPrint('OTP verification error: $e');
       if (e is ApiException) {
