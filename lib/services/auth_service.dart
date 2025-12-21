@@ -495,7 +495,7 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
           if (_resendToken != null) {
             await _firebaseAuth.verifyPhoneNumber(
               phoneNumber: phoneNumber,
-              resendToken: _resendToken,
+              forceResendingToken: _resendToken,
               verificationCompleted: (firebase_auth.PhoneAuthCredential credential) {
                 debugPrint('Phone verification auto-completed on resend (native)');
               },
@@ -509,8 +509,9 @@ class AuthServiceImpl extends ChangeNotifier implements AuthService {
               },
               codeAutoRetrievalTimeout: (String verificationId) {
                 _verificationId = verificationId;
-            },
-          );
+              },
+            );
+          }
         }
       } else {
         // Backend resend path when Firebase is disabled or unconfigured
