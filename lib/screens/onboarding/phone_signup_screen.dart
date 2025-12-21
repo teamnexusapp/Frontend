@@ -49,7 +49,8 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
 
     // Get the selected language from LocalizationProvider
     final localizationProvider = context.read<loc_provider.LocalizationProvider>();
-    final selectedLanguage = localizationProvider.selectedLanguageCode ?? 'en';
+    final selectedLanguage =
+        (localizationProvider.selectedLanguageCode ?? 'en').toLowerCase();
 
     // Parse full name into first and last name
     final nameParts = _fullNameController.text.trim().split(' ');
