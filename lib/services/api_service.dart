@@ -122,7 +122,7 @@ class ApiService {
 
   // Verify OTP and Complete Registration
   Future<Map<String, dynamic>> verifyOtp({
-    required String phoneNumber,
+    required String email,
     required String otp,
   }) async {
     try {
@@ -131,7 +131,7 @@ class ApiService {
         Uri.parse('$baseUrl/auth/verify-otp'),
         headers: headers,
         body: jsonEncode({
-          'phone_number': phoneNumber,
+          'email': email,
           'otp': otp,
         }),
       );

@@ -21,8 +21,8 @@ class PhoneOTPVerificationScreen extends StatefulWidget {
 
 class _PhoneOTPVerificationScreenState
     extends State<PhoneOTPVerificationScreen> {
-  final _otpControllers = List.generate(6, (_) => TextEditingController());
-  final _focusNodes = List.generate(6, (_) => FocusNode());
+  final _otpControllers = List.generate(4, (_) => TextEditingController());
+  final _focusNodes = List.generate(4, (_) => FocusNode());
 
   late Timer _timer;
   int _secondsRemaining = 300; // 5 minutes
@@ -99,10 +99,10 @@ class _PhoneOTPVerificationScreenState
                 // OTP Input Fields
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(6, (index) {
+                  children: List.generate(4, (index) {
                     return SizedBox(
-                      width: 50,
-                      height: 60,
+                      width: 60,
+                      height: 66,
                       child: TextFormField(
                         controller: _otpControllers[index],
                         focusNode: _focusNodes[index],
@@ -135,7 +135,7 @@ class _PhoneOTPVerificationScreenState
                         ),
                         onChanged: (value) {
                           if (value.length == 1) {
-                            if (index < 5) {
+                            if (index < 3) {
                               _focusNodes[index + 1].requestFocus();
                             } else {
                               _focusNodes[index].unfocus();

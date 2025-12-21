@@ -444,7 +444,7 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                // OTP Input Fields - 6 digits
+                // OTP Input Fields - 4 digits
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
