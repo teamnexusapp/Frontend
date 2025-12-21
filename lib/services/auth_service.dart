@@ -185,11 +185,17 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
 
       return user;
     } on ApiException catch (e) {
-      debugPrint('API sign up error: ${e.message}');
+      debugPrint('API sign up error: Status ${e.statusCode}, Message: ${e.message}');
       if (e.message.toLowerCase().contains('already')) {
-        throw AuthException(AuthErrorCodes.emailAlreadyRegistered);
+        throw AuthException(AuthErrorCodes.emailAlreadyRegistered,
+          details: 'This email is already registered');
       }
-      throw AuthException(AuthErrorCodes.serverError, details: e.message);
+      if (e.statusCode == 422) {
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'Validation failed: ${e.message}');
+      }
+      throw AuthException(AuthErrorCodes.serverError, 
+        details: 'Server error (${e.statusCode}): ${e.message}');
     } catch (e) {
       debugPrint('Sign up error: $e');
       rethrow;
