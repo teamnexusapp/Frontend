@@ -62,7 +62,6 @@ class ApiService {
     };
     
     if (includeAuth) {
-      // Always try to get the latest token from storage
       final token = await getStoredToken();
       if (token != null) {
         headers['Authorization'] = 'Bearer $token';
@@ -101,9 +100,7 @@ class ApiService {
           'last_name': lastName,
           'password': password,
           'phone_number': phoneNumber,
-          // Send chosen language code in lowercase (default 'en')
           'language_preference': (languagePreference ?? 'en').toLowerCase(),
-          // Temporarily force role to 'user'
           'role': 'user',
         }),
       ).timeout(
@@ -183,7 +180,6 @@ class ApiService {
     required String password,
   }) async {
     try {
-      // OAuth2 form data format
       final response = await http.post(
         Uri.parse('$baseUrl/auth/token'),
         headers: {
@@ -239,7 +235,7 @@ class ApiService {
       }
     } catch (e) {
       debugPrint('Logout error: $e');
-      await clearToken(); // Clear token even if API call fails
+      await clearToken();
       rethrow;
     }
   }

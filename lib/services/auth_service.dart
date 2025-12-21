@@ -6,7 +6,55 @@ import 'auth_exception.dart';
 import 'api_service.dart';
 // Feature flags not used here
 
-class AuthService extends ChangeNotifier {
+abstract class AuthServiceInterface {
+  Future<User?> signUpWithEmail({
+    required String email,
+    required String password,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    String? preferredLanguage,
+  });
+
+  Future<User?> signUpWithPhone({
+    required String phoneNumber,
+    String? email,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? password,
+    String? preferredLanguage,
+  });
+
+  Future<bool> verifyEmailOTP({required String email, required String otp});
+
+  Future<bool> verifyPhoneOTP({required String phoneNumber, required String otp});
+
+  Future<bool> resendEmailOTP({required String email});
+
+  Future<bool> resendPhoneOTP({required String phoneNumber});
+
+  Future<User?> updateUserProfile({
+    required String userId,
+    String? firstName,
+    String? lastName,
+    DateTime? dateOfBirth,
+    String? gender,
+    String? profileImagePath,
+    String? preferredLanguage,
+  });
+
+  Future<User?> signIn({required String email, required String password});
+
+  Future<void> signOut();
+
+  Future<User?> getCurrentUser();
+
+  Stream<User?> authStateChanges();
+}
+
+class AuthService extends ChangeNotifier implements AuthServiceInterface {
   // Removed SharedPreferences; using in-memory storage for simplicity
   final Map<String, String> _inMemoryPrefs = {};
   User? _currentUser;
@@ -440,3 +488,6 @@ class AuthService extends ChangeNotifier {
     super.dispose();
   }
 }
+
+// Backwards compatibility: alias old class name to new implementation
+typedef AuthServiceImpl = AuthService;
