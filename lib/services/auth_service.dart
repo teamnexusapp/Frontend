@@ -76,7 +76,18 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     } catch (_) {}
   }
 
-  // Removed persistent storage helpers
+  // In-memory storage helpers
+  Future<void> _setString(String key, String value) async {
+    _inMemoryPrefs[key] = value;
+  }
+
+  Future<String?> _getString(String key) async {
+    return _inMemoryPrefs[key];
+  }
+
+  Future<void> _removeString(String key) async {
+    _inMemoryPrefs.remove(key);
+  }
 
   Future<void> _saveUserToPrefs(User user) async {
     _currentUser = user;
@@ -137,14 +148,23 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         lastName: lastName,
         phoneNumber: phoneNumber,
         emailVerified: false,
-        phoneVerified: false,
+        phoneVerified: false,  // We don't verify phone numbers
         preferredLanguage: preferredLanguage,
         createdAt: DateTime.now(),
       );
 
-      _inMemoryPrefs['temp_user_$email'] = _jsonEncode(user.toJson());
+      // Store registration data for later verification (keyed by email)
+      await _setString('registration_data_$email', _jsonEncode({
+        'email': email,
+        'username': username,
+        'firstName': firstName,
+        'lastName': lastName,
+        'password': password,
+        'phoneNumber': phoneNumber,
+        'preferredLanguage': preferredLanguage,
+      }));
 
-      debugPrint('OTP sent to $phoneNumber for user: $email');
+      debugPrint('OTP sent to email $email for user with phone $phoneNumber');
 
       return user;
     } on ApiException catch (e) {
@@ -168,62 +188,26 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     String? password,
     String? preferredLanguage,
   }) async {
-    try {
-      // Validate phone format
-      if (!_isValidPhoneNumber(phoneNumber)) {
-        throw AuthException(AuthErrorCodes.invalidPhone);
-      }
+    // Validate phone format
+    if (!_isValidPhoneNumber(phoneNumber)) {
+      throw AuthException(AuthErrorCodes.invalidPhone);
+    }
 
-      // Store registration data for later use after OTP verification
-      final registrationData = {
-        'email': email,
-        'username': username,
-        'firstName': firstName,
-        'lastName': lastName,
-        'password': password,
-        'phoneNumber': phoneNumber,
-        'preferredLanguage': preferredLanguage,
-      };
-      
-      _inMemoryPrefs['registration_data_$phoneNumber'] = _jsonEncode(registrationData);
-
-      // Send OTP via backend API to email
-      if (email != null && username != null && firstName != null && lastName != null && password != null) {
-        await _apiService.sendOtp(
-          email: email,
-          username: username,
-          firstName: firstName,
-          lastName: lastName,
-          password: password,
-          phoneNumber: phoneNumber,
-          languagePreference: preferredLanguage,
-        );
-      }
-      debugPrint('OTP sent to email: $email via backend');
-
-      // Create temporary user object
-      final user = User(
-        email: email ?? '',
+    // Since we only verify email, delegate to signUpWithEmail if email is provided
+    if (email != null && password != null) {
+      return signUpWithEmail(
+        email: email,
+        password: password,
         username: username,
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
-        phoneVerified: false,
-        emailVerified: false,
         preferredLanguage: preferredLanguage,
-        createdAt: DateTime.now(),
       );
-
-      return user;
-    } on ApiException catch (e) {
-      debugPrint('API error during sign up: ${e.message}');
-      throw AuthException(AuthErrorCodes.serverError, 
-        details: 'Failed to send verification code: ${e.message}');
-    } catch (e) {
-      debugPrint('Sign up error: $e');
-      throw AuthException(AuthErrorCodes.serverError,
-        details: 'An unexpected error occurred: $e');
     }
+    
+    throw AuthException(AuthErrorCodes.invalidEmail,
+      details: 'Email is required for registration');
   }
 
   Future<bool> verifyEmailOTP({
@@ -231,30 +215,40 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     required String otp,
   }) async {
     try {
-      // In production, verify OTP with backend
-      if (otp.length != 6) {
+      // Verify OTP with backend (SendGrid sends 4-digit codes)
+      if (otp.length != 4) {
         throw AuthException(AuthErrorCodes.invalidOtpFormat);
       }
 
-      // Simulate OTP verification (in production, call backend)
       debugPrint('Verifying OTP: $otp for email: $email');
 
-      // Get temporary user
-      final tempUserJson = _inMemoryPrefs['temp_user_$email'];
-      if (tempUserJson == null) {
+      // Get registration data
+      final registrationDataJson = await _getString('registration_data_$email');
+      if (registrationDataJson == null) {
         throw AuthException(AuthErrorCodes.userNotFound);
       }
+
+      final regData = _jsonDecode(registrationDataJson);
+      
+      // Verify OTP with backend API
+      await _apiService.verifyOtp(email: email, otp: otp);
 
       // Update user with verified email
       final user = User(
         email: email,
+        username: regData['username'],
+        firstName: regData['firstName'],
+        lastName: regData['lastName'],
+        phoneNumber: regData['phoneNumber'],
         emailVerified: true,
+        phoneVerified: false,  // We don't verify phone numbers
+        preferredLanguage: regData['preferredLanguage'],
         createdAt: DateTime.now(),
       );
 
       // Save verified user
       await _saveUserToPrefs(user);
-      _inMemoryPrefs.remove('temp_user_$email');
+      await _removeString('registration_data_$email');
 
       return true;
     } catch (e) {
@@ -267,56 +261,38 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     required String phoneNumber,
     required String otp,
   }) async {
+    // Since we only verify email, find the email associated with this phone number
+    // and call verifyEmailOTP instead
     try {
-      // Get registration data using phone number to find associated email
-      final registrationDataJson = _inMemoryPrefs['registration_data_$phoneNumber'];
+      String? foundEmail;
       
-      if (registrationDataJson == null) {
+      final allKeys = _inMemoryPrefs.keys;
+      for (final key in allKeys) {
+        if (key.startsWith('registration_data_')) {
+          final dataJson = _inMemoryPrefs[key];
+          if (dataJson != null) {
+            try {
+              final data = _jsonDecode(dataJson);
+              if (data['phoneNumber'] == phoneNumber) {
+                foundEmail = data['email'];
+                break;
+              }
+            } catch (e) {
+              debugPrint('Error parsing registration data: $e');
+            }
+          }
+        }
+      }
+      
+      if (foundEmail == null) {
         throw AuthException(AuthErrorCodes.userNotFound,
           details: 'Registration data not found. Please start signup again.');
       }
 
-      final regData = _jsonDecode(registrationDataJson);
-      final email = regData['email'];
-      
-      // Backend OTP verification via API using email
-      await _apiService.verifyOtp(email: email, otp: otp);
-
-      debugPrint('OTP verified for: $email (phone: $phoneNumber)');
-
-      // Fetch the latest user data from backend and update local state
-      final userData = await _apiService.getUser();
-      final fetchedUser = User.fromJson(userData);
-
-      // Persist language, email and name from server response
-      final updatedUser = (_currentUser ?? fetchedUser).copyWith(
-        email: fetchedUser.email,
-        firstName: fetchedUser.firstName,
-        lastName: fetchedUser.lastName,
-        preferredLanguage: fetchedUser.preferredLanguage,
-        phoneNumber: fetchedUser.phoneNumber ?? phoneNumber,
-        emailVerified: fetchedUser.emailVerified,
-        phoneVerified: true,
-        role: fetchedUser.role,
-        id: fetchedUser.id,
-        profileImageUrl: fetchedUser.profileImageUrl,
-        gender: fetchedUser.gender,
-        dateOfBirth: fetchedUser.dateOfBirth,
-      );
-
-      await _saveUserToPrefs(updatedUser);
-      _inMemoryPrefs.remove('registration_data_$phoneNumber');
-
-      return true;
+      // Verify using email
+      return verifyEmailOTP(email: foundEmail, otp: otp);
     } catch (e) {
-      debugPrint('OTP verification error: $e');
-      if (e is ApiException) {
-        final msg = e.message.toLowerCase();
-        if (msg.contains('invalid') || msg.contains('verification')) {
-          throw AuthException(AuthErrorCodes.invalidOtpFormat);
-        }
-        throw AuthException(AuthErrorCodes.serverError, details: e.message);
-      }
+      debugPrint('Phone OTP verification error: $e');
       rethrow;
     }
   }
@@ -327,9 +303,30 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         throw AuthException(AuthErrorCodes.invalidEmail);
       }
 
-      debugPrint('Resending OTP to email: $email');
-      // In production, send OTP via email service
-      return true;
+      // Get registration data to resend OTP
+      final registrationDataJson = await _getString('registration_data_$email');
+      if (registrationDataJson != null) {
+        final regData = _jsonDecode(registrationDataJson);
+        
+        // Resend OTP via backend API
+        await _apiService.sendOtp(
+          email: email,
+          username: regData['username'],
+          firstName: regData['firstName'],
+          lastName: regData['lastName'],
+          password: regData['password'],
+          phoneNumber: regData['phoneNumber'],
+          languagePreference: regData['preferredLanguage'],
+        );
+        
+        debugPrint('OTP resent successfully to email: $email');
+        return true;
+      } else {
+        throw AuthException(
+          AuthErrorCodes.serverError,
+          details: 'Registration data not found. Please start signup again.',
+        );
+      }
     } catch (e) {
       debugPrint('Resend OTP error: $e');
       rethrow;
@@ -337,30 +334,34 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
   }
 
   Future<bool> resendPhoneOTP({required String phoneNumber}) async {
+    // Since we only verify email, find the email associated with this phone
     try {
       if (!_isValidPhoneNumber(phoneNumber)) {
         throw AuthException(AuthErrorCodes.invalidPhone);
       }
 
-      // Get registration data to resend OTP to email
-      final registrationDataJson = _inMemoryPrefs['registration_data_$phoneNumber'];
-      
-      if (registrationDataJson != null) {
-        final regData = _jsonDecode(registrationDataJson);
-        // Resend OTP via backend API to email
-        if (regData['email'] != null && regData['username'] != null && regData['firstName'] != null && regData['lastName'] != null && regData['password'] != null) {
-          await _apiService.sendOtp(
-            email: regData['email'],
-            username: regData['username'],
-            firstName: regData['firstName'],
-            lastName: regData['lastName'],
-            password: regData['password'],
-            phoneNumber: phoneNumber,
-            languagePreference: regData['preferredLanguage'],
-          );
+      // Find email from registration data
+      String? foundEmail;
+      final allKeys = _inMemoryPrefs.keys;
+      for (final key in allKeys) {
+        if (key.startsWith('registration_data_')) {
+          final dataJson = _inMemoryPrefs[key];
+          if (dataJson != null) {
+            try {
+              final data = _jsonDecode(dataJson);
+              if (data['phoneNumber'] == phoneNumber) {
+                foundEmail = data['email'];
+                break;
+              }
+            } catch (e) {
+              debugPrint('Error parsing registration data: $e');
+            }
+          }
         }
-        debugPrint('OTP resent successfully to email: ${regData['email']}');
-        return true;
+      }
+
+      if (foundEmail != null) {
+        return resendEmailOTP(email: foundEmail);
       } else {
         throw AuthException(
           AuthErrorCodes.serverError,
