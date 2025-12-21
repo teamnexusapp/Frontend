@@ -1296,7 +1296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {},
-                    child: Text(AppLocalizations.of(context)!.exploreCommunityGroups),
+                    child: const Text('Explore Community Groups'),
                   ),
                 ),
               ],
