@@ -577,7 +577,8 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
   Widget _buildOTPField(TextEditingController controller) {
