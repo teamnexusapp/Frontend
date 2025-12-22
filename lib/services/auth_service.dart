@@ -520,7 +520,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
 
   Future<void> signOut() async {
     try {
-      // Logout from API
+      // Logout from API (may fail if token was already cleared)
       await _apiService.logout();
     } catch (e) {
       debugPrint('Logout failed during sign out (continuing): $e');
@@ -529,15 +529,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       _inMemoryPrefs.remove('user');
       _authStateController.add(null);
       notifyListeners();
-    }
-    debugPrint('User signed out successfully');
-    } catch (e) {
-      debugPrint('Sign out error: $e');
-      // Clear local data even if API call fails
-      _currentUser = null;
-      _inMemoryPrefs.remove('user');
-      _authStateController.add(null);
-      notifyListeners();
+      debugPrint('User signed out successfully');
     }
   }
 
