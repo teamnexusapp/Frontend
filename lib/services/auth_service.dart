@@ -194,6 +194,10 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         throw AuthException(AuthErrorCodes.serverError,
           details: 'Validation failed: ${e.message}');
       }
+      if (e.statusCode == 500) {
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'Server error - the backend encountered an issue. Please try again later or contact support.');
+      }
       throw AuthException(AuthErrorCodes.serverError, 
         details: 'Server error (${e.statusCode}): ${e.message}');
     } catch (e) {
