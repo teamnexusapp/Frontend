@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" width="240" height="280">
+  <!-- Green curved logo shape -->
+  <g transform="translate(60, 50)">
+    <!-- Top curved swoosh -->
+    <path d="M 30 10 Q 50 0, 70 10 Q 80 15, 85 25 Q 75 20, 60 20 Q 45 20, 30 25 Z" fill="#2E683D" />
+    
+    <!-- Middle curved swoosh -->
+    <path d="M 20 30 Q 40 25, 60 35 Q 75 40, 85 50 Q 70 42, 50 40 Q 35 40, 20 45 Z" fill="#2E683D" />
+    
+    <!-- Bottom curved swoosh -->
+    <path d="M 10 55 Q 30 50, 50 60 Q 70 68, 80 80 Q 65 70, 45 65 Q 30 62, 15 70 Q 5 65, 10 55 Z" fill="#2E683D" />
+    
+    <!-- Circle at bottom left -->
+    <circle cx="25" cy="95" r="18" fill="#2E683D" />
+  </g>
+  
+  <!-- Text below logo -->
+  <text x="120" y="220" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#2E683D" text-anchor="middle">Ferti Path</text>
+</svg>

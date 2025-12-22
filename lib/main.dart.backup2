@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'config/feature_flags.dart';
 import 'firebase_options.dart';
-// import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart'; // TEMPORARILY DISABLED
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import 'services/auth_service.dart';
 
 import 'services/localization_provider.dart' as loc_provider;
@@ -88,9 +88,9 @@ class MyApp extends StatelessWidget {
             ),
             locale: localizationProvider.locale,
 
-            supportedLocales: [Locale('en')], // TEMPORARY: Default to English
+            supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: const [
-              // AppLocalizations.delegate, // TEMPORARILY DISABLED
+              AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,

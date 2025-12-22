@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme.dart';
+import 'package:nexus_fertility_app/theme.dart';
 import 'onboarding_5.dart';
 
 class Onboarding4 extends StatelessWidget {
