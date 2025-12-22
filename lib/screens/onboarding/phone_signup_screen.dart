@@ -477,7 +477,7 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'A verification code has been sent to your phone number. Please enter it to continue.',
+                  'A verification code has been sent to your email. Please enter it to continue.',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,

@@ -540,6 +540,20 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
   }
 
   Future<User?> getCurrentUser() async {
+    // If we have a token, fetch fresh user data from API
+    final token = await _apiService.getStoredToken();
+    if (token != null) {
+      try {
+        final profileData = await _apiService.getProfile();
+        final user = User.fromJson(profileData);
+        await _saveUserToPrefs(user);
+        return user;
+      } catch (e) {
+        debugPrint('Error fetching current user from API: $e');
+        // Return cached user if API call fails
+        return _currentUser;
+      }
+    }
     return _currentUser;
   }
 

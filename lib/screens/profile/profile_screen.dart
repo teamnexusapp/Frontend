@@ -16,6 +16,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool faithBasedContent = false;
   String selectedLanguage = 'English';
   String selectedTheme = 'Light';
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      // Fetch fresh user data from API
+      await authService.getCurrentUser();
+      
+      // Update preferences from user data
+      final user = authService.currentUser;
+      if (user != null) {
+        setState(() {
+          selectedLanguage = _getLanguageDisplayName(user.preferredLanguage ?? 'en');
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading profile: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  String _getLanguageDisplayName(String code) {
+    switch (code.toLowerCase()) {
+      case 'en': return 'English';
+      case 'ig': return 'Igbo';
+      case 'ha': return 'Hausa';
+      case 'yo': return 'Yoruba';
+      case 'fr': return 'French';
+      case 'pt': return 'Portuguese';
+      case 'es': return 'Spanish';
+      default: return 'English';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +94,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2D5A3A)),
+              ),
+            )
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -121,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${user?.firstName ?? 'Amaka'} ${user?.lastName ?? ''}',
+                        '${user?.firstName ?? 'User'} ${user?.lastName ?? ''}',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -130,10 +182,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        user?.email ?? 'amaka@example.com',
+                        user?.email ?? 'No email',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
+                                              if (user?.phoneNumber != null) ...[
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  user!.phoneNumber!,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey[500],
+                                                  ),
+                                                ),
+                                              ],
                         ),
                       ),
                     ],
