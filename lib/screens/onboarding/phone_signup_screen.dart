@@ -16,6 +16,7 @@ class PhoneSignupScreen extends StatefulWidget {
 class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -28,6 +29,7 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
   void dispose() {
     _fullNameController.dispose();
     _emailController.dispose();
+    _usernameController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -57,8 +59,8 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
     final firstName = nameParts.first;
     final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : nameParts.first;
 
-    // Generate username from email (part before @)
-    final username = _emailController.text.split('@').first;
+    // Use provided username
+    final username = _usernameController.text.trim();
 
     // Register and send OTP before showing modal
     try {
@@ -164,6 +166,14 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
                     label: 'Email',
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 5),
+
+                  // Username Field
+                  _buildInputField(
+                    label: 'Username',
+                    controller: _usernameController,
+                    keyboardType: TextInputType.text,
                   ),
                   const SizedBox(height: 5),
 

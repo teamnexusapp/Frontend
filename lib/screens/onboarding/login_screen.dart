@@ -13,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -54,11 +54,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Email Field
+                  // Username Field
                   _buildInputField(
-                    label: 'Email',
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
+                    label: 'Username',
+                    controller: _usernameController,
+                    keyboardType: TextInputType.text,
                   ),
                   const SizedBox(height: 5),
 
@@ -362,9 +362,9 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
       
-      // The API accepts username or email. Users register with email.
+      // The API accepts username or email. Users now enter username.
       await authService.signIn(
-        email: _emailController.text.trim(),
+        email: _usernameController.text.trim(),
         password: _passwordController.text,
       );
 
