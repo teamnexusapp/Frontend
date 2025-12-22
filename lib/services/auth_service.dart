@@ -141,8 +141,9 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       debugPrint('Sending OTP for email: $email, username: $username, phone: $phoneNumber');
       
       // Send OTP via backend API
+      Map<String, dynamic> otpResponse;
       try {
-        await _apiService.sendOtp(
+        otpResponse = await _apiService.sendOtp(
           email: email,
           username: username,
           firstName: firstName,
@@ -152,6 +153,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
           languagePreference: preferredLanguage,
         );
         debugPrint('OTP sent successfully to email: $email');
+        debugPrint('OTP Response: $otpResponse');
       } catch (e) {
         debugPrint('Failed to send OTP: $e');
         rethrow;
@@ -179,6 +181,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         'password': password,
         'phoneNumber': phoneNumber,
         'preferredLanguage': preferredLanguage,
+        'verification_id': otpResponse['verification_id'],
       }));
 
       debugPrint('OTP sent to email $email for user with phone $phoneNumber');
@@ -264,10 +267,21 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
 
       debugPrint('Found registration data for email: $email');
       final regData = _jsonDecode(registrationDataJson);
+      final verificationId = regData['verification_id'];
+      
+      if (verificationId == null) {
+        debugPrint('No verification_id found in registration data');
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'Verification ID not found. Please register again.');
+      }
       
       // Verify OTP with backend API
-      debugPrint('Calling backend API to verify OTP...');
-      await _apiService.verifyOtp(email: email, otp: otp);
+      debugPrint('Calling backend API to verify OTP with verification_id: $verificationId');
+      await _apiService.verifyOtp(
+        email: email, 
+        otp: otp,
+        verificationId: verificationId,
+      );
       debugPrint('Backend verification successful');
 
       // Update user with verified email

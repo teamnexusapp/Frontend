@@ -169,19 +169,24 @@ class ApiService {
   Future<Map<String, dynamic>> verifyOtp({
     required String email,
     required String otp,
+    required String verificationId,
   }) async {
     try {
       final headers = await _getHeaders();
       final url = Uri.parse('$baseUrl/auth/verify-otp');
       debugPrint('Verifying OTP request to: $url');
       
+      final requestBody = {
+        'verification_id': verificationId,
+        'otp_code': otp,
+      };
+      
+      debugPrint('Verify OTP request body: ${jsonEncode(requestBody)}');
+      
       final response = await http.post(
         url,
         headers: headers,
-        body: jsonEncode({
-          'email': email,
-          'otp': otp,
-        }),
+        body: jsonEncode(requestBody),
       ).timeout(
         const Duration(seconds: 45),
         onTimeout: () {

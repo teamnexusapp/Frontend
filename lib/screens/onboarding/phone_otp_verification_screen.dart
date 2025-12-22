@@ -229,10 +229,10 @@ class _PhoneOTPVerificationScreenState
   Future<void> _handleVerification() async {
     final otp = _otpControllers.map((e) => e.text).join();
 
-    if (otp.length != 6) {
+    if (otp.length != 4) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.enterAll6Digits),
+        const SnackBar(
+          content: Text('Please enter all 4 digits'),
           backgroundColor: Colors.red,
         ),
       );
