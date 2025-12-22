@@ -522,13 +522,15 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     try {
       // Logout from API
       await _apiService.logout();
-      
+    } catch (e) {
+      debugPrint('Logout failed during sign out (continuing): $e');
+    } finally {
       _currentUser = null;
       _inMemoryPrefs.remove('user');
       _authStateController.add(null);
       notifyListeners();
-      
-      debugPrint('User signed out successfully');
+    }
+    debugPrint('User signed out successfully');
     } catch (e) {
       debugPrint('Sign out error: $e');
       // Clear local data even if API call fails

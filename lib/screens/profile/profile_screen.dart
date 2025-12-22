@@ -186,18 +186,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
-                                              if (user?.phoneNumber != null) ...[
-                                                const SizedBox(height: 2),
-                                                Text(
-                                                  user!.phoneNumber!,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey[500],
-                                                  ),
-                                                ),
-                                              ],
                         ),
                       ),
+                      if (user?.phoneNumber != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          user!.phoneNumber!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
