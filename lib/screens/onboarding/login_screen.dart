@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'phone_signup_screen.dart';
 import 'forget_password_flow.dart';
+import 'onboarding_screens.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 30),
 
-<<<<<<< HEAD
                   // Ferti Path Logo
                   SizedBox(
                     height: 60,
@@ -48,8 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
-=======
->>>>>>> team/main
                   // Login Title
                   const Text(
                     'Login',
@@ -355,7 +353,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     // TODO: Wire up authentication flow
-    // For now, navigate to home screen
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+    // After successful login, show onboarding screens immediately
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const OnboardingScreens()),
+    );
   }
 }
