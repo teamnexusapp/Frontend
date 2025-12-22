@@ -482,33 +482,13 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     required String password,
   }) async {
     try {
-      // First attempt: use email (backend may accept email as username)
+      // Login with email address
       Map<String, dynamic>? response;
-      try {
-        response = await _apiService.login(
-          username: email,
-          password: password,
-        );
-        debugPrint('User logged in with email: $email');
-      } on ApiException catch (e) {
-        final isInvalidCred = e.statusCode == 401 ||
-            e.message.toLowerCase().contains('credentials');
-        final hasAt = email.contains('@');
-        final altUsername = hasAt ? email.split('@').first : null;
-
-        // Retry with username (local-part) if email login failed with invalid credentials
-        if (isInvalidCred && altUsername != null && altUsername.isNotEmpty) {
-          debugPrint('Email login failed with 401; retrying with username: $altUsername');
-          response = await _apiService.login(
-            username: altUsername,
-            password: password,
-          );
-          debugPrint('User logged in with username: $altUsername');
-        } else {
-          // Re-throw to outer handler
-          throw e;
-        }
-      }
+      response = await _apiService.login(
+        email: email,
+        password: password,
+      );
+      debugPrint('User logged in with email: $email');
 
       // Fetch user profile after login
       final profileData = await _apiService.getProfile();

@@ -216,15 +216,15 @@ class ApiService {
 
   // Login (with retry logic for server wake-up)
   Future<Map<String, dynamic>> login({
-    required String username,
+    required String email,
     required String password,
     int retryCount = 0,
   }) async {
     try {
-      debugPrint('Login attempt ${retryCount + 1} for user: $username');
+      debugPrint('Login attempt ${retryCount + 1} for user: $email');
       
       final body = {
-        'username': username,
+        'username': email,
         'password': password,
         'grant_type': 'password',
       };
@@ -255,7 +255,7 @@ class ApiService {
         debugPrint('Server error during login, retrying in 5 seconds...');
         await Future.delayed(const Duration(seconds: 5));
         return login(
-          username: username,
+          email: email,
           password: password,
           retryCount: retryCount + 1,
         );
@@ -270,7 +270,7 @@ class ApiService {
         debugPrint('Login timeout, retrying in 5 seconds...');
         await Future.delayed(const Duration(seconds: 5));
         return login(
-          username: username,
+          email: email,
           password: password,
           retryCount: retryCount + 1,
         );
