@@ -223,20 +223,18 @@ class ApiService {
     try {
       debugPrint('Login attempt ${retryCount + 1} for user: $email');
       
+      final headers = await _getHeaders();
       final body = {
-        'username': email,
+        'email': email,
         'password': password,
-        'grant_type': 'password',
       };
       
-      debugPrint('Login request body: $body');
+      debugPrint('Login request body: ${jsonEncode(body)}');
       
       final response = await http.post(
         Uri.parse('$baseUrl/auth/token'),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: body,
+        headers: headers,
+        body: jsonEncode(body),
       ).timeout(
         const Duration(seconds: 45),
       );
