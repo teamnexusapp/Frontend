@@ -37,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 30),
 
+<<<<<<< HEAD
                   // Ferti Path Logo
                   SizedBox(
                     height: 60,
@@ -47,6 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
+=======
+>>>>>>> team/main
                   // Login Title
                   const Text(
                     'Login',

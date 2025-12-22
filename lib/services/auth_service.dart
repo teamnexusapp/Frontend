@@ -118,17 +118,30 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     try {
       // Validate email format
       if (!_isValidEmail(email)) {
+        debugPrint('Invalid email format: $email');
         throw AuthException(AuthErrorCodes.invalidEmail);
       }
 
       // Validate password strength
       if (password.length < 8) {
+        debugPrint('Password too short: ${password.length} characters');
         throw AuthException(AuthErrorCodes.passwordTooShort);
       }
 
-      // Optionally send OTP via API when full details are provided
-      // Send OTP via backend if enough data is provided
-      if (username != null && firstName != null && lastName != null && phoneNumber != null) {
+      // Validate required fields for OTP
+        if (username == null || username.isEmpty || 
+          firstName == null || firstName.isEmpty || 
+          lastName == null || lastName.isEmpty || 
+          phoneNumber == null || phoneNumber.isEmpty) {
+        debugPrint('Missing required fields - username: $username, firstName: $firstName, lastName: $lastName, phone: $phoneNumber');
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'All fields are required for registration');
+      }
+
+      debugPrint('Sending OTP for email: $email, username: $username, phone: $phoneNumber');
+      
+      // Send OTP via backend API
+      try {
         await _apiService.sendOtp(
           email: email,
           username: username,
@@ -138,6 +151,10 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
           phoneNumber: phoneNumber,
           languagePreference: preferredLanguage,
         );
+        debugPrint('OTP sent successfully to email: $email');
+      } catch (e) {
+        debugPrint('Failed to send OTP: $e');
+        rethrow;
       }
 
       // Create temporary user object for local tracking
@@ -168,11 +185,24 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
 
       return user;
     } on ApiException catch (e) {
-      debugPrint('API sign up error: ${e.message}');
+      debugPrint('API sign up error: Status ${e.statusCode}, Message: ${e.message}');
       if (e.message.toLowerCase().contains('already')) {
-        throw AuthException(AuthErrorCodes.emailAlreadyRegistered);
+        throw AuthException(AuthErrorCodes.emailAlreadyRegistered,
+          details: 'This email is already registered');
       }
-      throw AuthException(AuthErrorCodes.serverError, details: e.message);
+      if (e.statusCode == 422) {
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'Validation failed: ${e.message}');
+      }
+      if (e.statusCode >= 500) {
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'The backend server is temporarily unavailable. This may be because the server is starting up (this can take up to 30 seconds). Please wait a moment and try again.');
+      }
+      throw AuthException(AuthErrorCodes.serverError, 
+        details: 'Server error (${e.statusCode}): ${e.message}');
+    } on TimeoutException {
+      throw AuthException(AuthErrorCodes.serverError,
+        details: 'The server took too long to respond. It may be starting up. Please wait 30 seconds and try again.');
     } catch (e) {
       debugPrint('Sign up error: $e');
       rethrow;
@@ -217,6 +247,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     try {
       // Verify OTP with backend (SendGrid sends 4-digit codes)
       if (otp.length != 4) {
+        debugPrint('Invalid OTP length: ${otp.length}, expected 4');
         throw AuthException(AuthErrorCodes.invalidOtpFormat);
       }
 
@@ -225,13 +256,19 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       // Get registration data
       final registrationDataJson = await _getString('registration_data_$email');
       if (registrationDataJson == null) {
-        throw AuthException(AuthErrorCodes.userNotFound);
+        debugPrint('No registration data found for email: $email');
+        debugPrint('Available keys: ${_inMemoryPrefs.keys.toList()}');
+        throw AuthException(AuthErrorCodes.userNotFound,
+          details: 'Registration data not found. Please register again.');
       }
 
+      debugPrint('Found registration data for email: $email');
       final regData = _jsonDecode(registrationDataJson);
       
       // Verify OTP with backend API
+      debugPrint('Calling backend API to verify OTP...');
       await _apiService.verifyOtp(email: email, otp: otp);
+      debugPrint('Backend verification successful');
 
       // Update user with verified email
       final user = User(
@@ -251,8 +288,20 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       await _removeString('registration_data_$email');
 
       return true;
+    } on ApiException catch (e) {
+      debugPrint('API OTP verification error: ${e.message} (Status: ${e.statusCode})');
+      if (e.statusCode == 400 || e.message.toLowerCase().contains('invalid')) {
+        throw AuthException(AuthErrorCodes.invalidOtpFormat,
+          details: 'Invalid OTP code. Please check and try again.');
+      } else if (e.statusCode == 404) {
+        throw AuthException(AuthErrorCodes.userNotFound,
+          details: 'User not found. Please register again.');
+      } else {
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'Server error: ${e.message}');
+      }
     } catch (e) {
-      debugPrint('OTP verification error: $e');
+      debugPrint('Unexpected OTP verification error: $e');
       rethrow;
     }
   }
@@ -285,15 +334,21 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       }
       
       if (foundEmail == null) {
+        debugPrint('No email found for phone: $phoneNumber');
+        debugPrint('Available registration data: ${_inMemoryPrefs.keys.toList()}');
         throw AuthException(AuthErrorCodes.userNotFound,
           details: 'Registration data not found. Please start signup again.');
       }
 
+      debugPrint('Found email $foundEmail for phone $phoneNumber, verifying...');
       // Verify using email
       return verifyEmailOTP(email: foundEmail, otp: otp);
-    } catch (e) {
-      debugPrint('Phone OTP verification error: $e');
+    } on AuthException {
       rethrow;
+    } catch (e) {
+      debugPrint('Unexpected phone OTP verification error: $e');
+      throw AuthException(AuthErrorCodes.serverError,
+        details: 'Verification failed: ${e.toString()}');
     }
   }
 
@@ -407,6 +462,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     }
   }
 
+  @override
   Future<User?> signIn({
     required String email,
     required String password,
@@ -434,8 +490,14 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         throw AuthException(AuthErrorCodes.invalidCredentials);
       } else if (e.message.toLowerCase().contains('not found')) {
         throw AuthException(AuthErrorCodes.userNotFound);
+      } else if (e.statusCode >= 500) {
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'The backend server is temporarily unavailable. This may be because the server is starting up (this can take up to 30 seconds). Please wait a moment and try again.');
       }
       throw AuthException(AuthErrorCodes.serverError, details: e.message);
+    } on TimeoutException {
+      throw AuthException(AuthErrorCodes.serverError,
+        details: 'The server took too long to respond. It may be starting up. Please wait 30 seconds and try again.');
     } catch (e) {
       debugPrint('Sign in error: $e');
       rethrow;

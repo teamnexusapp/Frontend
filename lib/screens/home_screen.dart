@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 // import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart'; // TEMPORARILY DISABLED
 import 'profile/profile_screen.dart';
+=======
+import 'package:provider/provider.dart';
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import '../services/auth_service.dart';
+import 'profile/profile_screen.dart';
+import 'support/support_screen.dart';
+>>>>>>> team/main
 import 'tracking/log_symptom_screen.dart';
 
 
@@ -114,11 +122,19 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
+<<<<<<< HEAD
             label: _selectedIndex == 0 ? 'Home' : '',
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.school),
             label: _selectedIndex == 1 ? 'Learn' : '',
+=======
+            label: _selectedIndex == 0 ? AppLocalizations.of(context)!.home : '',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.school),
+            label: _selectedIndex == 1 ? AppLocalizations.of(context)!.learn : '',
+>>>>>>> team/main
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.timeline),
@@ -447,7 +463,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
+<<<<<<< HEAD
                           'Logged Symptoms',
+=======
+                          AppLocalizations.of(context)!.loggedSymptoms,
+>>>>>>> team/main
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -456,11 +476,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
+<<<<<<< HEAD
                       _buildLoggedSymptomItem('Bleeding', 7),
                       _buildLoggedSymptomItem('Mood', 14),
                       _buildLoggedSymptomItem('Cervical Mucus', 21),
                       _buildLoggedSymptomItem('Pain', 28),
                       _buildLoggedSymptomItem('Notes', 30),
+=======
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.bleeding, 7),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.mood, 14),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.cervicalMucus, 21),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.pain, 28),
+                      _buildLoggedSymptomItem(AppLocalizations.of(context)!.notes, 30),
+>>>>>>> team/main
                     ],
                   ),
                 ),

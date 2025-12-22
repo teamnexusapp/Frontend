@@ -34,7 +34,11 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
     super.dispose();
   }
 
+<<<<<<< HEAD
   void _showVerifyModal() {
+=======
+  void _showVerifyModal() async {
+>>>>>>> team/main
     // Validate form first
     if (!_formKey.currentState!.validate()) {
       return;
@@ -49,11 +53,17 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
 
     // Get the selected language from LocalizationProvider
     final localizationProvider = context.read<loc_provider.LocalizationProvider>();
+<<<<<<< HEAD
     final selectedLanguage = localizationProvider.selectedLanguageCode ?? 'en';
+=======
+    final selectedLanguage =
+        (localizationProvider.selectedLanguageCode ?? 'en').toLowerCase();
+>>>>>>> team/main
 
     // Parse full name into first and last name
     final nameParts = _fullNameController.text.trim().split(' ');
     final firstName = nameParts.first;
+<<<<<<< HEAD
     final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
     final otp1Controller = TextEditingController();
@@ -79,6 +89,75 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
         );
       },
     );
+=======
+    final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : nameParts.first;
+
+    // Generate username from email (part before @)
+    final username = _emailController.text.split('@').first;
+
+    // Register and send OTP before showing modal
+    try {
+      final authService = context.read<AuthService>();
+      
+      // Show loading indicator
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sending verification code...'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      await authService.signUpWithPhone(
+        phoneNumber: _phoneController.text.trim(),
+        email: _emailController.text.trim(),
+        username: username.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        password: _passwordController.text,
+        preferredLanguage: selectedLanguage,
+      );
+
+      if (!mounted) return;
+
+      // OTP sent successfully, show verification modal
+      final otp1Controller = TextEditingController();
+      final otp2Controller = TextEditingController();
+      final otp3Controller = TextEditingController();
+      final otp4Controller = TextEditingController();
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return _VerifyModalContent(
+            otp1Controller: otp1Controller,
+            otp2Controller: otp2Controller,
+            otp3Controller: otp3Controller,
+            otp4Controller: otp4Controller,
+            phoneNumber: _phoneController.text,
+            email: _emailController.text,
+            firstName: firstName,
+            lastName: lastName,
+            password: _passwordController.text,
+            selectedLanguage: selectedLanguage,
+          );
+        },
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to send verification code: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    }
+
+>>>>>>> team/main
   }
 
   @override
@@ -502,6 +581,7 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
 
                       if (otp.length == 4) {
                         try {
+<<<<<<< HEAD
                           // Call auth service to register with phone
                           final authService = context.read<AuthService>();
                           
@@ -519,6 +599,11 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                           );
 
                           // Verify OTP
+=======
+                          // Verify OTP (signup was already called when modal opened)
+                          final authService = context.read<AuthService>();
+                          
+>>>>>>> team/main
                           await authService.verifyPhoneOTP(
                             phoneNumber: widget.phoneNumber,
                             otp: otp,

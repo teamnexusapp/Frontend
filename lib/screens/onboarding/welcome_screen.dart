@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 // import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart'; // TEMPORARILY DISABLED
+=======
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+>>>>>>> team/main
 import 'language_selection_screen.dart';
 import 'login_screen.dart';
 

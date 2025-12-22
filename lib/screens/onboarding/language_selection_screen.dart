@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+<<<<<<< HEAD
 // import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart'; // TEMPORARILY DISABLED
+=======
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+>>>>>>> team/main
 import '../../services/localization_provider.dart' as loc_provider;
 import 'onboarding_screens.dart';
 
@@ -28,7 +32,11 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   Future<void> _handleNext(BuildContext context) async {
     if (_selectedCode == null) {
       ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< HEAD
         SnackBar(content: Text('Select an option')),
+=======
+        SnackBar(content: Text(AppLocalizations.of(context)!.selectOption)),
+>>>>>>> team/main
       );
       return;
     }

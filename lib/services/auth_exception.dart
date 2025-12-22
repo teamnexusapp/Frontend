@@ -6,7 +6,7 @@ class AuthException implements Exception {
   AuthException(this.code, {this.details});
 
   @override
-  String toString() => code;
+  String toString() => details != null ? '$code: $details' : code;
 }
 
 // Auth error codes
