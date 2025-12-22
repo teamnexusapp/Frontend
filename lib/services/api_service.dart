@@ -109,9 +109,9 @@ class ApiService {
         headers: headers,
         body: jsonEncode(requestBody),
       ).timeout(
-        const Duration(seconds: 45),
+        const Duration(seconds: 60),
         onTimeout: () {
-          throw TimeoutException('OTP request timed out after 45 seconds');
+          throw TimeoutException('OTP request timed out after 60 seconds');
         },
       );
 
@@ -183,9 +183,9 @@ class ApiService {
           'otp': otp,
         }),
       ).timeout(
-        const Duration(seconds: 30),
+        const Duration(seconds: 45),
         onTimeout: () {
-          throw TimeoutException('OTP verification request timed out after 30 seconds');
+          throw TimeoutException('OTP verification request timed out after 45 seconds');
         },
       );
 
