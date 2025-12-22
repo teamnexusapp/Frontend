@@ -75,11 +75,11 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
       }
 
       await authService.signUpWithPhone(
-        phoneNumber: _phoneController.text,
-        email: _emailController.text,
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
+        phoneNumber: _phoneController.text.trim(),
+        email: _emailController.text.trim(),
+        username: username.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         password: _passwordController.text,
         preferredLanguage: selectedLanguage,
       );

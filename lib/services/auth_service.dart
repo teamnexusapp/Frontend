@@ -194,12 +194,15 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         throw AuthException(AuthErrorCodes.serverError,
           details: 'Validation failed: ${e.message}');
       }
-      if (e.statusCode == 500) {
+      if (e.statusCode >= 500) {
         throw AuthException(AuthErrorCodes.serverError,
-          details: 'Server error - the backend encountered an issue. Please try again later or contact support.');
+          details: 'The backend server is temporarily unavailable. This may be because the server is starting up (this can take up to 30 seconds). Please wait a moment and try again.');
       }
       throw AuthException(AuthErrorCodes.serverError, 
         details: 'Server error (${e.statusCode}): ${e.message}');
+    } on TimeoutException {
+      throw AuthException(AuthErrorCodes.serverError,
+        details: 'The server took too long to respond. It may be starting up. Please wait 30 seconds and try again.');
     } catch (e) {
       debugPrint('Sign up error: $e');
       rethrow;
@@ -459,6 +462,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     }
   }
 
+  @override
   Future<User?> signIn({
     required String email,
     required String password,
@@ -486,8 +490,14 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         throw AuthException(AuthErrorCodes.invalidCredentials);
       } else if (e.message.toLowerCase().contains('not found')) {
         throw AuthException(AuthErrorCodes.userNotFound);
+      } else if (e.statusCode >= 500) {
+        throw AuthException(AuthErrorCodes.serverError,
+          details: 'The backend server is temporarily unavailable. This may be because the server is starting up (this can take up to 30 seconds). Please wait a moment and try again.');
       }
       throw AuthException(AuthErrorCodes.serverError, details: e.message);
+    } on TimeoutException {
+      throw AuthException(AuthErrorCodes.serverError,
+        details: 'The server took too long to respond. It may be starting up. Please wait 30 seconds and try again.');
     } catch (e) {
       debugPrint('Sign in error: $e');
       rethrow;

@@ -74,7 +74,7 @@ class ApiService {
     return headers;
   }
 
-  // Send OTP and Registration
+  // Send OTP and Registration (with retry logic for server wake-up)
   Future<Map<String, dynamic>> sendOtp({
     required String email,
     required String username,
@@ -84,6 +84,7 @@ class ApiService {
     required String phoneNumber,
     String? languagePreference,
     String? role,
+    int retryCount = 0,
   }) async {
     try {
       final headers = await _getHeaders();
@@ -100,7 +101,7 @@ class ApiService {
           'role': 'user',
         };
       
-      debugPrint('Sending OTP request to: $url');
+      debugPrint('Sending OTP request to: $url (attempt ${retryCount + 1})');
         debugPrint('Request body: ${jsonEncode(requestBody)}');
       
       final response = await http.post(
@@ -108,9 +109,9 @@ class ApiService {
         headers: headers,
         body: jsonEncode(requestBody),
       ).timeout(
-        const Duration(seconds: 30),
+        const Duration(seconds: 45),
         onTimeout: () {
-          throw TimeoutException('OTP request timed out after 30 seconds');
+          throw TimeoutException('OTP request timed out after 45 seconds');
         },
       );
 
@@ -119,6 +120,21 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
+      } else if (response.statusCode >= 500 && retryCount < 2) {
+        // Backend might be waking up (Render free tier), retry after delay
+        debugPrint('Server error, retrying in 5 seconds...');
+        await Future.delayed(const Duration(seconds: 5));
+        return sendOtp(
+          email: email,
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          phoneNumber: phoneNumber,
+          languagePreference: languagePreference,
+          role: role,
+          retryCount: retryCount + 1,
+        );
       } else {
         throw ApiException(
           statusCode: response.statusCode,
@@ -126,6 +142,21 @@ class ApiService {
         );
       }
     } on TimeoutException catch (e) {
+      if (retryCount < 2) {
+        debugPrint('Timeout, retrying in 5 seconds...');
+        await Future.delayed(const Duration(seconds: 5));
+        return sendOtp(
+          email: email,
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          phoneNumber: phoneNumber,
+          languagePreference: languagePreference,
+          role: role,
+          retryCount: retryCount + 1,
+        );
+      }
       debugPrint('Send OTP timeout error: $e');
       rethrow;
     } catch (e) {
@@ -178,12 +209,15 @@ class ApiService {
     }
   }
 
-  // Login
+  // Login (with retry logic for server wake-up)
   Future<Map<String, dynamic>> login({
     required String username,
     required String password,
+    int retryCount = 0,
   }) async {
     try {
+      debugPrint('Login attempt ${retryCount + 1} for user: $username');
+      
       final response = await http.post(
         Uri.parse('$baseUrl/auth/token'),
         headers: {
@@ -194,6 +228,8 @@ class ApiService {
           'password': password,
           'grant_type': 'password',
         },
+      ).timeout(
+        const Duration(seconds: 45),
       );
 
       debugPrint('Login Response: ${response.statusCode}');
@@ -205,12 +241,32 @@ class ApiService {
           await saveToken(data['access_token']);
         }
         return data;
+      } else if (response.statusCode >= 500 && retryCount < 2) {
+        // Backend might be waking up (Render free tier), retry after delay
+        debugPrint('Server error during login, retrying in 5 seconds...');
+        await Future.delayed(const Duration(seconds: 5));
+        return login(
+          username: username,
+          password: password,
+          retryCount: retryCount + 1,
+        );
       } else {
         throw ApiException(
           statusCode: response.statusCode,
           message: _extractErrorMessage(response),
         );
       }
+    } on TimeoutException {
+      if (retryCount < 2) {
+        debugPrint('Login timeout, retrying in 5 seconds...');
+        await Future.delayed(const Duration(seconds: 5));
+        return login(
+          username: username,
+          password: password,
+          retryCount: retryCount + 1,
+        );
+      }
+      rethrow;
     } catch (e) {
       debugPrint('Login error: $e');
       rethrow;
