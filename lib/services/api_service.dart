@@ -273,6 +273,11 @@ class ApiService {
             await saveToken(data['access_token']);
           }
           return data;
+        } else {
+          throw ApiException(
+            statusCode: response.statusCode,
+            message: _extractErrorMessage(response),
+          );
         }
       } else if (response.statusCode >= 500 && retryCount < 2) {
         // Backend might be waking up (Render free tier), retry after delay
