@@ -252,10 +252,35 @@ class ApiService {
           await saveToken(data['access_token']);
         }
         return data;
-      } else if ((response.statusCode == 404 || response.statusCode == 422) && retryCount == 0) {
+      } else if (retryCount == 0) {
+        // Many FastAPI OAuth2 setups expect x-www-form-urlencoded with 'username' and 'password'
+        final formHeaders = {
+          ...headers,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        };
+        final formBody = 'username=' + Uri.encodeQueryComponent(email) +
+            '&password=' + Uri.encodeQueryComponent(password);
+        debugPrint('Primary login failed (${response.statusCode}). Trying form-encoded to /auth/token');
+        response = await http.post(
+          primaryUrl,
+          headers: formHeaders,
+          body: formBody,
+        ).timeout(const Duration(seconds: 45));
+
+        debugPrint('Form Login Response: ${response.statusCode}');
+        debugPrint('Form Login Body: ${response.body}');
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          if (data['access_token'] != null) {
+            await saveToken(data['access_token']);
+          }
+          return data;
+        }
+
         // Some backends expose a JSON login at /auth/login instead of /auth/token
         final altUrl = Uri.parse('$baseUrl/auth/login');
-        debugPrint('Primary login failed (${response.statusCode}). Trying alternate URL: $altUrl');
+        debugPrint('Form login failed (${response.statusCode}). Trying alternate URL: $altUrl');
         response = await http.post(
           altUrl,
           headers: headers,
@@ -439,7 +464,33 @@ class ApiService {
       debugPrint('Get Profile Response: ${response.statusCode}');
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        final data = jsonDecode(response.body);
+        // If email is missing or empty, fall back to the more complete get_user endpoint
+        try {
+          final map = (data is Map<String, dynamic>)
+              ? data
+              : (data is Map ? Map<String, dynamic>.from(data) : <String, dynamic>{});
+          var candidate = map;
+          if (candidate['data'] is Map<String, dynamic>) {
+            candidate = Map<String, dynamic>.from(candidate['data']);
+          }
+          if (candidate['user'] is Map<String, dynamic>) {
+            candidate = {...candidate, ...Map<String, dynamic>.from(candidate['user'])};
+          }
+          final email = candidate['email'] ?? candidate['email_address'];
+          if (email is! String || email.trim().isEmpty) {
+            debugPrint('Profile missing email; fetching from /user/get_user');
+            final fullUser = await getUser();
+            return fullUser;
+          }
+        } catch (e) {
+          debugPrint('Profile parsing error, attempting fallback get_user: $e');
+          try {
+            final fullUser = await getUser();
+            return fullUser;
+          } catch (_) {}
+        }
+        return data;
       } else {
         throw ApiException(
           statusCode: response.statusCode,

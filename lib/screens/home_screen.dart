@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../models/user.dart';
@@ -22,6 +23,48 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showSideMenu = false;
   Set<DateTime> _selectedCalendarDays = {};
   String _currentAffirmation = "Every challenge is an opportunity to grow stronger and wiser.";
+  
+  // Calendar collapse state
+  final ScrollController _calendarScrollController = ScrollController();
+  bool _isCalendarCollapsed = false;
+  double _lastScrollOffset = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _calendarScrollController.addListener(_onCalendarScroll);
+  }
+
+  @override
+  void dispose() {
+    _calendarScrollController.removeListener(_onCalendarScroll);
+    _calendarScrollController.dispose();
+    super.dispose();
+  }
+
+  void _onCalendarScroll() {
+    final currentOffset = _calendarScrollController.offset;
+    
+    // Only collapse/expand if scrolled more than 10 pixels
+    if ((currentOffset - _lastScrollOffset).abs() > 10) {
+      if (currentOffset > _lastScrollOffset && currentOffset > 50) {
+        // Scrolling down - collapse
+        if (!_isCalendarCollapsed) {
+          setState(() {
+            _isCalendarCollapsed = true;
+          });
+        }
+      } else if (currentOffset < _lastScrollOffset) {
+        // Scrolling up - expand
+        if (_isCalendarCollapsed) {
+          setState(() {
+            _isCalendarCollapsed = false;
+          });
+        }
+      }
+      _lastScrollOffset = currentOffset;
+    }
+  }
 
   void _toggleSideMenu() {
     setState(() {
@@ -550,31 +593,68 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Back arrow
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedIndex = 0; // Navigate to home
-                      });
-                    },
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 28,
-                    ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              height: _isCalendarCollapsed ? 80 : null,
+              child: SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Back arrow
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 0; // Navigate to home
+                          });
+                        },
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      if (!_isCalendarCollapsed) ...[
+                        const SizedBox(height: 10),
+                        SwipeableGreenCalendar(
+                          initialMonth: DateTime.now(),
+                          selectedDates: _selectedCalendarDays,
+                          onDateToggle: _toggleCalendarDate,
+                        ),
+                      ] else ...[
+                        const SizedBox(height: 8),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isCalendarCollapsed = false;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                DateFormat('MMMM yyyy').format(DateTime.now()),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.expand_more,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  SwipeableGreenCalendar(
-                    initialMonth: DateTime.now(),
-                    selectedDates: _selectedCalendarDays,
-                    onDateToggle: _toggleCalendarDate,
-                  ),
-                ],
+                ),
               ),
             ),
             Expanded(
@@ -587,6 +667,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 child: SingleChildScrollView(
+                  controller: _calendarScrollController,
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
@@ -794,8 +875,71 @@ class _HomeScreenState extends State<HomeScreen> {
     final filters = ['Fertility basics', 'Myths & Facts', 'Trying to conceive'];
     int activeFilter = 0;
 
+    // Sample articles data with categories
+    final allArticles = [
+      {
+        'category': 'Fertility basics',
+        'title': "Infertility isn't a curse",
+        'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'duration': '5 minutes read',
+      },
+      {
+        'category': 'Fertility basics',
+        'title': 'Understanding Your Fertility Cycle',
+        'description': 'Learn the phases of your cycle and what happens each day. Understanding your body is the first step to fertility awareness.',
+        'duration': '4 minutes read',
+      },
+      {
+        'category': 'Fertility basics',
+        'title': 'The Role of Hormones',
+        'description': 'Discover how hormones regulate your fertility and reproductive health throughout your cycle.',
+        'duration': '6 minutes read',
+      },
+      {
+        'category': 'Myths & Facts',
+        'title': 'Debunking Common Fertility Myths',
+        'description': 'Separating fact from fiction in fertility. Learn the truth about common misconceptions.',
+        'duration': '5 minutes read',
+      },
+      {
+        'category': 'Myths & Facts',
+        'title': 'Age and Fertility: What You Need to Know',
+        'description': 'Understanding the relationship between age and fertility without the fear and stigma.',
+        'duration': '7 minutes read',
+      },
+      {
+        'category': 'Myths & Facts',
+        'title': 'Stress and Conception',
+        'description': 'Does stress really affect fertility? Get the facts about stress, relaxation, and conception.',
+        'duration': '4 minutes read',
+      },
+      {
+        'category': 'Trying to conceive',
+        'title': 'Optimize Your Chances',
+        'description': 'Best practices for couples trying to conceive. Practical tips for your journey.',
+        'duration': '8 minutes read',
+      },
+      {
+        'category': 'Trying to conceive',
+        'title': 'Timing and Frequency',
+        'description': 'How often and when to have intercourse for the best chances of conception.',
+        'duration': '5 minutes read',
+      },
+      {
+        'category': 'Trying to conceive',
+        'title': 'Healthy Lifestyle Choices',
+        'description': 'Nutrition, exercise, and lifestyle factors that support fertility and conception.',
+        'duration': '6 minutes read',
+      },
+    ];
+
     return StatefulBuilder(
       builder: (context, setState) {
+        // Filter articles based on selected filter
+        final filteredArticles = allArticles
+            .where((article) => article['category'] == filters[activeFilter])
+            .toList();
+
         return Scaffold(
           backgroundColor: Colors.white,
           body: Column(
@@ -893,25 +1037,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: ListView(
+                child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  children: [
-                    _buildArticleCard(
-                      title: "Infertility isn't a curse",
-                      description:
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                      category: 'Fertility basics',
-                      duration: '5 minutes read',
-                    ),
-                    const SizedBox(height: 16),
-                    _buildArticleCard(
-                      title: 'Understanding Your Fertility Cycle',
-                      description:
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                      category: 'Trying to conceive',
-                      duration: '4 minutes read',
-                    ),
-                  ],
+                  itemCount: filteredArticles.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    final article = filteredArticles[index];
+                    return _buildArticleCard(
+                      title: article['title']!,
+                      description: article['description']!,
+                      category: article['category']!,
+                      duration: article['duration']!,
+                    );
+                  },
                 ),
               ),
             ],

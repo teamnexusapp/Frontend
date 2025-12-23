@@ -489,9 +489,9 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       );
       debugPrint('User logged in with email: $email');
 
-      // Fetch user profile after login
-      final profileData = await _apiService.getProfile();
-      final user = User.fromJson(profileData);
+      // Fetch full user details after login (prefer /user/get_user for complete registration data)
+      final userData = await _apiService.getUser();
+      final user = User.fromJson(userData);
 
       // Store user locally
       await _saveUserToPrefs(user);
@@ -537,8 +537,9 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     final token = await _apiService.getStoredToken();
     if (token != null) {
       try {
-        final profileData = await _apiService.getProfile();
-        final user = User.fromJson(profileData);
+        // Prefer the endpoint that returns registration-derived credentials
+        final userData = await _apiService.getUser();
+        final user = User.fromJson(userData);
         await _saveUserToPrefs(user);
         return user;
       } catch (e) {
