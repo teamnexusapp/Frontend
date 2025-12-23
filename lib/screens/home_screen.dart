@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
+import '../models/user.dart';
+import '../widgets/swipeable_green_calendar.dart';
 import 'profile/profile_screen.dart';
 import 'support/support_screen.dart';
 import 'tracking/log_symptom_screen.dart';
+import 'onboarding/welcome_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -17,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool _showSideMenu = false;
-  Set<int> _selectedCalendarDays = {};
+  Set<DateTime> _selectedCalendarDays = {};
   String _currentAffirmation = "Every challenge is an opportunity to grow stronger and wiser.";
 
   void _toggleSideMenu() {
@@ -26,8 +29,25 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _toggleCalendarDate(DateTime date) {
+    final normalized = DateTime(date.year, date.month, date.day);
+    setState(() {
+      if (_selectedCalendarDays.any((d) => _isSameDay(d, normalized))) {
+        _selectedCalendarDays =
+            _selectedCalendarDays.where((d) => !_isSameDay(d, normalized)).toSet();
+      } else {
+        _selectedCalendarDays = {..._selectedCalendarDays, normalized};
+      }
+    });
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthService>(context);
+    final user = auth.currentUser;
     return Scaffold(
       appBar: null,
       body: Stack(
@@ -47,41 +67,72 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: _toggleSideMenu,
               child: Container(
                 color: Colors.black.withOpacity(0.3),
-              ),
-            ),
-          // Side menu
-          if (_showSideMenu)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: GestureDetector(
-                onTap: () {}, // Prevent closing when tapping inside menu
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFA8D497),
-                  ),
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15, top: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.close,
-                              color: Color(0xFF2E683D),
-                              size: 28,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Color(0xFF2E683D),
+                                    size: 28,
+                                  ),
+                                  onPressed: _toggleSideMenu,
+                                  padding: EdgeInsets.zero,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                _buildAvatar(user),
+                              ],
                             ),
-                            onPressed: _toggleSideMenu,
-                            padding: EdgeInsets.zero,
-                            alignment: Alignment.centerLeft,
-                          ),
-                          const SizedBox(height: 12),
-                          GestureDetector(
-                            onTap: () {
-                              _toggleSideMenu();
-                              Navigator.of(context).push(
+                            const SizedBox(height: 16),
+                            _buildProfileCard(user),
+                            const SizedBox(height: 20),
+                            _buildMenuItem(
+                              label: 'Profile & Settings',
+                              icon: Icons.person_outline,
+                              onTap: () {
+                                _toggleSideMenu();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const ProfileScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            _buildMenuItem(
+                              label: 'Support',
+                              icon: Icons.help_outline,
+                              onTap: () {
+                                _toggleSideMenu();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const SupportScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            const Spacer(),
+                            _buildMenuItem(
+                              label: 'Log out',
+                              icon: Icons.logout,
+                              iconColor: Colors.grey.shade600,
+                              textColor: Colors.grey.shade700,
+                              onTap: () async {
+                                _toggleSideMenu();
+                                await auth.signOut();
+                                if (mounted) {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+                                    (route) => false,
+                                  );
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                        ),
                                 MaterialPageRoute(
                                   builder: (_) => const ProfileScreen(),
                                 ),
@@ -134,6 +185,114 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildProfileCard(User? user) {
+    final name = [user?.firstName, user?.lastName]
+        .where((part) => part != null && part!.trim().isNotEmpty)
+        .map((part) => part!.trim())
+        .join(' ');
+    final email = user?.email ?? 'No email';
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          _buildAvatar(user, radius: 22),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name.isNotEmpty ? name : 'User',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF2E683D),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  email,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuItem({
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+    Color? iconColor,
+    Color? textColor,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            Icon(icon, color: iconColor ?? const Color(0xFF2E683D), size: 22),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
+                  color: textColor ?? const Color(0xFF2E683D),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar(User? user, {double radius = 18}) {
+    final name = [user?.firstName, user?.lastName]
+        .where((part) => part != null && part!.trim().isNotEmpty)
+        .map((part) => part!.trim())
+        .join(' ');
+    final initial = name.isNotEmpty ? name[0].toUpperCase() : 'U';
+    final color = _colorFromString(name.isNotEmpty ? name : initial);
+
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: color,
+      child: Text(
+        initial,
+        style: TextStyle(
+          fontSize: radius,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Color _colorFromString(String input) {
+    if (input.isEmpty) return const Color(0xFF2E683D);
+    final hash = input.codeUnits.fold<int>(0, (prev, code) => prev + code);
+    final hue = (hash % 360).toDouble();
+    return HSVColor.fromAHSV(1, hue, 0.45, 0.85).toColor();
   }
 
   Widget _buildHomeTab() {
@@ -377,49 +536,37 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF2E683D),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Back arrow
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedIndex = 0; // Navigate to home
-                        });
-                      },
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                        size: 28,
-                      ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Back arrow
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = 0; // Navigate to home
+                      });
+                    },
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 28,
                     ),
-                    const SizedBox(height: 10),
-                    // Month and year centered
-                    Center(
-                      child: const Text(
-                        'December 2025',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Day labels row aligned with grid
-                    _buildCalendarGridInGreen(),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 10),
+                  SwipeableGreenCalendar(
+                    initialMonth: DateTime.now(),
+                    selectedDates: _selectedCalendarDays,
+                    onDateToggle: _toggleCalendarDate,
+                  ),
+                ],
               ),
-              // White container - 5px higher by using negative margin
-              Container(
-                margin: const EdgeInsets.only(top: 5),
+            ),
+            Expanded(
+              child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -468,8 +615,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -608,183 +755,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCalendarGridInGreen() {
-    // December 2025 starts on Monday (day 1), so Sunday (0) is from previous month
-    final startDay = 1; // 0=Sunday, 1=Monday for Dec 1
-    final daysInMonth = 31;
-    final daysInPrevMonth = 30; // November has 30 days
-    
-    return Column(
-      children: [
-        // Day labels row using GridView-like spacing
-        Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 2),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              childAspectRatio: 1,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 0,
-            ),
-            itemCount: 7,
-            itemBuilder: (context, index) {
-              const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-              return Center(
-                child: Text(
-                  dayLabels[index],
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        // Calendar grid
-        Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              childAspectRatio: 1,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-            ),
-            itemCount: 35,
-            itemBuilder: (context, index) {
-              if (index < startDay) {
-                // Previous month days
-                final prevDay = daysInPrevMonth - startDay + index + 1;
-                return Center(
-                  child: Text(
-                    '$prevDay',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade400,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                );
-              } else if (index < startDay + daysInMonth) {
-                // Current month days
-                final day = index - startDay + 1;
-                final bool isSelected = _selectedCalendarDays.contains(day);
-                return Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (_selectedCalendarDays.contains(day)) {
-                          _selectedCalendarDays.remove(day);
-                        } else {
-                          _selectedCalendarDays.add(day);
-                        }
-                      });
-                    },
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isSelected ? const Color(0xFFA8D497) : Colors.transparent,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        '$day',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: isSelected ? const Color(0xFF2E683D) : Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Poppins',
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return const SizedBox();
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCalendarGrid() {
-    final days = List.generate(31, (i) => i + 1);
-    const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-
-    return Column(
-      children: [
-        // Day labels
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: dayLabels
-              .map((day) => Expanded(
-                    child: Center(
-                      child: Text(
-                        day,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ),
-                  ))
-              .toList(),
-        ),
-        const SizedBox(height: 12),
-        // Calendar days
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7,
-            childAspectRatio: 1,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-          ),
-          itemCount: 35,
-          itemBuilder: (context, index) {
-            final day = index - 1;
-            if (day < 0 || day >= 31) {
-              return const SizedBox();
-            }
-            return Container(
-              decoration: BoxDecoration(
-                color: day + 1 == 23
-                    ? Colors.blue.shade400
-                    : day + 1 > 23
-                        ? Colors.grey.shade200
-                        : Colors.white,
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: Text(
-                  '${day + 1}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: day + 1 == 23 ? Colors.white : Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
 
   Widget _buildLoggedSymptomItem(String symptom, int day) {
     return Padding(

@@ -57,7 +57,7 @@ class ApiService {
   // Get headers - automatically loads token if needed
   Future<Map<String, String>> _getHeaders({bool includeAuth = false}) async {
     final headers = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
       'Accept': 'application/json',
     };
     
@@ -229,10 +229,14 @@ class ApiService {
         'password': password,
       };
       
+      debugPrint('Login headers: $headers');
       debugPrint('Login request body: ${jsonEncode(body)}');
       
-      final response = await http.post(
-        Uri.parse('$baseUrl/auth/token'),
+      // First try the token endpoint with JSON (if backend supports JSON)
+      final primaryUrl = Uri.parse('$baseUrl/auth/token');
+      debugPrint('Login primary URL: $primaryUrl');
+      var response = await http.post(
+        primaryUrl,
         headers: headers,
         body: jsonEncode(body),
       ).timeout(
@@ -248,6 +252,28 @@ class ApiService {
           await saveToken(data['access_token']);
         }
         return data;
+      } else if ((response.statusCode == 404 || response.statusCode == 422) && retryCount == 0) {
+        // Some backends expose a JSON login at /auth/login instead of /auth/token
+        final altUrl = Uri.parse('$baseUrl/auth/login');
+        debugPrint('Primary login failed (${response.statusCode}). Trying alternate URL: $altUrl');
+        response = await http.post(
+          altUrl,
+          headers: headers,
+          body: jsonEncode(body),
+        ).timeout(
+          const Duration(seconds: 45),
+        );
+
+        debugPrint('Alt Login Response: ${response.statusCode}');
+        debugPrint('Alt Login Body: ${response.body}');
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          if (data['access_token'] != null) {
+            await saveToken(data['access_token']);
+          }
+          return data;
+        }
       } else if (response.statusCode >= 500 && retryCount < 2) {
         // Backend might be waking up (Render free tier), retry after delay
         debugPrint('Server error during login, retrying in 5 seconds...');
@@ -303,6 +329,61 @@ class ApiService {
     } catch (e) {
       debugPrint('Logout error: $e');
       await clearToken();
+      rethrow;
+    }
+  }
+
+  // Forgot Password
+  Future<void> forgotPassword({required String email}) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/forgot_password'),
+        headers: headers,
+        body: jsonEncode({'email': email}),
+      );
+
+      debugPrint('Forgot Password Response: ${response.statusCode}');
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        throw ApiException(
+          statusCode: response.statusCode,
+          message: _extractErrorMessage(response),
+        );
+      }
+    } catch (e) {
+      debugPrint('Forgot Password error: $e');
+      rethrow;
+    }
+  }
+
+  // Reset Password
+  Future<void> resetPassword({
+    required String token,
+    required String newPassword,
+  }) async {
+    if (newPassword.length < 8) {
+      throw ApiException(statusCode: 400, message: 'Password must be at least 8 characters long');
+    }
+
+    try {
+      final headers = await _getHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/reset_password'),
+        headers: headers,
+        body: jsonEncode({'token': token, 'new_password': newPassword}),
+      );
+
+      debugPrint('Reset Password Response: ${response.statusCode}');
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        throw ApiException(
+          statusCode: response.statusCode,
+          message: _extractErrorMessage(response),
+        );
+      }
+    } catch (e) {
+      debugPrint('Reset Password error: $e');
       rethrow;
     }
   }

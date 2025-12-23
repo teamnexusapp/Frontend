@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
+import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
-import '../onboarding/onboarding_screens.dart';
+import '../onboarding/welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,6 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String selectedLanguage = 'English';
   String selectedTheme = 'Light';
   bool _isLoading = true;
+  User? _user;
 
   @override
   void initState() {
@@ -28,20 +30,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
       // Fetch fresh user data from API
-      await authService.getCurrentUser();
-      
+      final fetchedUser = await authService.getCurrentUser();
+
       // Update preferences from user data
-      final user = authService.currentUser;
-      if (user != null) {
-        setState(() {
-          selectedLanguage = _getLanguageDisplayName(user.preferredLanguage ?? 'en');
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      setState(() {
+        _user = fetchedUser ?? authService.currentUser;
+        if (_user != null) {
+          selectedLanguage = _getLanguageDisplayName(_user!.preferredLanguage ?? 'en');
+        }
+        _isLoading = false;
+      });
     } catch (e) {
       debugPrint('Error loading profile: $e');
       setState(() {
@@ -67,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     final loc = Provider.of<LocalizationProvider>(context);
-    final user = auth.currentUser;
+    final user = _user ?? auth.currentUser;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F0),
@@ -142,31 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             Row(
               children: [
-                Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 35,
-                      backgroundColor: Colors.grey[300],
-                      child: const Icon(Icons.person, size: 40, color: Colors.grey),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF8BC34A),
-                          shape: BoxShape.circle,
-                        ),
-                        padding: const EdgeInsets.all(6),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          size: 14,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                _buildInitialAvatar(user),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -232,6 +206,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildInitialAvatar(User? user) {
+    final displayName = [user?.firstName, user?.lastName]
+        .where((part) => part != null && part!.trim().isNotEmpty)
+        .map((part) => part!.trim())
+        .join(' ');
+    final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U';
+    final bgColor = _colorFromString(displayName.isNotEmpty ? displayName : initial);
+
+    return CircleAvatar(
+      radius: 35,
+      backgroundColor: bgColor,
+      child: Text(
+        initial,
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Color _colorFromString(String input) {
+    if (input.isEmpty) return const Color(0xFF2E683D);
+    final hash = input.codeUnits.fold<int>(0, (prev, code) => prev + code);
+    final hue = (hash % 360).toDouble();
+    return HSVColor.fromAHSV(1, hue, 0.45, 0.85).toColor();
   }
 
   Widget _buildGoalsSection() {
@@ -580,10 +583,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Clear local auth state
                   final auth = Provider.of<AuthService>(context, listen: false);
                   await auth.signOut();
-                  // Navigate back to onboarding screens
+                  // Navigate back to welcome screen after deletion
                   if (mounted) {
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => const OnboardingScreens()),
+                      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
                       (route) => false,
                     );
                   }
