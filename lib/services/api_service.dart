@@ -339,13 +339,20 @@ class ApiService {
   }
 
   // Forgot Password
-  Future<void> forgotPassword({required String email}) async {
+  Future<void> forgotPassword({
+    required String email,
+    String? redirectUrl,
+  }) async {
     try {
       final headers = await _getHeaders();
+      final body = {'email': email};
+      if (redirectUrl != null && redirectUrl.isNotEmpty) {
+        body['redirect_url'] = redirectUrl;
+      }
       final response = await http.post(
         Uri.parse('$baseUrl/auth/forgot_password'),
         headers: headers,
-        body: jsonEncode({'email': email}),
+        body: jsonEncode(body),
       );
 
       debugPrint('Forgot Password Response: ${response.statusCode}');

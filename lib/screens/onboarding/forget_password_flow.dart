@@ -212,7 +212,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     });
 
     try {
-      await ApiService().forgotPassword(email: email);
+      // Use the backend domain for the reset link
+      // Backend will send: https://fertipath.onrender.com/reset_password?token=ABC123
+      final resetUrl = 'https://fertipath.onrender.com/reset_password';
+      
+      await ApiService().forgotPassword(
+        email: email,
+        redirectUrl: resetUrl,
+      );
 
       if (!mounted) return;
       setState(() {
@@ -244,7 +251,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 }
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
+  final String? prefilledToken;
+  const ResetPasswordScreen({super.key, this.prefilledToken});
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -257,6 +265,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool _showNew = false;
   bool _showConfirm = false;
   bool _isResetting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Prefill token from constructor or URL query (?token=...)
+    final fromArg = widget.prefilledToken;
+    final fromUri = Uri.base.queryParameters['token'];
+    final token = (fromArg != null && fromArg.isNotEmpty)
+        ? fromArg
+        : (fromUri != null && fromUri.isNotEmpty ? fromUri : null);
+    if (token != null) {
+      _tokenController.text = token;
+    }
+  }
 
   @override
   void dispose() {

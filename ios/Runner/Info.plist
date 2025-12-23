@@ -45,5 +45,17 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Deep link for password reset -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>nexusfertility</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nexusfertility</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

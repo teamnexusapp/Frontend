@@ -188,11 +188,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileCard(User? user) {
-    final name = [user?.firstName, user?.lastName]
+    final fullName = [user?.firstName, user?.lastName]
         .where((part) => part != null && part!.trim().isNotEmpty)
         .map((part) => part!.trim())
         .join(' ');
-    final email = user?.email ?? 'No email';
+    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty)
+        ? user.username!.trim()
+        : ((user?.email != null && user!.email.trim().isNotEmpty)
+            ? user.email.split('@').first
+            : 'User');
+    final displayName = fullName.isNotEmpty ? fullName : fallbackName;
+    final email = (user?.email != null && user!.email.trim().isNotEmpty) ? user.email : 'No email';
 
     return Container(
       width: double.infinity,
@@ -210,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name.isNotEmpty ? name : 'User',
+                  displayName,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -267,12 +273,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAvatar(User? user, {double radius = 18}) {
-    final name = [user?.firstName, user?.lastName]
-        .where((part) => part != null && part!.trim().isNotEmpty)
-        .map((part) => part!.trim())
-        .join(' ');
-    final initial = name.isNotEmpty ? name[0].toUpperCase() : 'U';
-    final color = _colorFromString(name.isNotEmpty ? name : initial);
+    final fullName = [user?.firstName, user?.lastName]
+      .where((part) => part != null && part!.trim().isNotEmpty)
+      .map((part) => part!.trim())
+      .join(' ');
+    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty)
+      ? user.username!.trim()
+      : ((user?.email != null && user!.email.trim().isNotEmpty)
+        ? user.email.split('@').first
+        : 'U');
+    final nameForInitial = fullName.isNotEmpty ? fullName : fallbackName;
+    final initial = nameForInitial.isNotEmpty ? nameForInitial[0].toUpperCase() : 'U';
+    final color = _colorFromString(nameForInitial.isNotEmpty ? nameForInitial : initial);
 
     return CircleAvatar(
       radius: radius,

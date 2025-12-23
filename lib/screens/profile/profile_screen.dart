@@ -19,6 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String selectedTheme = 'Light';
   bool _isLoading = true;
   User? _user;
+  bool _isDeleting = false;
 
   @override
   void initState() {
@@ -147,7 +148,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${user?.firstName ?? 'User'} ${user?.lastName ?? ''}',
+                        (() {
+                          final fullName = [user?.firstName, user?.lastName]
+                              .where((part) => part != null && part!.trim().isNotEmpty)
+                              .map((part) => part!.trim())
+                              .join(' ');
+                          if (fullName.isNotEmpty) return fullName;
+                          if (user?.username != null && user!.username!.trim().isNotEmpty) {
+                            return user.username!.trim();
+                          }
+                          if (user?.email != null && user!.email.trim().isNotEmpty) {
+                            return user.email.split('@').first;
+                          }
+                          return 'User';
+                        })(),
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -156,7 +170,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        user?.email ?? 'No email',
+                        (user?.email != null && user!.email.trim().isNotEmpty)
+                            ? user.email
+                            : 'No email',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -209,10 +225,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildInitialAvatar(User? user) {
-    final displayName = [user?.firstName, user?.lastName]
-        .where((part) => part != null && part!.trim().isNotEmpty)
-        .map((part) => part!.trim())
-        .join(' ');
+    final fullName = [user?.firstName, user?.lastName]
+      .where((part) => part != null && part!.trim().isNotEmpty)
+      .map((part) => part!.trim())
+      .join(' ');
+    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty)
+      ? user.username!.trim()
+      : ((user?.email != null && user!.email.trim().isNotEmpty)
+        ? user.email.split('@').first
+        : 'U');
+    final displayName = fullName.isNotEmpty ? fullName : fallbackName;
     final initial = displayName.isNotEmpty ? displayName[0].toUpperCase() : 'U';
     final bgColor = _colorFromString(displayName.isNotEmpty ? displayName : initial);
 
@@ -536,9 +558,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  _showDeleteConfirmation(context);
-                },
+                onPressed: _isDeleting ? null : () { _showDeleteConfirmation(context); },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
@@ -548,10 +568,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
-                child: const Text(
-                  'Delete my Account',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
+                child: _isDeleting
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : const Text(
+                        'Delete my Account',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
               ),
             ),
           ],
@@ -578,13 +607,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 Navigator.of(context).pop();
                 try {
-                  // Call backend to delete user
-                  await ApiService().deleteUser();
-                  // Clear local auth state
+                  if (mounted) setState(() => _isDeleting = true);
+                  // Attempt backend deletion
+                  try {
+                    await ApiService().deleteUser();
+                  } catch (e) {
+                    // If token expired or user already gone, continue to local cleanup
+                    final isAuthError = e is ApiException && (e.statusCode == 401 || e.statusCode == 403 || e.statusCode == 404);
+                    if (!isAuthError) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to delete account: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                      if (mounted) setState(() => _isDeleting = false);
+                      return;
+                    }
+                  }
+
+                  // Always clear local auth state
                   final auth = Provider.of<AuthService>(context, listen: false);
                   await auth.signOut();
-                  // Navigate back to welcome screen after deletion
+
+                  // Navigate back to welcome screen after deletion/cleanup
                   if (mounted) {
+                    setState(() => _isDeleting = false);
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (_) => const WelcomeScreen()),
                       (route) => false,
@@ -598,6 +648,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         backgroundColor: Colors.red,
                       ),
                     );
+                    setState(() => _isDeleting = false);
                   }
                 }
               },

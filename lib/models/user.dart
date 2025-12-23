@@ -90,26 +90,89 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
+    // Unwrap common envelope keys
+    Map<String, dynamic> data = json;
+    if (data['data'] is Map<String, dynamic>) {
+      data = Map<String, dynamic>.from(data['data']);
+    }
+    if (data['user'] is Map<String, dynamic>) {
+      // If the payload wraps the user under 'user'
+      final inner = Map<String, dynamic>.from(data['user']);
+      // Merge outer keys as fallbacks
+      data = {...data, ...inner};
+    }
+    if (data['profile'] is Map<String, dynamic>) {
+      // Some APIs split profile fields; merge them as hints
+      final profile = Map<String, dynamic>.from(data['profile']);
+      data = {...profile, ...data};
+    }
+
+    // Normalize fields with fallbacks
+    String? id = data['id'] ?? data['_id'];
+    String? email = data['email'] ?? data['email_address'];
+    String? username = data['username'] ?? data['user_name'];
+    String? phoneNumber = data['phoneNumber'] ?? data['phone_number'] ?? data['phone'];
+    String? firstName = data['firstName'] ?? data['first_name'];
+    String? lastName = data['lastName'] ?? data['last_name'];
+
+    // If only a single name is provided, try to split it
+    if ((firstName == null || (firstName is String && firstName.trim().isEmpty)) &&
+        (lastName == null || (lastName is String && lastName.trim().isEmpty))) {
+      final fullName = data['full_name'] ?? data['name'] ?? data['display_name'];
+      if (fullName is String && fullName.trim().isNotEmpty) {
+        final parts = fullName.trim().split(RegExp(r"\s+"));
+        firstName = parts.isNotEmpty ? parts.first : null;
+        lastName = parts.length > 1 ? parts.sublist(1).join(' ') : null;
+      }
+    }
+
+    DateTime? dateOfBirth;
+    final dobRaw = data['dateOfBirth'] ?? data['date_of_birth'] ?? data['dob'];
+    if (dobRaw is String && dobRaw.isNotEmpty) {
+      try { dateOfBirth = DateTime.parse(dobRaw); } catch (_) {}
+    }
+
+    final profileImageUrl = data['profileImageUrl'] ?? data['profile_image_url'] ?? data['avatar_url'];
+    final gender = data['gender'];
+    final preferredLanguage = data['preferredLanguage'] ?? data['language_preference'] ?? data['locale'];
+    final role = data['role'];
+    final emailVerified = (data['emailVerified'] ?? data['email_verified'] ?? false) == true;
+    final phoneVerified = (data['phoneVerified'] ?? data['phone_verified'] ?? false) == true;
+
+    DateTime createdAt = DateTime.now();
+    final createdRaw = data['createdAt'] ?? data['created_at'] ?? data['created'];
+    if (createdRaw is String && createdRaw.isNotEmpty) {
+      try { createdAt = DateTime.parse(createdRaw); } catch (_) {}
+    }
+    DateTime? updatedAt;
+    final updatedRaw = data['updatedAt'] ?? data['updated_at'] ?? data['updated'];
+    if (updatedRaw is String && updatedRaw.isNotEmpty) {
+      try { updatedAt = DateTime.parse(updatedRaw); } catch (_) {}
+    }
+
+    // Ensure email is non-null; if missing, try to derive from username (leave as empty if unknown)
+    email = (email is String && email.trim().isNotEmpty)
+        ? email
+        : (data['contact'] is Map && (data['contact']['email'] is String)
+            ? data['contact']['email'] as String
+            : '');
+
     return User(
-      id: json['id'],
-      email: json['email'],
-      username: json['username'],
-      phoneNumber: json['phoneNumber'] ?? json['phone_number'],
-      firstName: json['firstName'] ?? json['first_name'],
-      lastName: json['lastName'] ?? json['last_name'],
-      dateOfBirth: json['dateOfBirth'] != null ? DateTime.parse(json['dateOfBirth']) : null,
-      profileImageUrl: json['profileImageUrl'] ?? json['profile_image_url'],
-      gender: json['gender'],
-      preferredLanguage: json['preferredLanguage'] ?? json['language_preference'],
-      role: json['role'],
-      emailVerified: json['emailVerified'] ?? json['email_verified'] ?? false,
-      phoneVerified: json['phoneVerified'] ?? json['phone_verified'] ?? false,
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt']) 
-          : (json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now()),
-      updatedAt: json['updatedAt'] != null 
-          ? DateTime.parse(json['updatedAt']) 
-          : (json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null),
+      id: id,
+      email: email,
+      username: username,
+      phoneNumber: phoneNumber,
+      firstName: firstName,
+      lastName: lastName,
+      dateOfBirth: dateOfBirth,
+      profileImageUrl: profileImageUrl,
+      gender: gender,
+      preferredLanguage: preferredLanguage,
+      role: role,
+      emailVerified: emailVerified,
+      phoneVerified: phoneVerified,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 }
