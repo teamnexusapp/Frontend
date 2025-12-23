@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'config/feature_flags.dart';
@@ -78,6 +78,14 @@ class MyApp extends StatelessWidget {
 
             home: const SplashScreen(),
             routes: {
+              // New screens:
+              PrivacyAndSecurityScreen.routeName: (ctx) => const PrivacyAndSecurityScreen(),
+              CommunityGroupsScreen.routeName: (ctx) => const CommunityGroupsScreen(),
+              CommunityGroupDisplayScreen.routeName: (ctx) => const CommunityGroupDisplayScreen(),
+              SettingsProfileSetupScreen.routeName: (ctx) => const SettingsProfileSetupScreen(),
+              PredictionScreen.routeName: (ctx) => const PredictionScreen(),
+              EducationalHubScreen.routeName: (ctx) => const EducationalHubScreen(),
+              GoalsUpdateScreen.routeName: (ctx) => const GoalsUpdateScreen(),
               '/home': (context) => const HomeScreen(),
               '/audio': (context) => const AudioHubScreen(),
               '/support': (context) => const SupportScreen(),
@@ -139,6 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 
 
 

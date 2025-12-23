@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -43,8 +43,9 @@ class _SplashScreenState extends State<SplashScreen>
       if (status == AnimationStatus.completed) {
         Future.delayed(const Duration(milliseconds: 300), () {
           if (mounted) {
-            // Navigate by route name '/welcome' as requested
-            Navigator.of(context).pushReplacementNamed('/welcome');
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+            );
           }
         });
       }
@@ -73,22 +74,27 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Use the provided app logo asset
-              SizedBox(
-                width: 140,
-                height: 140,
-                child: Image.asset(
-                  'assets/images/app_logo.png',
-                  fit: BoxFit.contain,
+              // Logo placeholder - replace with your actual logo
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade400,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: const Icon(
+                  Icons.favorite,
+                  size: 64,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 24),
               Text(
                 'Nexus Fertility',
                 style: TextStyle(
-                  fontSize: 26,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green.shade700,
+                  color: Colors.blue.shade400,
                 ),
               ),
             ],
