@@ -67,87 +67,87 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: _toggleSideMenu,
               child: Container(
                 color: Colors.black.withOpacity(0.3),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Color(0xFF2E683D),
-                                    size: 28,
-                                  ),
-                                  onPressed: _toggleSideMenu,
-                                  padding: EdgeInsets.zero,
-                                  alignment: Alignment.centerLeft,
+              ),
+            ),
+          // Side menu
+          if (_showSideMenu)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: GestureDetector(
+                onTap: () {}, // Prevent closing when tapping inside menu
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFA8D497),
+                  ),
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15, top: 30, right: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Color(0xFF2E683D),
+                                  size: 28,
                                 ),
-                                _buildAvatar(user),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            _buildProfileCard(user),
-                            const SizedBox(height: 20),
-                            _buildMenuItem(
-                              label: 'Profile & Settings',
-                              icon: Icons.person_outline,
-                              onTap: () {
-                                _toggleSideMenu();
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const ProfileScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                            _buildMenuItem(
-                              label: 'Support',
-                              icon: Icons.help_outline,
-                              onTap: () {
-                                _toggleSideMenu();
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const SupportScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                            const Spacer(),
-                            _buildMenuItem(
-                              label: 'Log out',
-                              icon: Icons.logout,
-                              iconColor: Colors.grey.shade600,
-                              textColor: Colors.grey.shade700,
-                              onTap: () async {
-                                _toggleSideMenu();
-                                await auth.signOut();
-                                if (mounted) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-                                    (route) => false,
-                                  );
-                                }
-                              },
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                        ),
+                                onPressed: _toggleSideMenu,
+                                padding: EdgeInsets.zero,
+                                alignment: Alignment.centerLeft,
+                              ),
+                              _buildAvatar(user),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          _buildProfileCard(user),
+                          const SizedBox(height: 20),
+                          _buildMenuItem(
+                            label: 'Profile & Settings',
+                            icon: Icons.person_outline,
+                            onTap: () {
+                              _toggleSideMenu();
+                              Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => const ProfileScreen(),
                                 ),
                               );
                             },
-                            child: const Text(
-                              'Settings',
-                              style: TextStyle(
-                                color: Color(0xFF2E683D),
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
                           ),
+                          _buildMenuItem(
+                            label: 'Support',
+                            icon: Icons.help_outline,
+                            onTap: () {
+                              _toggleSideMenu();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const SupportScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          const Spacer(),
+                          _buildMenuItem(
+                            label: 'Log out',
+                            icon: Icons.logout,
+                            iconColor: Colors.grey.shade600,
+                            textColor: Colors.grey.shade700,
+                            onTap: () async {
+                              _toggleSideMenu();
+                              await auth.signOut();
+                              if (mounted) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+                                  (route) => false,
+                                );
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 12),
                         ],
                       ),
                     ),
