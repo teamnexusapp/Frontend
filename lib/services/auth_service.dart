@@ -45,7 +45,7 @@ abstract class AuthServiceInterface {
     String? preferredLanguage,
   });
 
-  Future<User?> signIn({required String email, required String password});
+  Future<User> signIn({required String email, required String password});
 
   Future<void> signOut();
 
@@ -477,14 +477,13 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
   }
 
   @override
-  Future<User?> signIn({
+  Future<User> signIn({
     required String email,
     required String password,
   }) async {
     try {
       // Login with email address
-      Map<String, dynamic>? response;
-      response = await _apiService.login(
+      await _apiService.login(
         email: email,
         password: password,
       );
@@ -497,7 +496,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       // Store user locally
       await _saveUserToPrefs(user);
 
-      return user;
+      return user; // Guaranteed non-null on success
     } on ApiException catch (e) {
       debugPrint('API login error: ${e.message}');
       if (e.statusCode == 401 || e.message.toLowerCase().contains('credentials')) {
@@ -514,7 +513,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         details: 'The server took too long to respond. It may be starting up. Please wait 30 seconds and try again.');
     } catch (e) {
       debugPrint('Sign in error: $e');
-      rethrow;
+      rethrow; // Propagate errors; never return null
     }
   }
 

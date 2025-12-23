@@ -10,6 +10,10 @@ import 'services/tts_service.dart';
 
 import 'screens/onboarding/language_selection_screen.dart';
 import 'screens/onboarding/splash_screen.dart';
+import 'screens/onboarding/welcome_screen.dart';
+import 'screens/onboarding/login_screen.dart';
+import 'screens/onboarding/forget_password_flow.dart';
+import 'screens/onboarding/profile_setup_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/audio/audio_hub_screen.dart';
 import 'screens/support/support_screen.dart';
@@ -18,6 +22,13 @@ import 'screens/tracking/calendar_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import 'screens/tracking/sex_timing_screen.dart';
+import 'screens/privacy_and_security/privacy_and_security_screen.dart';
+import 'screens/community_groups/community_groups_screen.dart';
+import 'screens/community_groups/community_group_display_screen.dart';
+import 'screens/profile/settings_profile_setup_screen.dart';
+import 'screens/prediction/prediction_screen.dart';
+import 'screens/educational/educational_hub_screen.dart';
+import 'screens/goals/goals_update_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,11 +89,18 @@ class MyApp extends StatelessWidget {
 
             home: const SplashScreen(),
             routes: {
+              // Core onboarding/navigation
+              '/welcome': (context) => const WelcomeScreen(),
+              '/login': (context) => const LoginScreen(),
+              '/forgot-password': (context) => const ForgotPasswordScreen(),
+              '/reset-password': (context) => const ResetPasswordScreen(),
+              '/password-updated': (context) => const PasswordUpdatedScreen(),
               // New screens:
               PrivacyAndSecurityScreen.routeName: (ctx) => const PrivacyAndSecurityScreen(),
               CommunityGroupsScreen.routeName: (ctx) => const CommunityGroupsScreen(),
               CommunityGroupDisplayScreen.routeName: (ctx) => const CommunityGroupDisplayScreen(),
               SettingsProfileSetupScreen.routeName: (ctx) => const SettingsProfileSetupScreen(),
+              '/onboarding/profile': (ctx) => const ProfileSetupScreen(),
               PredictionScreen.routeName: (ctx) => const PredictionScreen(),
               EducationalHubScreen.routeName: (ctx) => const EducationalHubScreen(),
               GoalsUpdateScreen.routeName: (ctx) => const GoalsUpdateScreen(),

@@ -39,7 +39,7 @@ class CommunityGroupDisplayScreen extends StatelessWidget {
                 children: List.generate(5, (i) {
                   return ListTile(
                     leading: CircleAvatar(child: Text('G')),
-                    title: Text('Member \'),
+                    title: Text('Member $i'),
                   );
                 }),
               ),
