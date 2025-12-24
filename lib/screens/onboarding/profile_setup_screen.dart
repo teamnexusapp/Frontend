@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/auth_service.dart';
 
+
 import '../../services/auth_error_helper.dart';
 import '../../services/localization_provider.dart';
+import '../../services/api_service.dart';
 
 
 class ProfileSetupScreen extends StatefulWidget {
@@ -416,27 +418,29 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       };
 
       // Send PUT request to user/profile
-      final apiService = Provider.of<ApiService>(context, listen: false);
-      final response = await apiService.put(
-        'user/profile',
-        body,
+      final apiService = ApiService();
+      final response = await apiService.updateProfile(
+        age: _age,
+        cycleLength: _cycleLength,
+        lastPeriodDate: _lastPeriodDate != null
+            ? _lastPeriodDate!.toIso8601String().split('T')[0]
+            : null,
+        ttcHistory: _ttcHistory ?? '',
+        faithPreference: _faithPreference ?? '',
+        audioPreference: _audioGuidance,
       );
 
-      if (response.statusCode == 200 || response.statusCode == 204) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.profileSetupComplete),
-              backgroundColor: Colors.green,
-            ),
-          );
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            '/home',
-            (route) => false,
-          );
-        }
-      } else {
-        throw Exception('Failed to update profile');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.profileSetupComplete),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/home',
+          (route) => false,
+        );
       }
     } catch (e) {
       if (mounted) {

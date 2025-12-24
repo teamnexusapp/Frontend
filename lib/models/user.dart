@@ -1,4 +1,8 @@
 class User {
+    final String? ttcHistory;
+    final String? faithPreference;
+    final int? cycleLength;
+    final String? lastPeriodDate;
   final String? id;
   final String email;
   final String? username;
@@ -31,6 +35,10 @@ class User {
     this.phoneVerified = false,
     required this.createdAt,
     this.updatedAt,
+    this.ttcHistory,
+    this.faithPreference,
+    this.cycleLength,
+    this.lastPeriodDate,
   });
 
   User copyWith({
@@ -49,6 +57,10 @@ class User {
     bool? phoneVerified,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? ttcHistory,
+    String? faithPreference,
+    int? cycleLength,
+    String? lastPeriodDate,
   }) {
     return User(
       id: id ?? this.id,
@@ -66,6 +78,10 @@ class User {
       phoneVerified: phoneVerified ?? this.phoneVerified,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      ttcHistory: ttcHistory ?? this.ttcHistory,
+      faithPreference: faithPreference ?? this.faithPreference,
+      cycleLength: cycleLength ?? this.cycleLength,
+      lastPeriodDate: lastPeriodDate ?? this.lastPeriodDate,
     );
   }
 
@@ -86,10 +102,18 @@ class User {
       'phoneVerified': phoneVerified,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+      'ttcHistory': ttcHistory,
+      'faithPreference': faithPreference,
+      'cycleLength': cycleLength,
+      'lastPeriodDate': lastPeriodDate,
     };
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
+      final ttcHistory = data['ttc_history'] ?? data['ttcHistory'];
+      final faithPreference = data['faith_preference'] ?? data['faithPreference'];
+      final cycleLength = data['cycle_length'] ?? data['cycleLength'];
+      final lastPeriodDate = data['last_period_date'] ?? data['lastPeriodDate'];
     // Unwrap common envelope keys
     Map<String, dynamic> data = json;
     if (data['data'] is Map<String, dynamic>) {
@@ -173,6 +197,10 @@ class User {
       phoneVerified: phoneVerified,
       createdAt: createdAt,
       updatedAt: updatedAt,
+      ttcHistory: ttcHistory,
+      faithPreference: faithPreference,
+      cycleLength: cycleLength is int ? cycleLength : int.tryParse(cycleLength?.toString() ?? ''),
+      lastPeriodDate: lastPeriodDate,
     );
   }
 }
