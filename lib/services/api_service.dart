@@ -505,23 +505,22 @@ class ApiService {
 
   // Update Profile
   Future<Map<String, dynamic>> updateProfile({
-    String? firstName,
-    String? lastName,
-    String? phoneNumber,
-    String? languagePreference,
-    String? profileImageUrl,
+    int? age,
+    int? cycleLength,
+    String? lastPeriodDate,
+    String? ttcHistory,
+    String? faithPreference,
+    bool? audioPreference,
   }) async {
     try {
       final headers = await _getHeaders(includeAuth: true);
-      
       final body = <String, dynamic>{};
-      if (firstName != null) body['first_name'] = firstName;
-      if (lastName != null) body['last_name'] = lastName;
-      if (phoneNumber != null) body['phone_number'] = phoneNumber;
-      if (languagePreference != null) {
-        body['language_preference'] = languagePreference.toLowerCase();
-      }
-      if (profileImageUrl != null) body['profile_image_url'] = profileImageUrl;
+      if (age != null) body['age'] = age;
+      if (cycleLength != null) body['cycle_length'] = cycleLength;
+      if (lastPeriodDate != null) body['last_period_date'] = lastPeriodDate;
+      if (ttcHistory != null) body['ttc_history'] = ttcHistory;
+      if (faithPreference != null) body['faith_preference'] = faithPreference;
+      if (audioPreference != null) body['audio_preference'] = audioPreference;
 
       final response = await http.put(
         Uri.parse('$baseUrl/user/profile'),
