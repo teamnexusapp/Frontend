@@ -20,11 +20,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   int _age = 27;
   int _cycleLength = 28;
   DateTime? _lastPeriodDate;
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  // Removed first and last name controllers
   String? _ttcHistory;
   String? _faithPreference;
-  String _languageCode = 'en';
+  // Removed language code
   bool _audioGuidance = false;
   bool _isLoading = false;
   bool _acceptTerms = false;
@@ -47,7 +46,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     'None'
   ];
 
-  // Language options are built in build() to ensure labels are localized
+  // Removed language options
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +86,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   minHeight: 4,
                   backgroundColor: Colors.grey.shade300,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.blue.shade400,
+                    Color(0xFF2D5A3A), // dark green
                   ),
                 ),
               ),
@@ -112,21 +111,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               ),
               const SizedBox(height: 32),
 
-                  // First / Last name
-                  _buildFieldLabel(AppLocalizations.of(context)!.firstName),
-                  TextFormField(
-                    controller: _firstNameController,
-                    decoration: InputDecoration(hintText: AppLocalizations.of(context)!.firstName),
-                    validator: (v) => (v == null || v.isEmpty) ? 'Enter your first name' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildFieldLabel(AppLocalizations.of(context)!.lastName),
-                  TextFormField(
-                    controller: _lastNameController,
-                    decoration: InputDecoration(hintText: AppLocalizations.of(context)!.lastName),
-                    validator: (v) => (v == null || v.isEmpty) ? 'Enter your last name' : null,
-                  ),
-                  const SizedBox(height: 24),
+                  // Removed first and last name fields
 
                   // Age
                   _buildFieldLabel(AppLocalizations.of(context)!.age),
@@ -233,41 +218,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Language
-                  _buildFieldLabel(AppLocalizations.of(context)!.language),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Builder(builder: (ctx) {
-                      final provider = Provider.of<LocalizationProvider>(context, listen: false);
-                      final options = [
-                        {'code': 'en', 'label': AppLocalizations.of(context)!.english},
-                        {'code': 'yo', 'label': AppLocalizations.of(context)!.yoruba},
-                        {'code': 'ig', 'label': AppLocalizations.of(context)!.igbo},
-                        {'code': 'ha', 'label': AppLocalizations.of(context)!.hausa},
-                      ];
-                      return DropdownButton<String>(
-                        value: _languageCode,
-                        isExpanded: true,
-                        underline: const SizedBox(),
-                        items: options
-                            .map((o) => DropdownMenuItem<String>(
-                                  value: o['code']!,
-                                  child: Text(o['label']!),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          if (value == null) return;
-                          setState(() => _languageCode = value);
-                          provider.setLocaleByLanguageCode(value);
-                        },
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 20),
+                  // Removed language field
 
                   // Audio Guidance
                   _buildFieldLabel(AppLocalizations.of(context)!.audioGuidance),
@@ -285,7 +236,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           value: _audioGuidance,
                           onChanged: (value) =>
                               setState(() => _audioGuidance = value),
-                          activeThumbColor: Colors.blue,
+                          activeColor: Color(0xFF2D5A3A), // dark green
+                          activeTrackColor: Color(0xFFD4E9D7), // light green track
                         ),
                       ],
                     ),
@@ -302,6 +254,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                             _acceptTerms = value ?? false;
                           });
                         },
+                        activeColor: Color(0xFF2D5A3A), // dark green
+                        checkColor: Colors.white,
                       ),
                       Expanded(
                         child: Text(
@@ -323,7 +277,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     child: ElevatedButton(
                       onPressed: (_isLoading || !_acceptTerms) ? null : _handleContinue,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade400,
+                        backgroundColor: Color(0xFF2D5A3A), // dark green
                         disabledBackgroundColor: Colors.grey.shade300,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -458,8 +412,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
       await authService.updateUserProfile(
         userId: currentUser.id ?? '',
-        firstName: _firstNameController.text.trim(),
-        lastName: _lastNameController.text.trim(),
+        // Removed firstName and lastName
       );
 
       if (mounted) {
@@ -496,8 +449,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
+    // Removed firstNameController and lastNameController dispose
     super.dispose();
   }
 }

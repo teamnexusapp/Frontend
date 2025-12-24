@@ -362,87 +362,96 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                Container(
-                  height: heroHeight,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF2E683D),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CalendarScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: heroHeight,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF2E683D),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Stack(
-                      children: [
-                        // Decorative semicolon background
-                        Positioned(
-                          bottom: 50,
-                          right: -40,
-                          child: Transform.rotate(
-                            angle: -0.3, // ~17 degrees tilt
-                            child: Opacity(
-                              opacity: 0.15,
-                              child: Text(
-                                ';',
-                                style: TextStyle(
-                                  fontSize: 320,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                  height: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Stack(
+                        children: [
+                          // Decorative semicolon background
+                          Positioned(
+                            bottom: 50,
+                            right: -40,
+                            child: Transform.rotate(
+                              angle: -0.3, // ~17 degrees tilt
+                              child: Opacity(
+                                opacity: 0.15,
+                                child: Text(
+                                  ';',
+                                  style: TextStyle(
+                                    fontSize: 320,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    height: 1,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          top: 30,
-                          left: 15,
-                          child: GestureDetector(
-                            onTap: _toggleSideMenu,
-                            child: const Icon(
-                              Icons.menu,
-                              color: Color(0xFFA8D497),
-                              size: 28,
+                          Positioned(
+                            top: 30,
+                            left: 15,
+                            child: GestureDetector(
+                              onTap: _toggleSideMenu,
+                              child: const Icon(
+                                Icons.menu,
+                                color: Color(0xFFA8D497),
+                                size: 28,
+                              ),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 70, left: 30),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Today's fertility\ninsight",
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFFA8D497),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 70, left: 30),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Today's fertility\ninsight",
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFFA8D497),
+                                    ),
+                                    textAlign: TextAlign.left,
                                   ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                const SizedBox(height: 8),
-                                const Text(
-                                  'Your next fertility\nwindow is from\nDec 23-27',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    'Your next fertility\nwindow is from\nDec 23-27',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Poppins',
+                                      color: Colors.white,
+                                    ),
+                                    textAlign: TextAlign.left,
                                   ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

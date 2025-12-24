@@ -212,7 +212,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Icon(Icons.person_outline, size: 20),
                   SizedBox(width: 8),
-                  Text('Edit Profile', style: TextStyle(fontWeight: FontWeight.w600)),
+                  Text('Set and update profile', style: TextStyle(fontWeight: FontWeight.w600)),
                   Spacer(),
                   Icon(Icons.chevron_right, size: 20),
                 ],
@@ -290,27 +290,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 12),
             _buildGoalRow('Cycle Length', '28 days'),
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Update goals action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2D5A3A),
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                child: const Text(
-                  'Update Goals',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -374,7 +353,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildLanguageRow() {
     return Row(
       children: [
-        Icon(Icons.language, size: 22, color: Colors.grey[700]),
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFE6F4EA), // light green
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Icon(Icons.language, size: 22, color: Color(0xFF2D5A3A)), // dark green
+        ),
         const SizedBox(width: 12),
         const Expanded(
           child: Text(
@@ -413,7 +399,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildFaithBasedRow() {
     return Row(
       children: [
-        Icon(Icons.lightbulb_outline, size: 22, color: Colors.grey[700]),
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFE6F4EA), // light green
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Icon(Icons.lightbulb_outline, size: 22, color: Color(0xFF2D5A3A)), // dark green
+        ),
         const SizedBox(width: 12),
         const Expanded(
           child: Text(
@@ -437,7 +430,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildThemeRow() {
     return Row(
       children: [
-        Icon(Icons.brightness_6_outlined, size: 22, color: Colors.grey[700]),
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFE6F4EA), // light green
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Icon(Icons.brightness_6_outlined, size: 22, color: Color(0xFF2D5A3A)), // dark green
+        ),
         const SizedBox(width: 12),
         const Expanded(
           child: Text(
@@ -495,7 +495,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 8),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.shield_outlined, color: Colors.grey[700]),
+              leading: Icon(Icons.shield_outlined, color: Color(0xFF2D5A3A)), // dark green
               title: const Text('Data Privacy Policy'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
@@ -504,7 +504,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.shield_outlined, color: Colors.grey[700]),
+              leading: Icon(Icons.shield_outlined, color: Color(0xFF4CAF50)), // medium green
               title: const Text('Manage Data & Permissions'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
@@ -513,7 +513,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.shield_outlined, color: Colors.grey[700]),
+              leading: Icon(Icons.shield_outlined, color: Color(0xFF81C784)), // light green
               title: const Text('Explore my Data'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
