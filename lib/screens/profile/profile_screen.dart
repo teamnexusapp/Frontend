@@ -29,13 +29,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUserProfile() async {
     try {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      // Fetch fresh user data from API
-      final fetchedUser = await authService.getCurrentUser();
-
-      // Update preferences from user data
+      final apiService = ApiService();
+      final profileJson = await apiService.getProfile();
+      final fetchedUser = User.fromJson(profileJson);
       setState(() {
-        _user = fetchedUser ?? authService.currentUser;
+        _user = fetchedUser;
         if (_user != null) {
           selectedLanguage = _getLanguageDisplayName(_user!.preferredLanguage ?? 'en');
         }
@@ -260,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildGoalsSection() {
-    // Assume _user has the fields: ttcHistory, faithPreference, cycleLength, lastPeriodDate
+    // Dynamically display user profile data fetched from API
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
