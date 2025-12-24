@@ -110,27 +110,6 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
-      Map<String, dynamic> data = json;
-      if (data['data'] is Map<String, dynamic>) {
-        data = Map<String, dynamic>.from(data['data']);
-      }
-      if (data['user'] is Map<String, dynamic>) {
-        // If the payload wraps the user under 'user'
-        final inner = Map<String, dynamic>.from(data['user']);
-        // Merge outer keys as fallbacks
-        data = {...data, ...inner};
-      }
-      if (data['profile'] is Map<String, dynamic>) {
-        // Some APIs split profile fields; merge them as hints
-        final profile = Map<String, dynamic>.from(data['profile']);
-        data = {...profile, ...data};
-      }
-
-      final ttcHistory = data['ttc_history'] ?? data['ttcHistory'];
-      final faithPreference = data['faith_preference'] ?? data['faithPreference'];
-      final cycleLength = data['cycle_length'] ?? data['cycleLength'];
-      final lastPeriodDate = data['last_period_date'] ?? data['lastPeriodDate'];
-    // Unwrap common envelope keys
     Map<String, dynamic> data = json;
     if (data['data'] is Map<String, dynamic>) {
       data = Map<String, dynamic>.from(data['data']);
@@ -146,6 +125,11 @@ class User {
       final profile = Map<String, dynamic>.from(data['profile']);
       data = {...profile, ...data};
     }
+
+    final ttcHistory = data['ttc_history'] ?? data['ttcHistory'];
+    final faithPreference = data['faith_preference'] ?? data['faithPreference'];
+    final cycleLength = data['cycle_length'] ?? data['cycleLength'];
+    final lastPeriodDate = data['last_period_date'] ?? data['lastPeriodDate'];
 
     // Normalize fields with fallbacks
     String? id = data['id'] ?? data['_id'];
