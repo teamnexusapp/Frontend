@@ -7,9 +7,9 @@ import 'profile/profile_screen.dart';
 import 'support/support_screen.dart';
 import 'tracking/log_symptom_screen.dart';
 import 'onboarding/welcome_screen.dart';
-import 'educational_hub_screen.dart';
+import 'education/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
-import 'community_tab_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildHomeTab(),
               EducationalHubScreen(),
               CalendarTabScreen(),
-              CommunityTabScreen(),
+              SupportScreen(),
             ],
           ),
           if (_showSideMenu)
@@ -155,8 +155,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: _selectedIndex == 2 ? 'Track' : '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.favorite),
-            label: _selectedIndex == 3 ? 'Community' : '',
+            icon: const Icon(Icons.support_agent),
+            label: _selectedIndex == 3 ? 'Support' : '',
           ),
         ],
       ),
