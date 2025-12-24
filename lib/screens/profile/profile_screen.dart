@@ -260,6 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildGoalsSection() {
+    // Assume _user has the fields: ttcHistory, faithPreference, cycleLength, lastPeriodDate
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -274,9 +275,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Icon(Icons.favorite_border, size: 20, color: Colors.grey[700]),
                 const SizedBox(width: 8),
-                const Text(
-                  'Trying to conceive',
-                  style: TextStyle(
+                Text(
+                  _user?.ttcHistory ?? 'Not set',
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -284,11 +285,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            _buildGoalRow('Start Date', '15/06/2025'),
+            _buildGoalRow('Faith Preference', _user?.faithPreference ?? 'Not set'),
             const SizedBox(height: 12),
-            _buildGoalRow('Primary Goal', 'Conceive'),
+            _buildGoalRow('Cycle Length',
+              _user?.cycleLength != null ? '${_user!.cycleLength} days' : 'Not set'),
             const SizedBox(height: 12),
-            _buildGoalRow('Cycle Length', '28 days'),
+            _buildGoalRow('Last Period Date',
+              _user?.lastPeriodDate != null ? _user!.lastPeriodDate.toString().split(' ')[0] : 'Not set'),
             const SizedBox(height: 16),
           ],
         ),

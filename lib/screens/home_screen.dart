@@ -365,11 +365,9 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => CalendarScreen(),
-                      ),
-                    );
+                    setState(() {
+                      _selectedIndex = 1; // Navigate to calendar/track tab
+                    });
                   },
                   child: Container(
                     height: heroHeight,

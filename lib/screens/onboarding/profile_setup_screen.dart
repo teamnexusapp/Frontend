@@ -403,31 +403,40 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     });
 
     try {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      final currentUser = authService.currentUser;
+      // Prepare the request body according to the schema
+      final Map<String, dynamic> body = {
+        "age": _age,
+        "cycle_length": _cycleLength,
+        "last_period_date": _lastPeriodDate != null
+            ? _lastPeriodDate!.toIso8601String().split('T')[0]
+            : null,
+        "ttc_history": _ttcHistory ?? '',
+        "faith_preference": _faithPreference ?? '',
+        "audio_preference": _audioGuidance,
+      };
 
-      if (currentUser == null) {
-        throw Exception('User not found');
-      }
-
-      await authService.updateUserProfile(
-        userId: currentUser.id ?? '',
-        // Removed firstName and lastName
+      // Send PUT request to user/profile
+      final apiService = Provider.of<ApiService>(context, listen: false);
+      final response = await apiService.put(
+        'user/profile',
+        body,
       );
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.profileSetupComplete),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Navigate to home screen
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          '/home',
-          (route) => false,
-        );
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.profileSetupComplete),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/home',
+            (route) => false,
+          );
+        }
+      } else {
+        throw Exception('Failed to update profile');
       }
     } catch (e) {
       if (mounted) {
