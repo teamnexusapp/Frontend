@@ -14,6 +14,10 @@ void main() {
       final user = await authService.signUpWithEmail(
         email: 'test@example.com',
         password: 'Password123',
+        username: 'testuser',
+        firstName: 'Test',
+        lastName: 'User',
+        phoneNumber: '+1234567890',
       );
 
       expect(user, isNotNull);
@@ -26,6 +30,10 @@ void main() {
         () => authService.signUpWithEmail(
           email: 'invalid-email',
           password: 'Password123',
+          username: 'testuser',
+          firstName: 'Test',
+          lastName: 'User',
+          phoneNumber: '+1234567890',
         ),
         throwsException,
       );
@@ -36,6 +44,10 @@ void main() {
         () => authService.signUpWithEmail(
           email: 'test@example.com',
           password: 'short',
+          username: 'testuser',
+          firstName: 'Test',
+          lastName: 'User',
+          phoneNumber: '+1234567890',
         ),
         throwsException,
       );
@@ -45,6 +57,10 @@ void main() {
       final user = await authService.signUpWithEmail(
         email: 'test@example.com',
         password: 'Password123',
+        username: 'testuser',
+        firstName: 'Test',
+        lastName: 'User',
+        phoneNumber: '+1234567890',
       );
 
       // Mock OTP verification
@@ -59,6 +75,11 @@ void main() {
     test('Phone signup should create user with phone', () async {
       final user = await authService.signUpWithPhone(
         phoneNumber: '+1234567890',
+        email: 'test2@example.com',
+        username: 'testuser2',
+        firstName: 'Test2',
+        lastName: 'User2',
+        password: 'Password123',
       );
 
       expect(user, isNotNull);
