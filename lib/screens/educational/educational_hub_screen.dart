@@ -70,55 +70,51 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
       appBar: AppBar(
         title: const Text('Educational Hub'),
         backgroundColor: green,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // Filter chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: categories.map((category) {
-                final isSelected = category == selectedCategory;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    selected: isSelected,
-                    label: Text(
-                      category,
-                      style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black,
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 110,
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              decoration: const BoxDecoration(
+                color: Color(0xFF2E683D),
+              ),
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Educational Hub',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Poppins',
+                        ),
                       ),
                     ),
-                    backgroundColor: Colors.grey.shade200,
-                    selectedColor: green,
-                    onSelected: (selected) {
-                      setState(() {
-                        selectedCategory = category;
-                      });
-                    },
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-          const SizedBox(height: 16),
-          
-          // Articles list
-          if (filteredArticles.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 32),
-                child: Text(
-                  'No articles found for this category',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                ),
+                  Positioned(
+                    right: 57,
+                    top: 0,
+                    bottom: 0,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.bookmark,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            )
-          else
-            Column(
-              children: filteredArticles.map((article) {
-                return Padding(
+            ),
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Card(
                     elevation: 2,
