@@ -174,7 +174,7 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                  )
+                  ),
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       final cardHeight = 320.0;
