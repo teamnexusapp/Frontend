@@ -58,9 +58,13 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
   ];
 
   List<Map<String, String>> get filteredArticles {
-    return allArticles
-        .where((article) => article['category'] == selectedCategory)
-        .toList();
+    // Normalize category names for matching (case-insensitive, ignore & vs and)
+    String normalize(String s) => s.toLowerCase().replaceAll('&', 'and').replaceAll(' ', '').replaceAll('-', '');
+    final selectedNorm = normalize(selectedCategory);
+    return allArticles.where((article) {
+      final cat = article['category'] ?? '';
+      return normalize(cat) == selectedNorm;
+    }).toList();
   }
 
   @override
@@ -110,6 +114,58 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
               ],
             ),
           ),
+          // Filter bubbles
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: categories.map((category) {
+                  final bool isActive = selectedCategory == category;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = category;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isActive ? const Color(0xFF2E683D) : Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: isActive ? const Color(0xFF2E683D) : Colors.grey.shade300,
+                            width: 1.5,
+                          ),
+                          boxShadow: isActive
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.green.withOpacity(0.08),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Text(
+                          category,
+                          style: TextStyle(
+                            color: isActive ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.only(bottom: 16),
@@ -118,66 +174,148 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
-                        child: Image.network(
-                          article['image']!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: 180,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              height: 180,
-                              color: Colors.grey.shade300,
-                              child: const Icon(Icons.image_not_supported),
-                            );
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12),
+                  )
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final cardHeight = 320.0;
+                      final imageHeight = cardHeight * 0.6;
+                      return SizedBox(
+                        height: cardHeight,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              article['title']!,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              article['excerpt']!,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Opening: ${article['title']}'),
-                                    ),
+                            // Image (60% of card height)
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                              child: Image.network(
+                                article['image']!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: imageHeight,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: imageHeight,
+                                    color: Colors.grey.shade300,
+                                    child: const Icon(Icons.image_not_supported),
                                   );
                                 },
-                                child: const Text('Read More'),
+                              ),
+                            ),
+                            // Row: Category and Duration
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
+                              child: Row(
+                                children: [
+                                  // Category
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFA8D497),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      article['category'] ?? '',
+                                      style: const TextStyle(
+                                        color: Color(0xFF2E683D),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  // Duration (hardcoded for now)
+                                  Text(
+                                    '5 mins read',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Title
+                            Padding(
+                              padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
+                              child: Text(
+                                article['title'] ?? '',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            // Paragraph
+                            Padding(
+                              padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
+                              child: Text(
+                                article['excerpt'] ?? '',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ),
+                            // Last row: Listen, Language, Bookmark
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8, top: 12),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // Listen button
+                                  Container(
+                                    height: 32,
+                                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF2E683D),
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                                        SizedBox(width: 4),
+                                        Text('Listen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 3),
+                                  // Language
+                                  Container(
+                                    height: 32,
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFA8D497),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'English',
+                                        style: TextStyle(
+                                          color: Color(0xFF2E683D),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  // Bookmark icon
+                                  IconButton(
+                                    icon: const Icon(Icons.bookmark_border, color: Color(0xFF2E683D)),
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Bookmarked: ${article['title']}')),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 );
               }).toList(),
