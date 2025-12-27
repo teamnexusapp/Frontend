@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../services/api_service.dart';
+import '../calendar_tab_screen.dart';
 
 class LogSymptomScreen extends StatefulWidget {
   const LogSymptomScreen({super.key});
@@ -7,9 +9,10 @@ class LogSymptomScreen extends StatefulWidget {
   State<LogSymptomScreen> createState() => _LogSymptomScreenState();
 }
 
-class _LogSymptomScreenState extends State<LogSymptomScreen> {
   String? _expandedSymptom;
   Map<String, String?> _selectedOptions = {};
+  // Store the last saved symptoms
+  Map<String, String?> _lastSavedSymptoms = {};
 
   final Map<String, List<String>> _symptomOptions = {
     'Mood': ['Fatigue', 'Anxiety', 'Mood swings', 'Sadness'],
@@ -105,8 +108,40 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Save logic here
+                    onPressed: () async {
+                      // Save selected symptoms in variable
+                      setState(() {
+                        _lastSavedSymptoms = Map<String, String?>.from(_selectedOptions);
+                      });
+
+                      // Gather required data
+                      // Find the nearest ancestor CalendarTabScreen state
+                      final calendarState = context.findAncestorStateOfType<_CalendarTabScreenState>();
+                      final lastPeriodDate = calendarState?._lastPeriodDate ?? DateTime.now().toIso8601String().substring(0, 10);
+                      final cycleLength = calendarState?._cycleLength ?? 28;
+                      final periodLength = calendarState?._periodLength ?? 5;
+                        // Collect selected symptoms as a list of strings (non-null values, no duplicates)
+                        final seenSymptoms = <String>{};
+                        final symptoms = _selectedOptions.values
+                          .whereType<String>()
+                          .where((s) => seenSymptoms.add(s))
+                          .toList();
+
+                      // Build request body
+                      final requestBody = {
+                        'last_period_date': lastPeriodDate,
+                        'cycle_length': cycleLength,
+                        'period_length': periodLength,
+                        'symptoms': symptoms,
+                      };
+
+                      try {
+                        await ApiService().postCycleData(requestBody);
+                      } catch (e) {
+                        // Optionally show error to user
+                        debugPrint('Failed to send cycle data: $e');
+                      }
+
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(

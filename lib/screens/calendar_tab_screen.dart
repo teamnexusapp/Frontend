@@ -13,6 +13,8 @@ class CalendarTabScreen extends StatefulWidget {
   State<CalendarTabScreen> createState() => _CalendarTabScreenState();
 }
 
+import '../services/api_service.dart';
+
 class _CalendarTabScreenState extends State<CalendarTabScreen> {
   final ScrollController _calendarScrollController = ScrollController();
   bool _isCalendarCollapsed = false;
@@ -22,12 +24,33 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   Set<String> _selectedCalendarDaysFormatted = {};
   // Store last period date as yyyy-mm-dd string
   String? _lastPeriodDate;
+  // Default values for period and cycle length
+  int _periodLength = 5; // days
+  int _cycleLength = 28; // days
+
+  // Symptoms fetched from backend
+  List<String> _loggedSymptoms = [];
 
   @override
   void initState() {
     super.initState();
     _calendarScrollController.addListener(_onCalendarScroll);
     _loadTappedDays();
+    _fetchLoggedSymptoms();
+  }
+
+  Future<void> _fetchLoggedSymptoms() async {
+    try {
+      final symptoms = await ApiService().getCycleSymptoms();
+      // Remove duplicates while preserving order
+      final seen = <String>{};
+      final uniqueSymptoms = symptoms.where((s) => seen.add(s)).toList();
+      setState(() {
+        _loggedSymptoms = uniqueSymptoms;
+      });
+    } catch (e) {
+      debugPrint('Failed to fetch symptoms: $e');
+    }
   }
 
   Future<void> _loadTappedDays() async {
@@ -47,6 +70,16 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           _lastPeriodDate = null;
         }
       });
+    } else {
+      // Set default value: today as period day
+      final today = DateTime.now();
+      final todayStr = DateFormat('yyyy-MM-dd').format(today);
+      setState(() {
+        _selectedCalendarDays = {today};
+        _selectedCalendarDaysFormatted = {todayStr};
+        _lastPeriodDate = todayStr;
+      });
+      await prefs.setStringList('tapped_days', [todayStr]);
     }
   }
 
@@ -81,6 +114,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       } else {
         _selectedCalendarDays = {..._selectedCalendarDays, normalized};
       }
+      // Remove duplicates (Set already ensures this)
+      _selectedCalendarDays = _selectedCalendarDays.toSet();
       // Update formatted set
       _selectedCalendarDaysFormatted = _selectedCalendarDays
           .map((d) => DateFormat('yyyy-MM-dd').format(d))
@@ -93,7 +128,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
         _lastPeriodDate = null;
       }
     });
-    // Save tapped days
+    // Save tapped days (as unique list)
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
   }
@@ -249,11 +284,13 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                             ),
                           ),
                           const SizedBox(height: 18),
-                          _buildLoggedSymptomItem('Cervical Mucus', Icons.opacity, const Color(0xFF7E9B7B)),
-                          _buildLoggedSymptomItem('Mood', Icons.sentiment_satisfied_alt, const Color(0xFF2E683D)),
-                          _buildLoggedSymptomItem('Bleeding', Icons.water_drop, Colors.redAccent),
-                          _buildLoggedSymptomItem('Pain', Icons.flash_on, const Color(0xFFB0B0B0)),
-                          _buildLoggedSymptomItem('Notes', Icons.note_add, Colors.grey),
+                          ..._loggedSymptoms.map((symptom) => _buildLoggedSymptomItem(
+                                symptom,
+                                Icons.check_circle_outline,
+                                const Color(0xFF2E683D),
+                              )),
+                          if (_loggedSymptoms.isEmpty)
+                            const Text('No symptoms logged yet.'),
                           const SizedBox(height: 80),
                         ],
                       ),

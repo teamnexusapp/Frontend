@@ -1,3 +1,43 @@
+    // Get cycle data from cycle/cycles endpoint
+    Future<List<String>> getCycleSymptoms() async {
+      final headers = await _getHeaders(includeAuth: true);
+      final url = Uri.parse('$baseUrl/cycle/cycles');
+      final response = await http.get(url, headers: headers);
+      debugPrint('GET cycle/cycles response: \\${response.statusCode}');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Assuming the response is a list of cycles, get the latest one
+        if (data is List && data.isNotEmpty) {
+          final latest = data.last;
+          if (latest is Map && latest['symptoms'] is List) {
+            return List<String>.from(latest['symptoms']);
+          }
+        }
+        return [];
+      } else {
+        throw ApiException(
+          statusCode: response.statusCode,
+          message: _extractErrorMessage(response),
+        );
+      }
+    }
+  // Post cycle data to cycle/cycles endpoint
+  Future<void> postCycleData(Map<String, dynamic> data) async {
+    final headers = await _getHeaders(includeAuth: true);
+    final url = Uri.parse('$baseUrl/cycle/cycles');
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode(data),
+    );
+    debugPrint('POST cycle/cycles response: \\${response.statusCode}');
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw ApiException(
+        statusCode: response.statusCode,
+        message: _extractErrorMessage(response),
+      );
+    }
+  }
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
