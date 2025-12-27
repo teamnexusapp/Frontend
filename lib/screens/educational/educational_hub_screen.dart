@@ -104,10 +104,19 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
                   bottom: 0,
                   child: Align(
                     alignment: Alignment.center,
-                    child: Icon(
-                      Icons.bookmark,
-                      color: Colors.white,
-                      size: 32,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => BookmarkScreen(bookmarkedArticles: allArticles),
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        Icons.bookmark,
+                        color: Colors.white,
+                        size: 32,
+                      ),
                     ),
                   ),
                 ),
@@ -289,7 +298,7 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
                                       padding: const EdgeInsets.symmetric(horizontal: 10),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFA8D497),
-                                        borderRadius: BorderRadius.circular(6),
+                                        borderRadius: BorderRadius.zero,
                                       ),
                                       child: const Center(
                                         child: Text(
