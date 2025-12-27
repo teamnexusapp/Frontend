@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'bookmark_screen.dart';
 
 class EducationalHubScreen extends StatefulWidget {
   static const routeName = '/educational-hub';
