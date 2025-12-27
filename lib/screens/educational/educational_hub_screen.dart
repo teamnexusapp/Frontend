@@ -170,152 +170,156 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
             child: ListView(
               padding: const EdgeInsets.only(bottom: 16),
               children: filteredArticles.map((article) {
-                return Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final cardHeight = 320.0;
-                      final imageHeight = cardHeight * 0.6;
-                      return SizedBox(
-                        height: cardHeight,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Image (60% of card height)
-                            ClipRRect(
-                              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                              child: Image.network(
-                                article['image']!,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: imageHeight,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: imageHeight,
-                                    color: Colors.grey.shade300,
-                                    child: const Icon(Icons.image_not_supported),
-                                  );
-                                },
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final cardHeight = 320.0;
+                          final imageHeight = cardHeight * 0.6;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Image (60% of card height)
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
+                                child: Image.network(
+                                  article['image']!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: imageHeight,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      height: imageHeight,
+                                      color: Colors.grey.shade300,
+                                      child: const Icon(Icons.image_not_supported),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                            // Row: Category and Duration
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
-                              child: Row(
-                                children: [
-                                  // Category
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFA8D497),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      article['category'] ?? '',
-                                      style: const TextStyle(
-                                        color: Color(0xFF2E683D),
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13,
+                              // Row: Category and Duration
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
+                                child: Row(
+                                  children: [
+                                    // Category
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFA8D497),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  // Duration (hardcoded for now)
-                                  Text(
-                                    '5 mins read',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // Title
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
-                              child: Text(
-                                article['title'] ?? '',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            // Paragraph
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
-                              child: Text(
-                                article['excerpt'] ?? '',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                            ),
-                            // Last row: Listen, Language, Bookmark
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8, right: 8, top: 12),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  // Listen button
-                                  Container(
-                                    height: 32,
-                                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF2E683D),
-                                      borderRadius: BorderRadius.circular(0),
-                                    ),
-                                    child: Row(
-                                      children: const [
-                                        Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                                        SizedBox(width: 4),
-                                        Text('Listen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 3),
-                                  // Language
-                                  Container(
-                                    height: 32,
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFA8D497),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: const Center(
                                       child: Text(
-                                        'English',
-                                        style: TextStyle(
+                                        article['category'] ?? '',
+                                        style: const TextStyle(
                                           color: Color(0xFF2E683D),
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 14,
+                                          fontSize: 13,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const Spacer(),
-                                  // Bookmark icon
-                                  IconButton(
-                                    icon: const Icon(Icons.bookmark_border, color: Color(0xFF2E683D)),
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Bookmarked: ${article['title']}')),
-                                      );
-                                    },
-                                  ),
-                                ],
+                                    const Spacer(),
+                                    // Duration (hardcoded for now)
+                                    Text(
+                                      '5 mins read',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                              // Title
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
+                                child: Text(
+                                  article['title'] ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              // Paragraph
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
+                                child: Text(
+                                  article['excerpt'] ?? '',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ),
+                              // Last row: Listen, Language, Bookmark
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8, right: 8, top: 12),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // Listen button
+                                    Container(
+                                      height: 32,
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF2E683D),
+                                        borderRadius: BorderRadius.circular(0),
+                                      ),
+                                      child: Row(
+                                        children: const [
+                                          Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                                          SizedBox(width: 4),
+                                          Text('Listen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 3),
+                                    // Language
+                                    Container(
+                                      height: 32,
+                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFA8D497),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'English',
+                                          style: TextStyle(
+                                            color: Color(0xFF2E683D),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    // Bookmark icon
+                                    IconButton(
+                                      icon: const Icon(Icons.bookmark_border, color: Color(0xFF2E683D)),
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Bookmarked: ${article['title']}')),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 );
               }).toList(),
