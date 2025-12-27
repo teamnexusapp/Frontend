@@ -68,118 +68,171 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF2E683D),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              height: _isCalendarCollapsed ? 80 : null,
-              child: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 28,
-                        ),
+            Column(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  height: _isCalendarCollapsed ? 80 : null,
+                  child: SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
+                          if (!_isCalendarCollapsed) ...[
+                            const SizedBox(height: 10),
+                            SwipeableGreenCalendar(
+                              initialMonth: DateTime.now(),
+                              selectedDates: _selectedCalendarDays,
+                              onDateToggle: _toggleCalendarDate,
+                            ),
+                          ] else ...[
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isCalendarCollapsed = false;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    DateFormat('MMMM yyyy').format(DateTime.now()),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Icon(
+                                    Icons.expand_more,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
-                      if (!_isCalendarCollapsed) ...[
-                        const SizedBox(height: 10),
-                        SwipeableGreenCalendar(
-                          initialMonth: DateTime.now(),
-                          selectedDates: _selectedCalendarDays,
-                          onDateToggle: _toggleCalendarDate,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(36),
+                        topRight: Radius.circular(36),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 16,
+                          offset: const Offset(0, -4),
                         ),
-                      ] else ...[
-                        const SizedBox(height: 8),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isCalendarCollapsed = false;
-                            });
-                          },
-                          child: Row(
+                      ],
+                    ),
+                    child: SingleChildScrollView(
+                      controller: _calendarScrollController,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Cycle Summaries Section
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                DateFormat('MMMM yyyy').format(DateTime.now()),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                              const Text(
+                                'Cycle Summaries',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontFamily: 'Poppins',
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              const Icon(
-                                Icons.expand_more,
-                                color: Colors.white,
-                                size: 20,
+                              TextButton.icon(
+                                style: TextButton.styleFrom(
+                                  backgroundColor: const Color(0xFFFFE5E5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                icon: Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: const Color(0xFFD32F2F), width: 1.5),
+                                  ),
+                                  child: const Icon(Icons.info_outline, color: Color(0xFFD32F2F), size: 14),
+                                ),
+                                label: const Text(
+                                  'Disclaimer',
+                                  style: TextStyle(
+                                    color: Color(0xFFD32F2F),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ],
+                          const SizedBox(height: 16),
+                          _buildCycleSummary(),
+                          const SizedBox(height: 32),
+                          // Logged Symptoms Section
+                          const Text(
+                            'Logged Symptoms',
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          const SizedBox(height: 18),
+                          _buildLoggedSymptomItem('Cervical Mucus', Icons.opacity, const Color(0xFF7E9B7B)),
+                          _buildLoggedSymptomItem('Mood', Icons.sentiment_satisfied_alt, const Color(0xFF2E683D)),
+                          _buildLoggedSymptomItem('Bleeding', Icons.water_drop, Colors.redAccent),
+                          _buildLoggedSymptomItem('Pain', Icons.flash_on, const Color(0xFFB0B0B0)),
+                          _buildLoggedSymptomItem('Notes', Icons.note_add, Colors.grey),
+                          const SizedBox(height: 80),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  controller: _calendarScrollController,
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: const Text(
-                          'Cycle summaries',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      _buildCycleSummary(),
-                      const SizedBox(height: 24),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Logged Symptoms',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildLoggedSymptomItem('Bleeding', 7),
-                      _buildLoggedSymptomItem('Mood', 14),
-                      _buildLoggedSymptomItem('Cervical Mucus', 21),
-                      _buildLoggedSymptomItem('Pain', 28),
-                      _buildLoggedSymptomItem('Notes', 30),
-                    ],
-                  ),
-                ),
+            // Floating Action Button
+            Positioned(
+              bottom: 32,
+              right: 32,
+              child: FloatingActionButton(
+                backgroundColor: const Color(0xFF2E683D),
+                elevation: 6,
+                onPressed: () {},
+                child: const Icon(Icons.add, size: 32, color: Colors.white),
               ),
             ),
           ],
@@ -192,10 +245,10 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: Colors.grey.shade300, width: 1),
         borderRadius: BorderRadius.circular(12),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       child: Column(
         children: [
           Row(
@@ -204,109 +257,116 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
               Text(
                 'Abnormalities',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
                 ),
               ),
               Text(
                 'None',
                 style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF2E683D),
+                  fontSize: 15,
+                  color: Color(0xFF7E9B7B),
                   fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
                 ),
               ),
             ],
           ),
-          Divider(color: Colors.grey, thickness: 1, height: 14),
+          const Divider(color: Color(0xFFE0E0E0), thickness: 1, height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               Text(
-                'Fertile window',
+                'Fertile Window',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
                 ),
               ),
               Text(
-                '21st - 27 Dec',
+                '21–27 Dec',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
+                  fontFamily: 'Poppins',
                 ),
               ),
             ],
           ),
-          Divider(color: Colors.grey, thickness: 1, height: 14),
+          const Divider(color: Color(0xFFE0E0E0), thickness: 1, height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               Text(
-                'Fertile Window (Gender specific)',
+                'Gender Specific',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
                 ),
               ),
               Text(
-                '4',
+                '',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,
+                  fontFamily: 'Poppins',
                 ),
               ),
             ],
           ),
-          Divider(color: Colors.grey, thickness: 1, height: 14),
+          const Divider(color: Color(0xFFE0E0E0), thickness: 1, height: 18),
           Row(
             children: [
               Container(
-                width: 20,
-                height: 20,
+                width: 24,
+                height: 24,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(0xFFA8D497),
+                  color: Color(0xFFE6F4EA),
                 ),
                 child: const Center(
                   child: Icon(
                     Icons.smart_toy,
-                    size: 14,
+                    size: 16,
                     color: Color(0xFF2E683D),
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               const Text(
                 'Normal',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   color: Color(0xFF2E683D),
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 14),
               Icon(
                 Icons.lock,
                 size: 16,
-                color: Colors.grey.shade500,
+                color: Colors.grey,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Unlock detailed insights and chat with verified doctors',
-                  maxLines: 3,
-                  softWrap: true,
+                  'Unlock Detailed Insights',
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey,
                     fontWeight: FontWeight.w500,
+                    fontFamily: 'Poppins',
                   ),
                 ),
               ),
@@ -317,22 +377,31 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     );
   }
 
-  Widget _buildLoggedSymptomItem(String symptom, int day) {
+  Widget _buildLoggedSymptomItem(String symptom, IconData icon, Color iconColor) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         children: [
-          Icon(Icons.check_circle, color: Colors.grey.shade400, size: 20),
-          const SizedBox(width: 12),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: iconColor, size: 22),
+          ),
+          const SizedBox(width: 16),
           Expanded(
             child: Text(
               symptom,
-              style: const TextStyle(fontSize: 16, color: Colors.black),
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Poppins',
+              ),
             ),
-          ),
-          Text(
-            '$day',
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
           ),
         ],
       ),
