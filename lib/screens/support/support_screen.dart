@@ -178,33 +178,6 @@ class _SupportScreenState extends State<SupportScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onNavBarTap,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF2E683D),
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.timeline),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.support_agent),
-            label: '',
-          ),
-        ],
-      ),
     );
   }
 }

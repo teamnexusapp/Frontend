@@ -198,8 +198,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/onboarding/profile');
+              onPressed: () async {
+                await Navigator.of(context).pushNamed('/onboarding/profile');
+                // After returning from profile setup, reload profile to fetch new goal values
+                await _loadUserProfile();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFD4E9D7),

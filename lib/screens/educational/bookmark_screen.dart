@@ -94,6 +94,24 @@ class _ArticleCard extends StatelessWidget {
                 const SizedBox(height: 12),
                 Row(
                   children: [
+                    // Listen container
+                    Container(
+                      height: 32,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF2E683D),
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.volume_up, color: Colors.white, size: 18),
+                          SizedBox(width: 4),
+                          Text('Listen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Language container
                     Container(
                       height: 32,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
