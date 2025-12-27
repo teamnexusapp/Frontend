@@ -30,22 +30,17 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
 
   void _onCalendarScroll() {
     final currentOffset = _calendarScrollController.offset;
-    if ((currentOffset - _lastScrollOffset).abs() > 10) {
-      if (currentOffset > _lastScrollOffset && currentOffset > 50) {
-        if (!_isCalendarCollapsed) {
-          setState(() {
-            _isCalendarCollapsed = true;
-          });
-        }
-      } else if (currentOffset < _lastScrollOffset) {
-        if (_isCalendarCollapsed) {
-          setState(() {
-            _isCalendarCollapsed = false;
-          });
-        }
-      }
-      _lastScrollOffset = currentOffset;
+    // Collapse when scrolling down, expand when scrolling up, with a threshold
+    if (currentOffset > 60 && !_isCalendarCollapsed) {
+      setState(() {
+        _isCalendarCollapsed = true;
+      });
+    } else if (currentOffset < 20 && _isCalendarCollapsed) {
+      setState(() {
+        _isCalendarCollapsed = false;
+      });
     }
+    _lastScrollOffset = currentOffset;
   }
 
   void _toggleCalendarDate(DateTime date) {
