@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../widgets/swipeable_green_calendar.dart';
+import 'tracking/log_symptom_screen.dart';
 
 class CalendarTabScreen extends StatefulWidget {
   const CalendarTabScreen({Key? key}) : super(key: key);
@@ -14,11 +18,36 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   bool _isCalendarCollapsed = false;
   double _lastScrollOffset = 0;
   Set<DateTime> _selectedCalendarDays = {};
+  // Store tapped days as yyyy-mm-dd strings
+  Set<String> _selectedCalendarDaysFormatted = {};
+  // Store last period date as yyyy-mm-dd string
+  String? _lastPeriodDate;
 
   @override
   void initState() {
     super.initState();
     _calendarScrollController.addListener(_onCalendarScroll);
+    _loadTappedDays();
+  }
+
+  Future<void> _loadTappedDays() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedDays = prefs.getStringList('tapped_days');
+    if (savedDays != null && savedDays.isNotEmpty) {
+      setState(() {
+        _selectedCalendarDaysFormatted = savedDays.toSet();
+        _selectedCalendarDays = savedDays
+            .map((s) => DateTime.parse(s))
+            .toSet();
+        // Update last period date
+        if (_selectedCalendarDays.isNotEmpty) {
+          final latest = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
+          _lastPeriodDate = DateFormat('yyyy-MM-dd').format(latest);
+        } else {
+          _lastPeriodDate = null;
+        }
+      });
+    }
   }
 
   @override
@@ -43,7 +72,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     _lastScrollOffset = currentOffset;
   }
 
-  void _toggleCalendarDate(DateTime date) {
+  void _toggleCalendarDate(DateTime date) async {
     final normalized = DateTime(date.year, date.month, date.day);
     setState(() {
       if (_selectedCalendarDays.any((d) => _isSameDay(d, normalized))) {
@@ -52,7 +81,21 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       } else {
         _selectedCalendarDays = {..._selectedCalendarDays, normalized};
       }
+      // Update formatted set
+      _selectedCalendarDaysFormatted = _selectedCalendarDays
+          .map((d) => DateFormat('yyyy-MM-dd').format(d))
+          .toSet();
+      // Update last period date (most recent date)
+      if (_selectedCalendarDays.isNotEmpty) {
+        final latest = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
+        _lastPeriodDate = DateFormat('yyyy-MM-dd').format(latest);
+      } else {
+        _lastPeriodDate = null;
+      }
     });
+    // Save tapped days
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
   }
 
   bool _isSameDay(DateTime a, DateTime b) =>
@@ -226,7 +269,13 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
               child: FloatingActionButton(
                 backgroundColor: const Color(0xFF2E683D),
                 elevation: 6,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const LogSymptomScreen(),
+                    ),
+                  );
+                },
                 child: const Icon(Icons.add, size: 32, color: Colors.white),
               ),
             ),
