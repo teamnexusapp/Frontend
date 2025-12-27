@@ -98,8 +98,8 @@ class _ArticleCard extends StatelessWidget {
                     Container(
                       height: 32,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF2E683D),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2E683D),
                         borderRadius: BorderRadius.circular(0),
                       ),
                       child: Row(
