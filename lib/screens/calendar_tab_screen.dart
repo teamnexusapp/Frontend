@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../widgets/swipeable_green_calendar.dart';
 import 'tracking/log_symptom_screen.dart';
+import '../services/api_service.dart';
 
 class CalendarTabScreen extends StatefulWidget {
   const CalendarTabScreen({Key? key}) : super(key: key);
@@ -12,8 +12,6 @@ class CalendarTabScreen extends StatefulWidget {
   @override
   State<CalendarTabScreen> createState() => _CalendarTabScreenState();
 }
-
-import '../services/api_service.dart';
 
 class _CalendarTabScreenState extends State<CalendarTabScreen> {
   final ScrollController _calendarScrollController = ScrollController();

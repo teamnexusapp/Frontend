@@ -5,62 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ApiService {
-  static const String baseUrl = 'https://fertility-fastapi.onrender.com';
-  
-  // Singleton pattern
-  static final ApiService _instance = ApiService._internal();
-  factory ApiService() => _instance;
-  ApiService._internal();
 
-  String? _accessToken;
-
-  // Set access token after login
-  void setAccessToken(String token) {
-    _accessToken = token;
-  }
-
-  // Get cycle data from cycle/cycles endpoint
-  Future<List<String>> getCycleSymptoms() async {
-    final headers = await _getHeaders(includeAuth: true);
-    final url = Uri.parse('$baseUrl/cycle/cycles');
-    final response = await http.get(url, headers: headers);
-    debugPrint('GET cycle/cycles response: \\${response.statusCode}');
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      // Assuming the response is a list of cycles, get the latest one
-      if (data is List && data.isNotEmpty) {
-        final latest = data.last;
-        if (latest is Map && latest['symptoms'] is List) {
-          return List<String>.from(latest['symptoms']);
-        }
-      }
-      return [];
-    } else {
-      throw ApiException(
-        statusCode: response.statusCode,
-        message: _extractErrorMessage(response),
-      );
-    }
-  }
-
-  // Post cycle data to cycle/cycles endpoint
-  Future<void> postCycleData(Map<String, dynamic> data) async {
-    final headers = await _getHeaders(includeAuth: true);
-    final url = Uri.parse('$baseUrl/cycle/cycles');
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(data),
-    );
-    debugPrint('POST cycle/cycles response: \\${response.statusCode}');
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw ApiException(
-        statusCode: response.statusCode,
-        message: _extractErrorMessage(response),
-      );
-    }
-  }
 
 class ApiService {
   static const String baseUrl = 'https://fertility-fastapi.onrender.com';
