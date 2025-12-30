@@ -340,12 +340,14 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
               child: FloatingActionButton(
                 backgroundColor: const Color(0xFF2E683D),
                 elevation: 6,
-                onPressed: () {
-                  Navigator.of(context).push(
+                onPressed: () async {
+                  await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => const LogSymptomScreen(),
                     ),
                   );
+                  // Refresh logged symptoms after returning
+                  _fetchLoggedSymptoms();
                 },
                 child: const Icon(Icons.add, size: 32, color: Colors.white),
               ),
