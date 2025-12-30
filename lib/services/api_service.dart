@@ -87,7 +87,7 @@ class ApiService {
     int retryCount = 0,
   }) async {
     try {
-      final headers = await _getHeaders();
+      final headers = await getHeaders();
       final url = Uri.parse('$baseUrl/auth/send-otp');
       
         final requestBody = {
@@ -172,7 +172,7 @@ class ApiService {
     required String verificationId,
   }) async {
     try {
-      final headers = await _getHeaders();
+      final headers = await getHeaders();
       final url = Uri.parse('$baseUrl/auth/verify-otp');
       debugPrint('Verifying OTP request to: $url');
       
@@ -223,7 +223,7 @@ class ApiService {
     try {
       debugPrint('Login attempt ${retryCount + 1} for user: $email');
       
-      final headers = await _getHeaders();
+      final headers = await getHeaders();
       final body = {
         'email': email,
         'password': password,
@@ -254,7 +254,7 @@ class ApiService {
         return data;
       } else if (retryCount == 0) {
         // Many FastAPI OAuth2 setups expect x-www-form-urlencoded with 'username' and 'password'
-        final formHeaders = {
+        final formHeaders = <String, String>{
           ...headers,
           'Content-Type': 'application/x-www-form-urlencoded',
         };
@@ -339,7 +339,7 @@ class ApiService {
   // Logout
   Future<void> logout() async {
     try {
-      final headers = await _getHeaders(includeAuth: true);
+      final headers = await getHeaders(includeAuth: true);
       
       final response = await http.post(
         Uri.parse('$baseUrl/auth/logout'),
@@ -369,7 +369,7 @@ class ApiService {
     String? redirectUrl,
   }) async {
     try {
-      final headers = await _getHeaders();
+      final headers = await getHeaders();
       final body = {'email': email};
       if (redirectUrl != null && redirectUrl.isNotEmpty) {
         body['redirect_url'] = redirectUrl;
@@ -404,7 +404,7 @@ class ApiService {
     }
 
     try {
-      final headers = await _getHeaders();
+      final headers = await getHeaders();
       final response = await http.post(
         Uri.parse('$baseUrl/auth/reset_password'),
         headers: headers,
@@ -428,7 +428,7 @@ class ApiService {
   // Get User
   Future<Map<String, dynamic>> getUser() async {
     try {
-      final headers = await _getHeaders(includeAuth: true);
+      final headers = await getHeaders(includeAuth: true);
       
       final response = await http.get(
         Uri.parse('$baseUrl/user/get_user'),
@@ -454,7 +454,7 @@ class ApiService {
   // Get Profile
   Future<Map<String, dynamic>> getProfile() async {
     try {
-      final headers = await _getHeaders(includeAuth: true);
+      final headers = await getHeaders(includeAuth: true);
       
       final response = await http.get(
         Uri.parse('$baseUrl/user/profile'),
@@ -513,7 +513,7 @@ class ApiService {
     bool? audioPreference,
   }) async {
     try {
-      final headers = await _getHeaders(includeAuth: true);
+      final headers = await getHeaders(includeAuth: true);
       final body = <String, dynamic>{};
       if (age != null) body['age'] = age;
       if (cycleLength != null) body['cycle_length'] = cycleLength;
@@ -547,7 +547,7 @@ class ApiService {
   // Delete User
   Future<void> deleteUser() async {
     try {
-      final headers = await _getHeaders(includeAuth: true);
+      final headers = await getHeaders(includeAuth: true);
       
       final response = await http.delete(
         Uri.parse('$baseUrl/user/delete_user'),
