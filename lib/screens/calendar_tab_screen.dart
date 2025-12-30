@@ -61,11 +61,14 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       final headers = await api.getHeaders(includeAuth: true);
       final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
       final response = await http.get(url, headers: headers);
+      debugPrint('GET /insights/insights response: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         // If the response is a list, get the latest cycle's symptoms
         if (data is List && data.isNotEmpty) {
           final latestCycle = data.last;
+          debugPrint('Latest cycle: $latestCycle');
           if (latestCycle['last_period_date'] != null && latestCycle['period_length'] != null) {
             _markPeriodDays(
               lastPeriodDate: latestCycle['last_period_date'],
@@ -73,11 +76,15 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             );
           }
           if (latestCycle['symptoms'] != null) {
+            debugPrint('Symptoms found: ${latestCycle['symptoms']}');
             setState(() {
               _loggedSymptoms = List<String>.from(latestCycle['symptoms']);
             });
+          } else {
+            debugPrint('No symptoms found in latest cycle.');
           }
         } else if (data is Map) {
+          debugPrint('Data is a Map: $data');
           if (data['last_period_date'] != null && data['period_length'] != null) {
             _markPeriodDays(
               lastPeriodDate: data['last_period_date'],
@@ -85,18 +92,24 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             );
           }
           if (data['symptoms'] != null) {
+            debugPrint('Symptoms found: ${data['symptoms']}');
             setState(() {
               _loggedSymptoms = List<String>.from(data['symptoms']);
             });
+          } else {
+            debugPrint('No symptoms found in data map.');
           }
+        } else {
+          debugPrint('Data is neither List nor Map: $data');
         }
       } else {
-        // Handle error or empty state
+        debugPrint('Non-200 response, setting _loggedSymptoms to empty.');
         setState(() {
           _loggedSymptoms = [];
         });
       }
     } catch (e) {
+      debugPrint('Exception in _fetchLoggedSymptoms: $e');
       setState(() {
         _loggedSymptoms = [];
       });

@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 24),
               Text(
-                'Nexus Fertility',
+                'Fertipath',
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,

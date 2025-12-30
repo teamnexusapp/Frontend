@@ -144,7 +144,11 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Log saved successfully!')),
                           );
-                          Navigator.of(context).pop();
+                          // Always navigate to CalendarTabScreen after saving
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (_) => CalendarTabScreen()),
+                            (route) => false,
+                          );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Failed to save log: \\${response.body}')),
