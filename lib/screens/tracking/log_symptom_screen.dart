@@ -121,7 +121,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Save log: send POST request to cycle/cycles
+                      // Save log: send POST request to insights/insights
                       final payload = {
                         "last_period_date": _defaultLastPeriodDate,
                         "cycle_length": _defaultCycleLength,
@@ -131,7 +131,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                       try {
                         final api = ApiService();
                         final headers = await api.getHeaders(includeAuth: true);
-                        final url = Uri.parse('${ApiService.baseUrl}/cycle/cycles');
+                        final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
                         final response = await http.post(
                           url,
                           headers: headers,
