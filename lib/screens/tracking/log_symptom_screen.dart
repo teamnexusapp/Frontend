@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../../services/api_service.dart';
 
 class LogSymptomScreen extends StatefulWidget {
   const LogSymptomScreen({super.key});
@@ -10,6 +13,18 @@ class LogSymptomScreen extends StatefulWidget {
 class _LogSymptomScreenState extends State<LogSymptomScreen> {
   String? _expandedSymptom;
   Map<String, String?> _selectedOptions = {};
+  List<String> get _selectedSymptoms {
+    // Only add symptoms that have a selected option
+    return _selectedOptions.entries
+        .where((entry) => entry.value != null)
+        .map((entry) => entry.value!)
+        .toList();
+  }
+
+  // Default values for demonstration
+  final String _defaultLastPeriodDate = '2025-12-30';
+  final int _defaultCycleLength = 21;
+  final int _defaultPeriodLength = 2;
 
   final Map<String, List<String>> _symptomOptions = {
     'Mood': ['Fatigue', 'Anxiety', 'Mood swings', 'Sadness'],
@@ -105,9 +120,42 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Save logic here
-                      Navigator.of(context).pop();
+                    onPressed: () async {
+                      // Save log: send POST request to cycle/cycles
+                      final payload = {
+                        "last_period_date": _defaultLastPeriodDate,
+                        "cycle_length": _defaultCycleLength,
+                        "period_length": _defaultPeriodLength,
+                        "symptoms": _selectedSymptoms,
+                      };
+                      try {
+                        final api = ApiService();
+                        final headers = await api._getHeaders(includeAuth: true);
+                        final url = Uri.parse('${ApiService.baseUrl}/cycle/cycles');
+                        final response = await http.post(
+                          url,
+                          headers: headers,
+                          body: jsonEncode(payload),
+                        );
+                        debugPrint('Save log response: \\${response.statusCode}');
+                        debugPrint('Save log body: \\${response.body}');
+                        if (response.statusCode == 200 || response.statusCode == 201) {
+                          // Success
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Log saved successfully!')),
+                          );
+                          Navigator.of(context).pop();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to save log: \\${response.body}')),
+                          );
+                        }
+                      } catch (e) {
+                        debugPrint('Error saving log: \\${e.toString()}');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error saving log: \\${e.toString()}')),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),

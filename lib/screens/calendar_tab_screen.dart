@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../widgets/swipeable_green_calendar.dart';
 import 'tracking/log_symptom_screen.dart';
+import '../services/api_service.dart';
 
 class CalendarTabScreen extends StatefulWidget {
   const CalendarTabScreen({Key? key}) : super(key: key);
@@ -22,12 +25,14 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   Set<String> _selectedCalendarDaysFormatted = {};
   // Store last period date as yyyy-mm-dd string
   String? _lastPeriodDate;
+  List<String> _loggedSymptoms = [];
 
   @override
   void initState() {
     super.initState();
     _calendarScrollController.addListener(_onCalendarScroll);
     _loadTappedDays();
+    _fetchLoggedSymptoms();
   }
 
   Future<void> _loadTappedDays() async {
@@ -47,6 +52,73 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           _lastPeriodDate = null;
         }
       });
+    }
+  }
+
+  Future<void> _fetchLoggedSymptoms() async {
+    try {
+      final api = ApiService();
+      final headers = await api._getHeaders(includeAuth: true);
+      final url = Uri.parse('${ApiService.baseUrl}/cycle/cycles');
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // If the response is a list, get the latest cycle's symptoms
+        if (data is List && data.isNotEmpty) {
+          final latestCycle = data.last;
+          if (latestCycle['last_period_date'] != null && latestCycle['period_length'] != null) {
+            _markPeriodDays(
+              lastPeriodDate: latestCycle['last_period_date'],
+              periodLength: latestCycle['period_length'],
+            );
+          }
+          if (latestCycle['symptoms'] != null) {
+            setState(() {
+              _loggedSymptoms = List<String>.from(latestCycle['symptoms']);
+            });
+          }
+        } else if (data is Map) {
+          if (data['last_period_date'] != null && data['period_length'] != null) {
+            _markPeriodDays(
+              lastPeriodDate: data['last_period_date'],
+              periodLength: data['period_length'],
+            );
+          }
+          if (data['symptoms'] != null) {
+            setState(() {
+              _loggedSymptoms = List<String>.from(data['symptoms']);
+            });
+          }
+        }
+      } else {
+        // Handle error or empty state
+        setState(() {
+          _loggedSymptoms = [];
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _loggedSymptoms = [];
+      });
+    }
+  }
+
+  // Calculate period days from last period date and period length
+  void _markPeriodDays({required String lastPeriodDate, required int periodLength}) {
+    try {
+      final startDate = DateTime.parse(lastPeriodDate);
+      final periodDays = List<DateTime>.generate(
+        periodLength,
+        (i) => DateTime(startDate.year, startDate.month, startDate.day + i),
+      );
+      setState(() {
+        _selectedCalendarDays = periodDays.toSet();
+        _selectedCalendarDaysFormatted = periodDays
+          .map((d) => DateFormat('yyyy-MM-dd').format(d))
+          .toSet();
+      });
+    } catch (e) {
+      // Handle parse error or invalid input
     }
   }
 
@@ -249,11 +321,10 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                             ),
                           ),
                           const SizedBox(height: 18),
-                          _buildLoggedSymptomItem('Cervical Mucus', Icons.opacity, const Color(0xFF7E9B7B)),
-                          _buildLoggedSymptomItem('Mood', Icons.sentiment_satisfied_alt, const Color(0xFF2E683D)),
-                          _buildLoggedSymptomItem('Bleeding', Icons.water_drop, Colors.redAccent),
-                          _buildLoggedSymptomItem('Pain', Icons.flash_on, const Color(0xFFB0B0B0)),
-                          _buildLoggedSymptomItem('Notes', Icons.note_add, Colors.grey),
+                          if (_loggedSymptoms.isEmpty)
+                            const Text('No symptoms logged yet.', style: TextStyle(color: Colors.grey)),
+                          for (final symptom in _loggedSymptoms)
+                            _buildLoggedSymptomItem(symptom, Icons.check_circle, const Color(0xFF2E683D)),
                           const SizedBox(height: 80),
                         ],
                       ),
