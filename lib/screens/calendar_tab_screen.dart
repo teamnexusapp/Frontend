@@ -59,7 +59,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     try {
       final api = ApiService();
       final headers = await api.getHeaders(includeAuth: true);
-      final url = Uri.parse('${ApiService.baseUrl}/cycle/cycles');
+      final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
