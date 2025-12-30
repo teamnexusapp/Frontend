@@ -130,7 +130,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                       };
                       try {
                         final api = ApiService();
-                        final headers = await api._getHeaders(includeAuth: true);
+                        final headers = await api.getHeaders(includeAuth: true);
                         final url = Uri.parse('${ApiService.baseUrl}/cycle/cycles');
                         final response = await http.post(
                           url,

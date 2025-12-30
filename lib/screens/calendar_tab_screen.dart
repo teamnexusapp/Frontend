@@ -58,7 +58,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   Future<void> _fetchLoggedSymptoms() async {
     try {
       final api = ApiService();
-      final headers = await api._getHeaders(includeAuth: true);
+      final headers = await api.getHeaders(includeAuth: true);
       final url = Uri.parse('${ApiService.baseUrl}/cycle/cycles');
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {

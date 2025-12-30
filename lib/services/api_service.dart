@@ -55,7 +55,7 @@ class ApiService {
   }
 
   // Get headers - automatically loads token if needed
-  Future<Map<String, String>> _getHeaders({bool includeAuth = false}) async {
+  Future<Map<String, String>> getHeaders({bool includeAuth = false}) async {
     final headers = {
       'Content-Type': 'application/json; charset=utf-8',
       'Accept': 'application/json',
