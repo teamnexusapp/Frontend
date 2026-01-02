@@ -26,6 +26,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   // Store last period date as yyyy-mm-dd string
   String? _lastPeriodDate;
   List<String> _loggedSymptoms = [];
+  bool _isSymptomsLoading = false;
 
   @override
   void initState() {
@@ -56,6 +57,9 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   }
 
   Future<void> _fetchLoggedSymptoms() async {
+    setState(() {
+      _isSymptomsLoading = true;
+    });
     try {
       final api = ApiService();
       final headers = await api.getHeaders(includeAuth: true);
@@ -79,6 +83,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             debugPrint('Symptoms found: ${latestCycle['symptoms']}');
             setState(() {
               _loggedSymptoms = List<String>.from(latestCycle['symptoms']);
+              _isSymptomsLoading = false;
             });
           } else {
             debugPrint('No symptoms found in latest cycle.');
@@ -95,6 +100,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             debugPrint('Symptoms found: ${data['symptoms']}');
             setState(() {
               _loggedSymptoms = List<String>.from(data['symptoms']);
+              _isSymptomsLoading = false;
             });
           } else {
             debugPrint('No symptoms found in data map.');
@@ -106,12 +112,14 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
         debugPrint('Non-200 response, setting _loggedSymptoms to empty.');
         setState(() {
           _loggedSymptoms = [];
+          _isSymptomsLoading = false;
         });
       }
     } catch (e) {
       debugPrint('Exception in _fetchLoggedSymptoms: $e');
       setState(() {
         _loggedSymptoms = [];
+        _isSymptomsLoading = false;
       });
     }
   }
@@ -334,10 +342,17 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                             ),
                           ),
                           const SizedBox(height: 18),
-                          if (_loggedSymptoms.isEmpty)
+                          if (_isSymptomsLoading)
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(24),
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          else if (_loggedSymptoms.isEmpty)
                             const Text('No symptoms logged yet.', style: TextStyle(color: Colors.grey)),
-                          for (final symptom in _loggedSymptoms)
-                            _buildLoggedSymptomItem(symptom, Icons.check_circle, const Color(0xFF2E683D)),
+                          else
+                            ..._loggedSymptoms.map((symptom) => _buildLoggedSymptomItem(symptom, Icons.check_circle, const Color(0xFF2E683D))),
                           const SizedBox(height: 80),
                         ],
                       ),

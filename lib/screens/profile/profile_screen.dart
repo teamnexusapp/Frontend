@@ -266,6 +266,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildGoalsSection() {
     // Dynamically display user profile data fetched from API
+    if (_isLoading) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
