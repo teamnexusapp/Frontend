@@ -351,7 +351,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                             )
                           else if (_loggedSymptoms.isEmpty)
                             const Text('No symptoms logged yet.', style: TextStyle(color: Colors.grey)),
-                          else
+                          else if (_loggedSymptoms.isNotEmpty)
                             ..._loggedSymptoms.map((symptom) => _buildLoggedSymptomItem(symptom, Icons.check_circle, const Color(0xFF2E683D))),
                           const SizedBox(height: 80),
                         ],

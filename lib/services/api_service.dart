@@ -507,6 +507,7 @@ class ApiService {
   Future<Map<String, dynamic>> updateProfile({
     int? age,
     int? cycleLength,
+    int? periodLength,
     String? lastPeriodDate,
     String? ttcHistory,
     String? faithPreference,
@@ -517,6 +518,7 @@ class ApiService {
       final body = <String, dynamic>{};
       if (age != null) body['age'] = age;
       if (cycleLength != null) body['cycle_length'] = cycleLength;
+      if (periodLength != null) body['period_length'] = periodLength;
       if (lastPeriodDate != null) body['last_period_date'] = lastPeriodDate;
       if (ttcHistory != null) body['ttc_history'] = ttcHistory;
       if (faithPreference != null) body['faith_preference'] = faithPreference;
