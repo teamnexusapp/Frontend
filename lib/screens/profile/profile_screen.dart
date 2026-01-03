@@ -5,6 +5,7 @@ import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
 import '../onboarding/welcome_screen.dart';
+import 'profile/_next_period_prediction_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -65,11 +66,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  /// Predicts the next two period days based on lastPeriodDate and cycleLength.
+  List<DateTime> _getNextPeriodDates(User? user, {int count = 2}) {
+    if (user == null || user.lastPeriodDate == null || user.cycleLength == null) return [];
+    try {
+      final lastDate = DateTime.tryParse(user.lastPeriodDate!);
+      if (lastDate == null) return [];
+      return List.generate(count, (i) => lastDate.add(Duration(days: user.cycleLength! * (i + 1))));
+    } catch (_) {
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     final loc = Provider.of<LocalizationProvider>(context);
     final user = _user ?? auth.currentUser;
+
+    final nextPeriodDates = _getNextPeriodDates(user, count: 2);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F0),
@@ -113,6 +128,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // User Profile Card
                     _buildProfileCard(user, context),
                     const SizedBox(height: 16),
+                    if (nextPeriodDates.isNotEmpty)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (int i = 0; i < nextPeriodDates.length; i++) ...[
+                            _NextPeriodPredictionWidget(
+                              nextPeriodDate: nextPeriodDates[i],
+                              label: i == 0 ? 'Next Period' : 'Following',
+                            ),
+                            if (i < nextPeriodDates.length - 1)
+                              const SizedBox(width: 24),
+                          ],
+                        ],
+                      ),
+                    if (nextPeriodDates.isNotEmpty) const SizedBox(height: 16),
                     // Goals Section
                     _buildGoalsSection(),
                     const SizedBox(height: 16),
@@ -676,6 +706,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         );
       },
+    );
+  }
+}
+
+class _NextPeriodPredictionWidget extends StatelessWidget {
+  final DateTime nextPeriodDate;
+  final String label;
+
+  const _NextPeriodPredictionWidget({Key? key, required this.nextPeriodDate, required this.label}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(Icons.date_range, size: 24, color: Colors.grey[700]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Based on your cycle length and last period date.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Next period starts on:',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${nextPeriodDate.day}/${nextPeriodDate.month}/${nextPeriodDate.year}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
