@@ -21,6 +21,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   int _age = 27;
   int _cycleLength = 28;
+  int _periodLength = 5;
   DateTime? _lastPeriodDate;
   // Removed first and last name controllers
   String? _ttcHistory;
@@ -150,6 +151,23 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   const SizedBox(height: 8),
                   Text(
                     AppLocalizations.of(context)!.averageDaysBetweenPeriods,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Period Length
+                  _buildFieldLabel('Period Length (days)'),
+                  _buildNumberDropdown(
+                    value: _periodLength,
+                    items: List.generate(15, (i) => i + 1),
+                    onChanged: (value) => setState(() => _periodLength = value),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'How many days do you usually bleed during your period?',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade600,
@@ -409,6 +427,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       final Map<String, dynamic> body = {
         "age": _age,
         "cycle_length": _cycleLength,
+        "period_length": _periodLength,
         "last_period_date": _lastPeriodDate != null
             ? _lastPeriodDate!.toIso8601String().split('T')[0]
             : null,
@@ -422,6 +441,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       final response = await apiService.updateProfile(
         age: _age,
         cycleLength: _cycleLength,
+        periodLength: _periodLength,
         lastPeriodDate: _lastPeriodDate != null
             ? _lastPeriodDate!.toIso8601String().split('T')[0]
             : null,

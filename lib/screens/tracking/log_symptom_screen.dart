@@ -22,10 +22,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
         .toList();
   }
 
-  // Default values for demonstration
-  final String _defaultLastPeriodDate = '2025-12-30';
-  final int _defaultCycleLength = 21;
-  final int _defaultPeriodLength = 2;
+  // Remove default values; will receive real data from parent
 
   final Map<String, List<String>> _symptomOptions = {
     'Mood': ['Fatigue', 'Anxiety', 'Mood swings', 'Sadness'],
@@ -122,11 +119,15 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Save log: send POST request to insights/insights
+                      // Get arguments from parent route
+                      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+                      final lastPeriodDate = args != null ? args['lastPeriodDate'] : null;
+                      final cycleLength = args != null ? args['cycleLength'] : null;
+                      final periodLength = args != null ? args['periodLength'] : null;
                       final payload = {
-                        "last_period_date": _defaultLastPeriodDate,
-                        "cycle_length": _defaultCycleLength,
-                        "period_length": _defaultPeriodLength,
+                        "last_period_date": lastPeriodDate,
+                        "cycle_length": cycleLength,
+                        "period_length": periodLength,
                         "symptoms": _selectedSymptoms,
                       };
                       try {
@@ -138,27 +139,22 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                           headers: headers,
                           body: jsonEncode(payload),
                         );
-                        debugPrint('Save log response: \\${response.statusCode}');
-                        debugPrint('Save log body: \\${response.body}');
+                        debugPrint('Save log response: ${response.statusCode}');
+                        debugPrint('Save log body: ${response.body}');
                         if (response.statusCode == 200 || response.statusCode == 201) {
-                          // Success
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Log saved successfully!')),
                           );
-                          // Always navigate to CalendarTabScreen after saving
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (_) => CalendarTabScreen()),
-                            (route) => false,
-                          );
+                          Navigator.of(context).pop(true); // Indicate log was saved
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to save log: \\${response.body}')),
+                            SnackBar(content: Text('Failed to save log: ${response.body}')),
                           );
                         }
                       } catch (e) {
-                        debugPrint('Error saving log: \\${e.toString()}');
+                        debugPrint('Error saving log: ${e.toString()}');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error saving log: \\${e.toString()}')),
+                          SnackBar(content: Text('Error saving log: ${e.toString()}')),
                         );
                       }
                     },

@@ -524,7 +524,7 @@ class ApiService {
       if (faithPreference != null) body['faith_preference'] = faithPreference;
       if (audioPreference != null) body['audio_preference'] = audioPreference;
 
-      final response = await http.put(
+      final response = await http.patch(
         Uri.parse('$baseUrl/user/profile'),
         headers: headers,
         body: jsonEncode(body),

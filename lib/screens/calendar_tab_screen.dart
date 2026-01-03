@@ -371,13 +371,21 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 backgroundColor: const Color(0xFF2E683D),
                 elevation: 6,
                 onPressed: () async {
-                  await Navigator.of(context).push(
+                  final result = await Navigator.of(context).push<bool>(
                     MaterialPageRoute(
-                      builder: (_) => const LogSymptomScreen(),
+                      builder: (context) => const LogSymptomScreen(),
+                      settings: RouteSettings(
+                        arguments: {
+                          'lastPeriodDate': _lastPeriodDate,
+                          'cycleLength': _selectedCalendarDays.length,
+                          'periodLength': _selectedCalendarDays.length,
+                        },
+                      ),
                     ),
                   );
-                  // Refresh logged symptoms after returning
-                  _fetchLoggedSymptoms();
+                  if (result == true) {
+                    _fetchLoggedSymptoms();
+                  }
                 },
                 child: const Icon(Icons.add, size: 32, color: Colors.white),
               ),
