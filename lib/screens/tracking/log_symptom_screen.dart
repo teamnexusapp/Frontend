@@ -121,9 +121,13 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                     onPressed: () async {
                       // Get arguments from parent route
                       final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-                      final lastPeriodDate = args != null ? args['lastPeriodDate'] : null;
+                      String? lastPeriodDate = args != null ? args['lastPeriodDate'] : null;
                       final cycleLength = args != null ? args['cycleLength'] : null;
                       final periodLength = args != null ? args['periodLength'] : null;
+                      // If lastPeriodDate is null, set to current date
+                      if (lastPeriodDate == null) {
+                        lastPeriodDate = DateTime.now().toIso8601String().split('T')[0];
+                      }
                       final payload = {
                         "last_period_date": lastPeriodDate,
                         "cycle_length": cycleLength,

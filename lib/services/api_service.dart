@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://fertility-fastapi.onrender.com';
+  static const String baseUrl = 'https://fertipath-fastapi.onrender.com';
   
   // Singleton pattern
   static final ApiService _instance = ApiService._internal();
