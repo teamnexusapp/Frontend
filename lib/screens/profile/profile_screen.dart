@@ -5,7 +5,7 @@ import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
 import '../onboarding/welcome_screen.dart';
-import 'profile/_next_period_prediction_widget.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
