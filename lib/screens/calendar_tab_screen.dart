@@ -280,83 +280,86 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                         ),
                       ],
                     ),
-                    child: SingleChildScrollView(
-                      controller: _calendarScrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Cycle Summaries Section
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Cycle Summaries',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                              TextButton.icon(
-                                style: TextButton.styleFrom(
-                                  backgroundColor: const Color(0xFFFFE5E5),
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                onPressed: () {},
-                                icon: Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: const Color(0xFFD32F2F), width: 1.5),
-                                  ),
-                                  child: const Icon(Icons.info_outline, color: Color(0xFFD32F2F), size: 14),
-                                ),
-                                label: const Text(
-                                  'Disclaimer',
+                    child: RefreshIndicator(
+                      onRefresh: _fetchLoggedSymptoms,
+                      child: SingleChildScrollView(
+                        controller: _calendarScrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Cycle Summaries Section
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Cycle Summaries',
                                   style: TextStyle(
-                                    color: Color(0xFFD32F2F),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          _buildCycleSummary(),
-                          const SizedBox(height: 32),
-                          // Logged Symptoms Section
-                          const Text(
-                            'Logged Symptoms',
-                            style: TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontFamily: 'Poppins',
+                                TextButton.icon(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: const Color(0xFFFFE5E5),
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                  icon: Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: const Color(0xFFD32F2F), width: 1.5),
+                                    ),
+                                    child: const Icon(Icons.info_outline, color: Color(0xFFD32F2F), size: 14),
+                                  ),
+                                  label: const Text(
+                                    'Disclaimer',
+                                    style: TextStyle(
+                                      color: Color(0xFFD32F2F),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 18),
-                          if (_isSymptomsLoading)
-                            const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(24),
-                                child: CircularProgressIndicator(),
+                            const SizedBox(height: 16),
+                            _buildCycleSummary(),
+                            const SizedBox(height: 32),
+                            // Logged Symptoms Section
+                            const Text(
+                              'Logged Symptoms',
+                              style: TextStyle(
+                                fontSize: 19,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontFamily: 'Poppins',
                               ),
-                            )
-                          else ...[
-                            if (_loggedSymptoms.isEmpty)
-                              const Text('No symptoms logged yet.', style: TextStyle(color: Colors.grey)),
-                            if (_loggedSymptoms.isNotEmpty)
-                              ..._loggedSymptoms.map((symptom) => _buildLoggedSymptomItem(symptom, Icons.check_circle, const Color(0xFF2E683D))),
+                            ),
+                            const SizedBox(height: 18),
+                            if (_isSymptomsLoading)
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(24),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            else ...[
+                              if (_loggedSymptoms.isEmpty)
+                                const Text('No symptoms logged yet.', style: TextStyle(color: Colors.grey)),
+                              if (_loggedSymptoms.isNotEmpty)
+                                ..._loggedSymptoms.map((symptom) => _buildLoggedSymptomItem(symptom, Icons.check_circle, const Color(0xFF2E683D))),
+                            ],
+                            const SizedBox(height: 80),
                           ],
-                          const SizedBox(height: 80),
-                        ],
+                        ),
                       ),
                     ),
                   ),

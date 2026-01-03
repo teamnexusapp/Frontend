@@ -102,33 +102,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2D5A3A)),
               ),
             )
-          : SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // User Profile Card
-            _buildProfileCard(user, context),
-            const SizedBox(height: 16),
-            
-            // Goals Section
-            _buildGoalsSection(),
-            const SizedBox(height: 16),
-            
-            // Preferences Section
-            _buildPreferencesSection(),
-            const SizedBox(height: 16),
-            
-            // Privacy & Security Section
-            _buildPrivacySection(),
-            const SizedBox(height: 16),
-            
-            // Delete Account Section
-            _buildDeleteAccountSection(context),
-            const SizedBox(height: 24),
-          ],
-        ),
-      ),
+          : RefreshIndicator(
+              onRefresh: _loadUserProfile,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // User Profile Card
+                    _buildProfileCard(user, context),
+                    const SizedBox(height: 16),
+                    // Goals Section
+                    _buildGoalsSection(),
+                    const SizedBox(height: 16),
+                    // Preferences Section
+                    _buildPreferencesSection(),
+                    const SizedBox(height: 16),
+                    // Privacy & Security Section
+                    _buildPrivacySection(),
+                    const SizedBox(height: 16),
+                    // Delete Account Section
+                    _buildDeleteAccountSection(context),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 
