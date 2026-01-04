@@ -691,9 +691,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
                   }
 
-                  // Always clear local auth state
-                  final auth = Provider.of<AuthService>(context, listen: false);
-                  await auth.signOut();
+
 
                   // Navigate back to welcome screen after deletion/cleanup
                   if (mounted) {
