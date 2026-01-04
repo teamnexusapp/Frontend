@@ -150,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           for (int i = 0; i < nextPeriodDates.length; i++) ...[
-                            _NextPeriodPredictionWidget(
+                            NextPeriodPredictionWidget(
                               nextPeriodDate: nextPeriodDates[i],
                               label: i == 0 ? 'Next Period' : 'Following',
                             ),
