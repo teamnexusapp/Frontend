@@ -21,6 +21,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   User? _user;
   bool _isDeleting = false;
 
+  // Add missing fields for preferences
+  String selectedLanguage = 'English';
+  bool faithBasedContent = false;
+  String selectedTheme = 'Light';
+
   @override
   void initState() {
     super.initState();

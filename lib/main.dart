@@ -13,6 +13,8 @@ import 'screens/onboarding/splash_screen.dart';
 import 'screens/onboarding/welcome_screen.dart';
 import 'screens/onboarding/login_screen.dart';
 import 'screens/onboarding/forget_password_flow.dart';
+import 'screens/onboarding/reset_password_screen.dart';
+import 'screens/onboarding/password_updated_screen.dart';
 import 'screens/onboarding/profile_setup_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/audio/audio_hub_screen.dart';
