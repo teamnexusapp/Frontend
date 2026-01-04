@@ -6,12 +6,17 @@ import '../../services/auth_service.dart';
 import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
+
 import '../onboarding/welcome_screen.dart';
-}
+
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
-}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
   User? _user;
   bool _isDeleting = false;
