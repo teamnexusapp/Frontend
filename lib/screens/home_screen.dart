@@ -461,7 +461,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   textAlign: TextAlign.left,
                                 ),
                                 const SizedBox(height: 8),
-                                // ...existing code...
                               ],
                             ),
                           ),
@@ -481,55 +480,63 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ElevatedButton(
                         onPressed: () async {
                           final result = await Navigator.of(context).push(
-                            // ...existing code...
-                            Positioned(
-                              top: heroHeight + 20, // place below the green container
-                              left: 0,
-                              right: 0,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                                child: _insightLoading
-                                    ? const SizedBox(
-                                        height: 36,
-                                        child: Center(child: CircularProgressIndicator()),
-                                      )
-                                    : Text(
-                                        _insightError != null
-                                            ? _insightError!
-                                            : (_insightText != null && _insightText!.isNotEmpty)
-                                                ? _insightText!
-                                                : defaultPositiveText,
-                                        style: positiveTextStyle,
-                                        textAlign: TextAlign.left,
-                                      ),
+                            MaterialPageRoute(
+                              builder: (_) => const LogSymptomScreen(),
+                            ),
+                          );
+                          if (result == 'refresh') {
+                            await refreshHomeData();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFA8D497),
+                          foregroundColor: const Color(0xFF2E683D),
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.water_drop, color: Color(0xFF2E683D)),
+                            SizedBox(width: 12),
+                            Text(
+                              'Log symptoms',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF2E683D),
                               ),
                             ),
-                            // ...existing code...
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Show insight text below the green container
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+            child: _insightLoading
+                ? const SizedBox(
+                    height: 36,
                     child: Center(child: CircularProgressIndicator()),
                   )
-                : _insightError != null
-                    ? Text(
-                        _insightError!,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Poppins',
-                          color: Color(0xFF2E683D),
-                        ),
-                        textAlign: TextAlign.center,
-                      )
-                    : Text(
-                        _insightText ?? '',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Poppins',
-                          color: Color(0xFF2E683D),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                : Text(
+                    _insightError != null
+                        ? _insightError!
+                        : (_insightText != null && _insightText!.isNotEmpty)
+                            ? _insightText!
+                            : defaultPositiveText,
+                    style: positiveTextStyle,
+                    textAlign: TextAlign.left,
+                  ),
           ),
-          const SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
