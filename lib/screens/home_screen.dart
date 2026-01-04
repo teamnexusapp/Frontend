@@ -334,6 +334,32 @@ class _HomeScreenState extends State<HomeScreen> {
     final size = MediaQuery.of(context).size;
     final heroHeight = size.height * 0.5;
     const buttonHeight = 64.0;
+    final auth = Provider.of<AuthService>(context);
+    final user = auth.currentUser;
+    String fertileWindowText = 'Fertility window unavailable';
+    if (user != null && user.lastPeriodDate != null && user.cycleLength != null) {
+      try {
+        final lastPeriod = DateTime.parse(user.lastPeriodDate!);
+        final ovulationDay = lastPeriod.add(Duration(days: (user.cycleLength! / 2).floor()));
+        final fertileStart = ovulationDay.subtract(const Duration(days: 5));
+        final fertileEnd = ovulationDay.add(const Duration(days: 1));
+        final now = DateTime.now();
+        // If the window is in the past, project to next cycle
+        DateTime nextFertileStart = fertileStart;
+        DateTime nextFertileEnd = fertileEnd;
+        if (fertileEnd.isBefore(now)) {
+          final nextCycleStart = lastPeriod.add(Duration(days: user.cycleLength!));
+          final nextOvulation = nextCycleStart.add(Duration(days: (user.cycleLength! / 2).floor()));
+          nextFertileStart = nextOvulation.subtract(const Duration(days: 5));
+          nextFertileEnd = nextOvulation.add(const Duration(days: 1));
+        }
+        final startStr = "${nextFertileStart.month}/${nextFertileStart.day}";
+        final endStr = "${nextFertileEnd.month}/${nextFertileEnd.day}";
+        fertileWindowText = 'Your next fertility\nwindow is from\n$startStr - $endStr';
+      } catch (_) {
+        fertileWindowText = 'Fertility window unavailable';
+      }
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -396,6 +422,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text(
+                                  fertileWindowText,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                                const SizedBox(height: 8),
                                 _insightLoading
                                     ? const SizedBox(
                                         height: 36,

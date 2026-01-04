@@ -129,30 +129,35 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Get arguments from parent route
-                      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-                      String? lastPeriodDate = args != null ? args['lastPeriodDate'] : null;
-                      final cycleLength = args != null ? args['cycleLength'] : null;
-                      final periodLength = args != null ? args['periodLength'] : null;
-                      // If lastPeriodDate is null, set to current date
-                      if (lastPeriodDate == null) {
-                        lastPeriodDate = DateTime.now().toIso8601String().split('T')[0];
-                      }
-                      final payload = {
-                        "last_period_date": lastPeriodDate,
-                        "cycle_length": cycleLength,
-                        "period_length": periodLength,
-                        "symptoms": _selectedSymptoms,
-                      };
-                      // Show the request being sent
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Sending request: ' + payload.toString()),
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
+                      // Fetch user profile for cycleLength and periodLength
+                      String? lastPeriodDate;
+                      int? cycleLength;
+                      int? periodLength;
                       try {
                         final api = ApiService();
+                        final profileJson = await api.getProfile();
+                        // Defensive: handle both direct and nested user fields
+                        final userData = profileJson['data'] ?? profileJson;
+                        lastPeriodDate = userData['last_period_date'] ?? userData['lastPeriodDate'];
+                        cycleLength = userData['cycle_length'] ?? userData['cycleLength'];
+                        periodLength = userData['period_length'] ?? userData['periodLength'];
+                        // Fallback: if lastPeriodDate is null, set to today
+                        if (lastPeriodDate == null) {
+                          lastPeriodDate = DateTime.now().toIso8601String().split('T')[0];
+                        }
+                        final payload = {
+                          "last_period_date": lastPeriodDate,
+                          "cycle_length": cycleLength,
+                          "period_length": periodLength,
+                          "symptoms": _selectedSymptoms,
+                        };
+                        // Show the request being sent
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Sending request: ' + payload.toString()),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
                         final headers = await api.getHeaders(includeAuth: true);
                         final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
                         final response = await http.post(
@@ -160,8 +165,8 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                           headers: headers,
                           body: jsonEncode(payload),
                         );
-                        debugPrint('Save log response: ${response.statusCode}');
-                        debugPrint('Save log body: ${response.body}');
+                        debugPrint('Save log response: \\${response.statusCode}');
+                        debugPrint('Save log body: \\${response.body}');
                         if (response.statusCode == 200 || response.statusCode == 201) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Log saved successfully!')),
@@ -169,13 +174,13 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                           Navigator.of(context).pop(true); // Indicate log was saved
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to save log: ${response.body}')),
+                            SnackBar(content: Text('Failed to save log: \\${response.body}')),
                           );
                         }
                       } catch (e) {
-                        debugPrint('Error saving log: ${e.toString()}');
+                        debugPrint('Error saving log: \\${e.toString()}');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error saving log: ${e.toString()}')),
+                          SnackBar(content: Text('Error saving log: \\${e.toString()}')),
                         );
                       }
                     },

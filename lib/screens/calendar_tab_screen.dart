@@ -221,10 +221,37 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       _selectedCalendarDaysFormatted = _selectedCalendarDays
           .map((d) => DateFormat('yyyy-MM-dd').format(d))
           .toSet();
-      // Update last period date (most recent date)
+      // The last period date is always the latest (maximum) tapped day,
+      // regardless of order or grouping. This ensures that if the user taps
+      // 2 Jan and 5 Jan, the last period date is 5 Jan.
       if (_selectedCalendarDays.isNotEmpty) {
         final latest = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
         _lastPeriodDate = DateFormat('yyyy-MM-dd').format(latest);
+
+        // Sync last period date to user profile, retaining all required fields
+        try {
+          final api = ApiService();
+          final profileJson = await api.getProfile();
+          final userData = profileJson['data'] ?? profileJson;
+          // Retain all required fields, update only lastPeriodDate
+          final int? cycleLength = userData['cycle_length'] ?? userData['cycleLength'];
+          final int? periodLength = userData['period_length'] ?? userData['periodLength'];
+          final int? age = userData['age'];
+          final String? ttcHistory = userData['ttc_history'] ?? userData['ttcHistory'];
+          final String? faithPreference = userData['faith_preference'] ?? userData['faithPreference'];
+          final bool? audioPreference = userData['audio_preference'];
+          await api.updateProfile(
+            age: age,
+            cycleLength: cycleLength,
+            periodLength: periodLength,
+            lastPeriodDate: _lastPeriodDate,
+            ttcHistory: ttcHistory,
+            faithPreference: faithPreference,
+            audioPreference: audioPreference,
+          );
+        } catch (e) {
+          debugPrint('Failed to sync last period date to profile: \\${e.toString()}');
+        }
       } else {
         _lastPeriodDate = null;
       }
