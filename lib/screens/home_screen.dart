@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../models/user.dart';
-
 import 'profile/profile_screen.dart';
 import 'support/support_screen.dart';
 import 'tracking/log_symptom_screen.dart';
@@ -12,6 +12,8 @@ import 'educational/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
 import 'gender_prediction_screen.dart';
 import '../services/insights_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 
 class _HomeScreenState extends State<HomeScreen> {
+      String? _fertileWindowText;
     Future<void> refreshHomeData() async {
       await _fetchInsight();
       setState(() {}); // Force rebuild if needed
@@ -37,6 +40,27 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchInsight();
+    _loadFertileWindow();
+  }
+
+  Future<void> _loadFertileWindow() async {
+    String fertileWindowText = 'Fertility window unavailable';
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final fertileStartStr = prefs.getString('fertile_period_start');
+      final fertileEndStr = prefs.getString('fertile_period_end');
+      if (fertileStartStr != null && fertileEndStr != null) {
+        final start = DateTime.parse(fertileStartStr);
+        final end = DateTime.parse(fertileEndStr);
+        final formatter = DateFormat('d MMM');
+        fertileWindowText = 'Your next fertility\nwindow is from\n${formatter.format(start)}–${formatter.format(end)}';
+      }
+    } catch (_) {
+      // fallback to unavailable
+    }
+    setState(() {
+      _fertileWindowText = fertileWindowText;
+    });
   }
 
   Future<void> _fetchInsight() async {
@@ -340,32 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const buttonHeight = 64.0;
     final auth = Provider.of<AuthService>(context);
     final user = auth.currentUser;
-        // Use the fertile window range from calendar logic if available
-        // Listen for log symptom save and refresh
-        Positioned(
-          top: 0,
-          right: 0,
-          child: Builder(
-            builder: (context) {
-              return SizedBox.shrink(); // Placeholder for context
-            },
-          ),
-        ),
-    String fertileWindowText = 'Fertility window unavailable';
-    // Try to get values from CalendarTabScreen's logic via shared preferences
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final fertileStartStr = prefs.getString('fertile_period_start');
-      final fertileEndStr = prefs.getString('fertile_period_end');
-      if (fertileStartStr != null && fertileEndStr != null) {
-        final start = DateTime.parse(fertileStartStr);
-        final end = DateTime.parse(fertileEndStr);
-        final formatter = DateFormat('d MMM');
-        fertileWindowText = 'Your next fertility\nwindow is from\n${formatter.format(start)}–${formatter.format(end)}';
-      }
-    } catch (_) {
-      // fallback to unavailable
-    }
+    final fertileWindowText = _fertileWindowText ?? 'Fertility window unavailable';
     // Default positive text and styling
     const String defaultPositiveText = 'You are doing well! Keep tracking your symptoms and stay positive.';
     const TextStyle positiveTextStyle = TextStyle(
