@@ -12,9 +12,12 @@ class GenderPredictionScreen extends StatefulWidget {
   State<GenderPredictionScreen> createState() => _GenderPredictionScreenState();
 }
 
+
 class _GenderPredictionScreenState extends State<GenderPredictionScreen> {
   String? _selectedGender;
   DateTime? _ovulationDay;
+  DateTime? _fertileStart;
+  DateTime? _fertileEnd;
   bool _loading = true;
 
   final List<String> _genderOptions = ['Male', 'Female', 'No Preference'];
@@ -39,17 +42,20 @@ class _GenderPredictionScreenState extends State<GenderPredictionScreen> {
                 ? List<Map<String, dynamic>>.from(jsonDecode(data))
                 : Map<String, dynamic>.from(jsonDecode(data)))
             : null;
+        Map<String, dynamic>? latestCycle;
         if (decoded is List && decoded.isNotEmpty) {
-          final latestCycle = decoded.last;
+          latestCycle = decoded.last;
+        } else if (decoded is Map) {
+          latestCycle = decoded;
+        }
+        if (latestCycle != null) {
           if (latestCycle['ovulation_day'] != null) {
-            setState(() {
-              _ovulationDay = DateTime.parse(latestCycle['ovulation_day']);
-            });
+            _ovulationDay = DateTime.tryParse(latestCycle['ovulation_day']);
           }
-        } else if (decoded is Map && decoded['ovulation_day'] != null) {
-          setState(() {
-            _ovulationDay = DateTime.parse(decoded['ovulation_day']);
-          });
+          if (latestCycle['fertile_period_start'] != null && latestCycle['fertile_period_end'] != null) {
+            _fertileStart = DateTime.tryParse(latestCycle['fertile_period_start']);
+            _fertileEnd = DateTime.tryParse(latestCycle['fertile_period_end']);
+          }
         }
       }
     } catch (e) {
@@ -77,6 +83,21 @@ class _GenderPredictionScreenState extends State<GenderPredictionScreen> {
       });
     }
     return advice;
+  }
+
+  String? getFertileWindowText() {
+    if (_fertileStart != null && _fertileEnd != null) {
+      final formatter = DateFormat('d MMM');
+      return '${formatter.format(_fertileStart!)}–${formatter.format(_fertileEnd!)}';
+    }
+    return null;
+  }
+
+  String? getOvulationDayText() {
+    if (_ovulationDay != null) {
+      return DateFormat('d MMM').format(_ovulationDay!);
+    }
+    return null;
   }
 
   // Update GenderPredictionScreen to look like a chat box
@@ -139,11 +160,21 @@ class _GenderPredictionScreenState extends State<GenderPredictionScreen> {
                     isBot: false,
                   ),
                   const SizedBox(height: 24),
-                  if (_selectedGender != null && _ovulationDay != null)
+                  if (_selectedGender != null && (_ovulationDay != null || (_fertileStart != null && _fertileEnd != null)))
                     _chatBubble(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          if (getFertileWindowText() != null)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text('Fertile Window: ${getFertileWindowText()!}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                            ),
+                          if (getOvulationDayText() != null)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text('Ovulation Day: ${getOvulationDayText()!}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                            ),
                           Text('Advice for intercourse timing:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 12),
                           ..._getAdvice().map((item) => Card(

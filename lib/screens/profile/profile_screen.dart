@@ -72,8 +72,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (calendarDays.isEmpty) return [];
     try {
       final lastDate = calendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
-      // Predict next period start dates
-      return List.generate(count, (i) => lastDate.add(Duration(days: cycleLength * (i + 1))));
+      // Predict next period start dates using (cycleLength - periodLength)
+      final interval = cycleLength - periodLength;
+      return List.generate(count, (i) => lastDate.add(Duration(days: interval * (i + 1))));
     } catch (_) {
       return [];
     }
@@ -723,68 +724,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-class _NextPeriodPredictionWidget extends StatelessWidget {
-  final DateTime nextPeriodDate;
-  final String label;
-
-  const _NextPeriodPredictionWidget({Key? key, required this.nextPeriodDate, required this.label}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(Icons.date_range, size: 24, color: Colors.grey[700]),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Based on your cycle length and last period date.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Next period starts on:',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${nextPeriodDate.day}/${nextPeriodDate.month}/${nextPeriodDate.year}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// ...existing code...
+// Use the dashed circle widget from _next_period_prediction_widget.dart
+export '../profile/_next_period_prediction_widget.dart' show _NextPeriodPredictionWidget;
