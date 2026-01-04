@@ -227,31 +227,6 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       if (_selectedCalendarDays.isNotEmpty) {
         final latest = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
         _lastPeriodDate = DateFormat('yyyy-MM-dd').format(latest);
-
-        // Sync last period date to user profile, retaining all required fields
-        try {
-          final api = ApiService();
-          final profileJson = await api.getProfile();
-          final userData = profileJson['data'] ?? profileJson;
-          // Retain all required fields, update only lastPeriodDate
-          final int? cycleLength = userData['cycle_length'] ?? userData['cycleLength'];
-          final int? periodLength = userData['period_length'] ?? userData['periodLength'];
-          final int? age = userData['age'];
-          final String? ttcHistory = userData['ttc_history'] ?? userData['ttcHistory'];
-          final String? faithPreference = userData['faith_preference'] ?? userData['faithPreference'];
-          final bool? audioPreference = userData['audio_preference'];
-          await api.updateProfile(
-            age: age,
-            cycleLength: cycleLength,
-            periodLength: periodLength,
-            lastPeriodDate: _lastPeriodDate,
-            ttcHistory: ttcHistory,
-            faithPreference: faithPreference,
-            audioPreference: audioPreference,
-          );
-        } catch (e) {
-          debugPrint('Failed to sync last period date to profile: \\${e.toString()}');
-        }
       } else {
         _lastPeriodDate = null;
       }
@@ -259,6 +234,33 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     // Save tapped days
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
+
+    // Now perform the profile update (async, outside setState)
+    if (_selectedCalendarDays.isNotEmpty) {
+      try {
+        final api = ApiService();
+        final profileJson = await api.getProfile();
+        final userData = profileJson['data'] ?? profileJson;
+        // Retain all required fields, update only lastPeriodDate
+        final int? cycleLength = userData['cycle_length'] ?? userData['cycleLength'];
+        final int? periodLength = userData['period_length'] ?? userData['periodLength'];
+        final int? age = userData['age'];
+        final String? ttcHistory = userData['ttc_history'] ?? userData['ttcHistory'];
+        final String? faithPreference = userData['faith_preference'] ?? userData['faithPreference'];
+        final bool? audioPreference = userData['audio_preference'];
+        await api.updateProfile(
+          age: age,
+          cycleLength: cycleLength,
+          periodLength: periodLength,
+          lastPeriodDate: _lastPeriodDate,
+          ttcHistory: ttcHistory,
+          faithPreference: faithPreference,
+          audioPreference: audioPreference,
+        );
+      } catch (e) {
+        debugPrint('Failed to sync last period date to profile: ${e.toString()}');
+      }
+    }
   }
 
   bool _isSameDay(DateTime a, DateTime b) =>
