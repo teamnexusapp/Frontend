@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './_next_period_prediction_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
@@ -6,19 +7,11 @@ import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
 import '../onboarding/welcome_screen.dart';
-
-
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
-
+}
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  bool faithBasedContent = false;
-  String selectedLanguage = 'English';
-  String selectedTheme = 'Light';
+}
   bool _isLoading = true;
   User? _user;
   bool _isDeleting = false;
@@ -724,6 +717,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-// ...existing code...
-// Use the dashed circle widget from _next_period_prediction_widget.dart
-export '../profile/_next_period_prediction_widget.dart' show _NextPeriodPredictionWidget;
+

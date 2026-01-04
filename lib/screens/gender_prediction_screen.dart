@@ -39,14 +39,14 @@ class _GenderPredictionScreenState extends State<GenderPredictionScreen> {
         final data = response.body;
         final decoded = data.isNotEmpty
             ? (data.startsWith('[')
-                ? List<Map<String, dynamic>>.from(jsonDecode(data))
+                ? List<Map<String, dynamic>>.from(jsonDecode(data).map((e) => Map<String, dynamic>.from(e)))
                 : Map<String, dynamic>.from(jsonDecode(data)))
             : null;
         Map<String, dynamic>? latestCycle;
         if (decoded is List && decoded.isNotEmpty) {
           latestCycle = decoded.last;
         } else if (decoded is Map) {
-          latestCycle = decoded;
+          latestCycle = Map<String, dynamic>.from(decoded);
         }
         if (latestCycle != null) {
           if (latestCycle['ovulation_day'] != null) {

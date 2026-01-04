@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class _NextPeriodPredictionWidget extends StatelessWidget {
   final DateTime nextPeriodDate;
@@ -93,7 +94,7 @@ class _DashedCirclePainter extends CustomPainter {
 // Math helpers
 class Math {
   static double cos(double radians) =>
-      double.parse((radians.cos()).toStringAsFixed(10));
+    double.parse((math.cos(radians)).toStringAsFixed(10));
   static double sin(double radians) =>
-      double.parse((radians.sin()).toStringAsFixed(10));
+    double.parse((math.sin(radians)).toStringAsFixed(10));
 }
