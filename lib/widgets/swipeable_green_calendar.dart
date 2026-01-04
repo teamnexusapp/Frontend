@@ -181,6 +181,14 @@ class _MonthGrid extends StatelessWidget {
 
   static const Color _accent = Color(0xFFA8D497);
 
+  // Add a helper to get next period days for styling
+  List<DateTime> getNextPeriodDays() {
+    if (_selectedCalendarDays.isEmpty) return [];
+    final lastDate = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
+    final nextPeriodStart = lastDate.add(const Duration(days: 28));
+    return List<DateTime>.generate(5, (i) => nextPeriodStart.add(Duration(days: i)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final firstWeekday = month.weekday % 7; // 0=Sunday ... 6=Saturday
@@ -190,6 +198,9 @@ class _MonthGrid extends StatelessWidget {
     final daysInPrevMonth = DateUtils.getDaysInMonth(prevMonth.year, prevMonth.month);
 
     final totalCells = (firstWeekday + daysInMonth) <= 35 ? 35 : 42;
+
+    // Get next period days for this month grid
+    final nextPeriodDays = getNextPeriodDays();
 
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
@@ -214,6 +225,7 @@ class _MonthGrid extends StatelessWidget {
           );
 
           final isSelected = selectedDates.any((d) => _isSameDay(d, dayInfo.date));
+          final isNextPeriodDay = nextPeriodDays.any((d) => _isSameDay(d, dayInfo.date));
           final textColor = dayInfo.isOutside
               ? _accent.withOpacity(0.4)
               : isSelected
@@ -229,7 +241,14 @@ class _MonthGrid extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isSelected ? _accent : Colors.transparent,
+                  color: isNextPeriodDay
+                      ? Colors.transparent
+                      : isSelected
+                          ? _accent
+                          : Colors.transparent,
+                  border: isNextPeriodDay
+                      ? Border.all(color: Colors.red, width: 2, style: BorderStyle.solid)
+                      : null,
                 ),
                 alignment: Alignment.center,
                 child: Text(

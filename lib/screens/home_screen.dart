@@ -9,6 +9,7 @@ import 'tracking/log_symptom_screen.dart';
 import 'onboarding/welcome_screen.dart';
 import 'educational/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
+import 'gender_prediction/gender_prediction_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -466,7 +467,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildFeatureCard(
                   icon: Icons.child_care,
                   label: 'Gender\nPredictions',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const GenderPredictionScreen()),
+                    );
+                  },
                 ),
               ],
             ),

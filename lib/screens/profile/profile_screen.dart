@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 import '../../models/user.dart';
 import '../../services/localization_provider.dart';
@@ -66,13 +67,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  /// Predicts the next two period days based on lastPeriodDate and cycleLength.
-  List<DateTime> _getNextPeriodDates(User? user, {int count = 2}) {
-    if (user == null || user.lastPeriodDate == null || user.cycleLength == null) return [];
+  /// Predicts the next two period days based on last tapped calendar day and default cycle length.
+  List<DateTime> _getNextPeriodDatesFromCalendar(Set<DateTime> calendarDays, {int count = 2, int cycleLength = 28, int periodLength = 5}) {
+    if (calendarDays.isEmpty) return [];
     try {
-      final lastDate = DateTime.tryParse(user.lastPeriodDate!);
-      if (lastDate == null) return [];
-      return List.generate(count, (i) => lastDate.add(Duration(days: user.cycleLength! * (i + 1))));
+      final lastDate = calendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
+      // Predict next period start dates
+      return List.generate(count, (i) => lastDate.add(Duration(days: cycleLength * (i + 1))));
     } catch (_) {
       return [];
     }
@@ -84,7 +85,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final loc = Provider.of<LocalizationProvider>(context);
     final user = _user ?? auth.currentUser;
 
-    final nextPeriodDates = _getNextPeriodDates(user, count: 2);
+    // Get calendar days from CalendarTabScreen (for demo, use SharedPreferences directly)
+    // In production, refactor to pass calendar data via provider or callback
+    final Set<DateTime> calendarDays = {};
+    // Load tapped days from SharedPreferences synchronously (for demo only)
+    // In production, this should be async and handled in state
+    // This is a workaround for demonstration
+    SharedPreferences.getInstance().then((prefs) {
+      final savedDays = prefs.getStringList('tapped_days');
+      if (savedDays != null && savedDays.isNotEmpty) {
+        calendarDays.addAll(savedDays.map((s) => DateTime.parse(s)));
+      }
+    });
+    final nextPeriodDates = _getNextPeriodDatesFromCalendar(calendarDays, count: 2, cycleLength: 28, periodLength: 5);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F0),

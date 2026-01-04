@@ -27,6 +27,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   String? _lastPeriodDate;
   List<String> _loggedSymptoms = [];
   bool _isSymptomsLoading = false;
+  String? _fertileStart;
+  String? _fertileEnd;
 
   @override
   void initState() {
@@ -34,6 +36,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     _calendarScrollController.addListener(_onCalendarScroll);
     _loadTappedDays();
     _fetchLoggedSymptoms();
+    // Mark next period days after loading tapped days
+    WidgetsBinding.instance.addPostFrameCallback((_) => _markNextPeriodDays());
   }
 
   Future<void> _loadTappedDays() async {
@@ -69,10 +73,15 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       debugPrint('Response body: ${response.body}');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // If the response is a list, get the latest cycle's symptoms
         if (data is List && data.isNotEmpty) {
           final latestCycle = data.last;
           debugPrint('Latest cycle: $latestCycle');
+          if (latestCycle['fertile_period_start'] != null && latestCycle['fertile_period_end'] != null) {
+            setState(() {
+              _fertileStart = latestCycle['fertile_period_start'];
+              _fertileEnd = latestCycle['fertile_period_end'];
+            });
+          }
           if (latestCycle['last_period_date'] != null && latestCycle['period_length'] != null) {
             _markPeriodDays(
               lastPeriodDate: latestCycle['last_period_date'],
@@ -90,6 +99,12 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           }
         } else if (data is Map) {
           debugPrint('Data is a Map: $data');
+          if (data['fertile_period_start'] != null && data['fertile_period_end'] != null) {
+            setState(() {
+              _fertileStart = data['fertile_period_start'];
+              _fertileEnd = data['fertile_period_end'];
+            });
+          }
           if (data['last_period_date'] != null && data['period_length'] != null) {
             _markPeriodDays(
               lastPeriodDate: data['last_period_date'],
@@ -141,6 +156,23 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     } catch (e) {
       // Handle parse error or invalid input
     }
+  }
+
+  // Calculate and mark next period days using last tapped day and default cycle/period length
+  void _markNextPeriodDays() async {
+    if (_selectedCalendarDays.isEmpty) return;
+    final lastDate = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
+    final nextPeriodStart = lastDate.add(const Duration(days: 28));
+    final nextPeriodDays = List<DateTime>.generate(5, (i) => nextPeriodStart.add(Duration(days: i)));
+    setState(() {
+      // Optionally, you can highlight these days differently or add to selected days
+      _selectedCalendarDays = {..._selectedCalendarDays, ...nextPeriodDays};
+      _selectedCalendarDaysFormatted = _selectedCalendarDays
+        .map((d) => DateFormat('yyyy-MM-dd').format(d))
+        .toSet();
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
   }
 
   @override
@@ -214,16 +246,6 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                              size: 28,
-                            ),
-                          ),
                           if (!_isCalendarCollapsed) ...[
                             const SizedBox(height: 10),
                             SwipeableGreenCalendar(
@@ -309,7 +331,24 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Disclaimer'),
+                                        content: const Text(
+                                          'This app uses AI to provide predictions and insights. These predictions may not be fully accurate and should not replace professional medical advice. Please verify all health data and predictions with a qualified doctor.',
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(),
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                   icon: Container(
                                     width: 20,
                                     height: 20,
@@ -400,6 +439,18 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   }
 
   Widget _buildCycleSummary() {
+    // Format fertile window range
+    String fertileWindowText = '';
+    if (_fertileStart != null && _fertileEnd != null) {
+      try {
+        final start = DateTime.parse(_fertileStart!);
+        final end = DateTime.parse(_fertileEnd!);
+        final formatter = DateFormat('d MMM');
+        fertileWindowText = '${formatter.format(start)}–${formatter.format(end)}';
+      } catch (_) {
+        fertileWindowText = '';
+      }
+    }
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -446,7 +497,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 ),
               ),
               Text(
-                '21–27 Dec',
+                '',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.black,
@@ -536,6 +587,21 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   }
 
   Widget _buildLoggedSymptomItem(String symptom, IconData icon, Color iconColor) {
+    // Display as '<section name> - <symptom>'
+    // Try to split symptom by ':' or '-' to get section and value
+    String displaySymptom = symptom;
+    if (symptom.contains(':')) {
+      final parts = symptom.split(':');
+      if (parts.length == 2) {
+        displaySymptom = parts[0].trim() + ' - ' + parts[1].trim();
+      }
+    } else if (symptom.contains('-')) {
+      final parts = symptom.split('-');
+      if (parts.length == 2) {
+        displaySymptom = parts[0].trim() + ' - ' + parts[1].trim();
+      }
+    }
+    // Otherwise, just show the symptom as is
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Row(
@@ -552,7 +618,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           const SizedBox(width: 16),
           Expanded(
             child: Text(
-              symptom,
+              displaySymptom,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,

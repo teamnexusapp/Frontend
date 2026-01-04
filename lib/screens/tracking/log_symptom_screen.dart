@@ -14,12 +14,20 @@ class LogSymptomScreen extends StatefulWidget {
 class _LogSymptomScreenState extends State<LogSymptomScreen> {
   String? _expandedSymptom;
   Map<String, String?> _selectedOptions = {};
+  // Change Mood to allow multiple selections
+  Map<String, List<String>> _multiSelectedOptions = {'Mood': []};
+
   List<String> get _selectedSymptoms {
-    // Only add symptoms that have a selected option
-    return _selectedOptions.entries
-        .where((entry) => entry.value != null)
-        .map((entry) => entry.value!)
-        .toList();
+    // For multi-select symptoms, add all selected values
+    List<String> symptoms = [];
+    _selectedOptions.forEach((key, value) {
+      if (key == 'Mood') {
+        symptoms.addAll(_multiSelectedOptions['Mood'] ?? []);
+      } else if (value != null) {
+        symptoms.add(value!);
+      }
+    });
+    return symptoms;
   }
 
   // Remove default values; will receive real data from parent
@@ -188,102 +196,107 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
   }
 
   Widget _buildSymptomContainer(String symptomName) {
-    final isExpanded = _expandedSymptom == symptomName;
     final options = _symptomOptions[symptomName] ?? [];
-
-    return Center(
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        width: 340,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _expandedSymptom = isExpanded ? null : symptomName;
-                });
-              },
-              child: Container(
-                height: 83,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFFA8D497),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.water_drop,
-                          color: Color(0xFF2E683D),
-                          size: 20,
-                        ),
+    final isExpanded = _expandedSymptom == symptomName;
+    return Container(
+      // ...existing code...
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _expandedSymptom = isExpanded ? null : symptomName;
+              });
+            },
+            child: Container(
+              height: 83,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFA8D497),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.water_drop,
+                        color: Color(0xFF2E683D),
+                        size: 20,
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Text(
-                      symptomName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                        fontFamily: 'Poppins',
-                      ),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    symptomName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                      fontFamily: 'Poppins',
                     ),
-                    const Spacer(),
-                    Icon(
-                      isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
+                  ),
+                  const Spacer(),
+                  Icon(
+                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    color: Colors.grey,
+                  ),
+                ],
               ),
             ),
-            if (isExpanded)
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: options.map((option) {
-                    final isSelected = _selectedOptions[symptomName] == option;
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
+          ),
+          if (isExpanded)
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: options.map((option) {
+                  bool isSelected;
+                  if (symptomName == 'Mood') {
+                    isSelected = _multiSelectedOptions['Mood']?.contains(option) ?? false;
+                  } else {
+                    isSelected = _selectedOptions[symptomName] == option;
+                  }
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (symptomName == 'Mood') {
+                          if (isSelected) {
+                            _multiSelectedOptions['Mood']?.remove(option);
+                          } else {
+                            _multiSelectedOptions['Mood']?.add(option);
+                          }
+                        } else {
                           _selectedOptions[symptomName] = option;
-                          _expandedSymptom = null; // Collapse after selection
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFF2E683D) : const Color(0xFFA8D497),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          option,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Poppins',
-                          ),
+                          // Do NOT collapse after selection
+                          // _expandedSymptom = null; // Remove this line
+                        }
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: isSelected ? const Color(0xFF2E683D) : const Color(0xFFA8D497),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        option,
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Poppins',
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
+                    ),
+                  );
+                }).toList(),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
