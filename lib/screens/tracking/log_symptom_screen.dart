@@ -144,6 +144,13 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                         "period_length": periodLength,
                         "symptoms": _selectedSymptoms,
                       };
+                      // Show the request being sent
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Sending request: ' + payload.toString()),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
                       try {
                         final api = ApiService();
                         final headers = await api.getHeaders(includeAuth: true);

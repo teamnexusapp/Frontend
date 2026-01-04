@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../models/user.dart';
+
 import 'profile/profile_screen.dart';
 import 'support/support_screen.dart';
 import 'tracking/log_symptom_screen.dart';
@@ -10,6 +11,7 @@ import 'onboarding/welcome_screen.dart';
 import 'educational/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
 import 'gender_prediction_screen.dart';
+import '../services/insights_service.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -19,9 +21,47 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool _showSideMenu = false;
+  String? _insightText;
+  bool _insightLoading = false;
+  String? _insightError;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchInsight();
+  }
+
+  Future<void> _fetchInsight() async {
+    setState(() {
+      _insightLoading = true;
+      _insightError = null;
+    });
+    try {
+      final insights = await InsightsService().getInsights();
+      if (insights.isNotEmpty && insights[0]['insight_text'] != null) {
+        setState(() {
+          _insightText = insights[0]['insight_text'].toString();
+        });
+      } else {
+        setState(() {
+          _insightText = null;
+          _insightError = 'No insights available.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _insightError = 'Failed to load insights.';
+      });
+    } finally {
+      setState(() {
+        _insightLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -356,27 +396,32 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  "Today's fertility\ninsight",
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFFA8D497),
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                const SizedBox(height: 8),
-                                const Text(
-                                  'Your next fertility\nwindow is from\nDec 23-27',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
+                                _insightLoading
+                                    ? const SizedBox(
+                                        height: 36,
+                                        child: Center(child: CircularProgressIndicator()),
+                                      )
+                                    : _insightError != null
+                                        ? Text(
+                                            _insightError!,
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                          )
+                                        : Text(
+                                            _insightText ?? '',
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                          ),
                               ],
                             ),
                           ),
@@ -435,18 +480,34 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              "You're doing great! Stay positive\nand be focused!",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Poppins',
-                color: Color(0xFF2E683D),
-              ),
-              textAlign: TextAlign.left,
-            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: _insightLoading
+                ? const SizedBox(
+                    height: 36,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : _insightError != null
+                    ? Text(
+                        _insightError!,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Poppins',
+                          color: Color(0xFF2E683D),
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                    : Text(
+                        _insightText ?? '',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Poppins',
+                          color: Color(0xFF2E683D),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
           ),
           const SizedBox(height: 15),
           Padding(

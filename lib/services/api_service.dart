@@ -465,31 +465,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // If email is missing or empty, fall back to the more complete get_user endpoint
-        try {
-          final map = (data is Map<String, dynamic>)
-              ? data
-              : (data is Map ? Map<String, dynamic>.from(data) : <String, dynamic>{});
-          var candidate = map;
-          if (candidate['data'] is Map<String, dynamic>) {
-            candidate = Map<String, dynamic>.from(candidate['data']);
-          }
-          if (candidate['user'] is Map<String, dynamic>) {
-            candidate = {...candidate, ...Map<String, dynamic>.from(candidate['user'])};
-          }
-          final email = candidate['email'] ?? candidate['email_address'];
-          if (email is! String || email.trim().isEmpty) {
-            debugPrint('Profile missing email; fetching from /user/get_user');
-            final fullUser = await getUser();
-            return fullUser;
-          }
-        } catch (e) {
-          debugPrint('Profile parsing error, attempting fallback get_user: $e');
-          try {
-            final fullUser = await getUser();
-            return fullUser;
-          } catch (_) {}
-        }
+        // Only return /user/profile data, never call getUser as fallback
         return data;
       } else {
         throw ApiException(
