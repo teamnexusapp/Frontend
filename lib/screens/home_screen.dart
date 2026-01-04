@@ -469,7 +469,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Gender\nPredictions',
                   onTap: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const GenderPredictionScreen()),
+                      MaterialPageRoute(builder: (_) => GenderPredictionScreen()),
                     );
                   },
                 ),

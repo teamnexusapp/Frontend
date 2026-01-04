@@ -183,8 +183,8 @@ class _MonthGrid extends StatelessWidget {
 
   // Add a helper to get next period days for styling
   List<DateTime> getNextPeriodDays() {
-    if (_selectedCalendarDays.isEmpty) return [];
-    final lastDate = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
+    if (selectedDates.isEmpty) return [];
+    final lastDate = selectedDates.reduce((a, b) => a.isAfter(b) ? a : b);
     final nextPeriodStart = lastDate.add(const Duration(days: 28));
     return List<DateTime>.generate(5, (i) => nextPeriodStart.add(Duration(days: i)));
   }
