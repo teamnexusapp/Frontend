@@ -173,7 +173,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   void _markNextPeriodDays() async {
     if (_selectedCalendarDays.isEmpty) return;
     final lastDate = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
-    final nextPeriodStart = lastDate.add(const Duration(days: 28));
+    final nextPeriodStart = lastDate.add(const Duration(days: 25));
     final nextPeriodDays = List<DateTime>.generate(5, (i) => nextPeriodStart.add(Duration(days: i)));
     setState(() {
       // Optionally, you can highlight these days differently or add to selected days
@@ -507,8 +507,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           const Divider(color: Color(0xFFE0E0E0), thickness: 1, height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Fertile Window',
                 style: TextStyle(
                   fontSize: 15,
@@ -518,8 +518,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 ),
               ),
               Text(
-                '',
-                style: TextStyle(
+                fertileWindowText.isNotEmpty ? fertileWindowText : '-',
+                style: const TextStyle(
                   fontSize: 15,
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
@@ -531,8 +531,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           const Divider(color: Color(0xFFE0E0E0), thickness: 1, height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'Ovulation Day',
                 style: TextStyle(
                   fontSize: 15,
@@ -542,8 +542,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 ),
               ),
               Text(
-                '',
-                style: TextStyle(
+                ovulationDayText.isNotEmpty ? ovulationDayText : '-',
+                style: const TextStyle(
                   fontSize: 15,
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
@@ -608,47 +608,55 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   }
 
   Widget _buildLoggedSymptomItem(String symptom, IconData icon, Color iconColor) {
-    // Display as '<section name> - <symptom>'
-    // Try to split symptom by ':' or '-' to get section and value
+    // Always display as '<section> - <symptom>'
     String displaySymptom = symptom;
+    String sendSymptom = symptom;
     if (symptom.contains(':')) {
       final parts = symptom.split(':');
       if (parts.length == 2) {
         displaySymptom = parts[0].trim() + ' - ' + parts[1].trim();
+        sendSymptom = displaySymptom;
       }
     } else if (symptom.contains('-')) {
       final parts = symptom.split('-');
       if (parts.length == 2) {
         displaySymptom = parts[0].trim() + ' - ' + parts[1].trim();
+        sendSymptom = displaySymptom;
       }
     }
-    // Otherwise, just show the symptom as is
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.12),
-              shape: BoxShape.circle,
+      child: GestureDetector(
+        onTap: () {
+          // Send the full displaySymptom string when tapped
+          // TODO: Replace this with your actual send logic
+          debugPrint('Symptom sent: ' + sendSymptom);
+        },
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: iconColor, size: 22),
             ),
-            child: Icon(icon, color: iconColor, size: 22),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              displaySymptom,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins',
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                displaySymptom,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Poppins',
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
