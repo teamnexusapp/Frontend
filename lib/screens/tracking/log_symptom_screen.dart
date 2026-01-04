@@ -172,10 +172,11 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Log saved successfully!')),
                           );
-                          Navigator.of(context).pop(true); // Indicate log was saved
+                          // Pop and trigger refresh on home screen
+                          Navigator.of(context).pop('refresh');
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to save log: \\${response.body}')),
+                            SnackBar(content: Text('Failed to save log: ${response.body}')),
                           );
                         }
                       } catch (e) {

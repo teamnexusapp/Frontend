@@ -23,6 +23,10 @@ class HomeScreen extends StatefulWidget {
 
 
 class _HomeScreenState extends State<HomeScreen> {
+    Future<void> refreshHomeData() async {
+      await _fetchInsight();
+      setState(() {}); // Force rebuild if needed
+    }
   int _selectedIndex = 0;
   bool _showSideMenu = false;
   String? _insightText;
@@ -336,33 +340,55 @@ class _HomeScreenState extends State<HomeScreen> {
     const buttonHeight = 64.0;
     final auth = Provider.of<AuthService>(context);
     final user = auth.currentUser;
+        // Use the fertile window range from calendar logic if available
+        // Listen for log symptom save and refresh
+        Positioned(
+          top: 0,
+          right: 0,
+          child: Builder(
+            builder: (context) {
+              return SizedBox.shrink(); // Placeholder for context
+            },
+          ),
+        ),
     String fertileWindowText = 'Fertility window unavailable';
-    if (user != null && user.lastPeriodDate != null && user.cycleLength != null) {
-      try {
-        final lastPeriod = DateTime.parse(user.lastPeriodDate!);
-        final ovulationDay = lastPeriod.add(Duration(days: (user.cycleLength! / 2).floor()));
-        final fertileStart = ovulationDay.subtract(const Duration(days: 5));
-        final fertileEnd = ovulationDay.add(const Duration(days: 1));
-        final now = DateTime.now();
-        // If the window is in the past, project to next cycle
-        DateTime nextFertileStart = fertileStart;
-        DateTime nextFertileEnd = fertileEnd;
-        if (fertileEnd.isBefore(now)) {
-          final nextCycleStart = lastPeriod.add(Duration(days: user.cycleLength!));
-          final nextOvulation = nextCycleStart.add(Duration(days: (user.cycleLength! / 2).floor()));
-          nextFertileStart = nextOvulation.subtract(const Duration(days: 5));
-          nextFertileEnd = nextOvulation.add(const Duration(days: 1));
-        }
-        final startStr = "${nextFertileStart.month}/${nextFertileStart.day}";
-        final endStr = "${nextFertileEnd.month}/${nextFertileEnd.day}";
-        fertileWindowText = 'Your next fertility\nwindow is from\n$startStr - $endStr';
-      } catch (_) {
-        fertileWindowText = 'Fertility window unavailable';
+    // Try to get values from CalendarTabScreen's logic via shared preferences
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final fertileStartStr = prefs.getString('fertile_period_start');
+      final fertileEndStr = prefs.getString('fertile_period_end');
+      if (fertileStartStr != null && fertileEndStr != null) {
+        final start = DateTime.parse(fertileStartStr);
+        final end = DateTime.parse(fertileEndStr);
+        final formatter = DateFormat('d MMM');
+        fertileWindowText = 'Your next fertility\nwindow is from\n${formatter.format(start)}–${formatter.format(end)}';
       }
+    } catch (_) {
+      // fallback to unavailable
     }
+    // Default positive text and styling
+    const String defaultPositiveText = 'You are doing well! Keep tracking your symptoms and stay positive.';
+    const TextStyle positiveTextStyle = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'Poppins',
+      color: Colors.white,
+    );
+
     return SingleChildScrollView(
       child: Column(
         children: [
+          // Add a refresh button at the top right
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.refresh, color: Color(0xFF2E683D)),
+                tooltip: 'Refresh',
+                onPressed: refreshHomeData,
+              ),
+            ],
+          ),
           SizedBox(
             height: heroHeight + (buttonHeight / 2),
             child: Stack(
@@ -433,6 +459,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                   textAlign: TextAlign.left,
                                 ),
                                 const SizedBox(height: 8),
+                                // Green paragraph for Today's fertility insight
+                                Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFA8D497),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    "Today's fertility insight",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFF2E683D),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
                                 _insightLoading
                                     ? const SizedBox(
                                         height: 36,
@@ -441,22 +485,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     : _insightError != null
                                         ? Text(
                                             _insightError!,
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Poppins',
-                                              color: Colors.white,
-                                            ),
+                                            style: positiveTextStyle,
                                             textAlign: TextAlign.left,
                                           )
                                         : Text(
-                                            _insightText ?? '',
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Poppins',
-                                              color: Colors.white,
-                                            ),
+                                            (_insightText != null && _insightText!.isNotEmpty)
+                                              ? _insightText!
+                                              : defaultPositiveText,
+                                            style: positiveTextStyle,
                                             textAlign: TextAlign.left,
                                           ),
                               ],
@@ -476,12 +512,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 280,
                       height: buttonHeight,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
+                        onPressed: () async {
+                          final result = await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => const CalendarTabScreen(),
+                              builder: (_) => const LogSymptomScreen(),
                             ),
                           );
+                          if (result == 'refresh') {
+                            await refreshHomeData();
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFA8D497),
