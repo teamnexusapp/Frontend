@@ -134,56 +134,32 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                       String? lastPeriodDate;
                       int? cycleLength;
                       int? periodLength;
-                      try {
-                        final api = ApiService();
-                        final profileJson = await api.getProfile();
-                        // Defensive: handle both direct and nested user fields
-                        final userData = profileJson['data'] ?? profileJson;
-                        lastPeriodDate = userData['last_period_date'] ?? userData['lastPeriodDate'];
-                        cycleLength = userData['cycle_length'] ?? userData['cycleLength'];
-                        periodLength = userData['period_length'] ?? userData['periodLength'];
-                        // Fallback: if lastPeriodDate is null, set to today
-                        if (lastPeriodDate == null) {
-                          lastPeriodDate = DateTime.now().toIso8601String().split('T')[0];
-                        }
-                        final payload = {
-                          "last_period_date": lastPeriodDate,
-                          "cycle_length": cycleLength,
-                          "period_length": periodLength,
-                          "symptoms": _selectedSymptoms,
-                        };
-                        // Show the request being sent
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Sending request: ' + payload.toString()),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                        final headers = await api.getHeaders(includeAuth: true);
-                        final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
-                        final response = await http.post(
-                          url,
-                          headers: headers,
-                          body: jsonEncode(payload),
-                        );
-                        debugPrint('Save log response: \\${response.statusCode}');
-                        debugPrint('Save log body: \\${response.body}');
-                        if (response.statusCode == 200 || response.statusCode == 201) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Log saved successfully!')),
-                          );
-                          // Pop and trigger refresh on home screen
-                          Navigator.of(context).pop('refresh');
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to save log: ${response.body}')),
-                          );
-                        }
-                      } catch (e) {
-                        debugPrint('Error saving log: \\${e.toString()}');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error saving log: \\${e.toString()}')),
-                        );
+                      final api = ApiService();
+                      final profileJson = await api.getProfile();
+                      // Defensive: handle both direct and nested user fields
+                      final userData = profileJson['data'] ?? profileJson;
+                      lastPeriodDate = userData['last_period_date'] ?? userData['lastPeriodDate'];
+                      cycleLength = userData['cycle_length'] ?? userData['cycleLength'];
+                      periodLength = userData['period_length'] ?? userData['periodLength'];
+                      // Fallback: if lastPeriodDate is null, set to today
+                      if (lastPeriodDate == null) {
+                        lastPeriodDate = DateTime.now().toIso8601String().split('T')[0];
+                      }
+                      final payload = {
+                        "last_period_date": lastPeriodDate,
+                        "cycle_length": cycleLength,
+                        "period_length": periodLength,
+                        "symptoms": _selectedSymptoms,
+                      };
+                      final headers = await api.getHeaders(includeAuth: true);
+                      final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
+                      final response = await http.post(
+                        url,
+                        headers: headers,
+                        body: jsonEncode(payload),
+                      );
+                      if (response.statusCode == 200 || response.statusCode == 201) {
+                        Navigator.of(context).pop('refresh');
                       }
                     },
                     style: ElevatedButton.styleFrom(

@@ -52,8 +52,12 @@ class _HomeScreenState extends State<HomeScreen> {
       if (fertileStartStr != null && fertileEndStr != null) {
         final start = DateTime.parse(fertileStartStr);
         final end = DateTime.parse(fertileEndStr);
-        final formatter = DateFormat('d MMM');
-        fertileWindowText = 'Your next fertility\nwindow is from\n${formatter.format(start)}–${formatter.format(end)}';
+        final monthFormatter = DateFormat('MMM');
+        final dayFormatter = DateFormat('d');
+        final month = monthFormatter.format(start); // e.g. Dec
+        final startDay = dayFormatter.format(start); // e.g. 23
+        final endDay = dayFormatter.format(end); // e.g. 27
+        fertileWindowText = 'Your next fertility\nwindow is from $month\n$startDay–$endDay';
       }
     } catch (_) {
       // fallback to unavailable
@@ -377,17 +381,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Add a refresh button at the top right
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.refresh, color: Color(0xFF2E683D)),
-                tooltip: 'Refresh',
-                onPressed: refreshHomeData,
-              ),
-            ],
-          ),
           SizedBox(
             height: heroHeight + (buttonHeight / 2),
             child: Stack(
@@ -448,6 +441,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
+                                  "Today's fertility insight",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFFA8D497), // Light green
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
                                   fertileWindowText,
                                   style: const TextStyle(
                                     fontSize: 18,
@@ -458,42 +461,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                   textAlign: TextAlign.left,
                                 ),
                                 const SizedBox(height: 8),
-                                // Green paragraph for Today's fertility insight
-                                Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFA8D497),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    "Today's fertility insight",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFF2E683D),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
                                 _insightLoading
                                     ? const SizedBox(
                                         height: 36,
                                         child: Center(child: CircularProgressIndicator()),
                                       )
-                                    : _insightError != null
-                                        ? Text(
-                                            _insightError!,
-                                            style: positiveTextStyle,
-                                            textAlign: TextAlign.left,
-                                          )
-                                        : Text(
-                                            (_insightText != null && _insightText!.isNotEmpty)
-                                              ? _insightText!
-                                              : defaultPositiveText,
-                                            style: positiveTextStyle,
-                                            textAlign: TextAlign.left,
-                                          ),
+                                    : Text(
+                                        _insightError != null
+                                            ? _insightError!
+                                            : (_insightText != null && _insightText!.isNotEmpty)
+                                                ? _insightText!
+                                                : defaultPositiveText,
+                                        style: positiveTextStyle,
+                                        textAlign: TextAlign.left,
+                                      ),
                               ],
                             ),
                           ),

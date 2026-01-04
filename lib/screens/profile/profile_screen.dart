@@ -19,6 +19,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
   User? _user;
+  User? _userCard;
   bool _isDeleting = false;
 
   // Add missing fields for preferences
@@ -30,6 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadUserProfile();
+    _loadUserCard();
   }
 
   Future<void> _loadUserProfile() async {
@@ -54,6 +56,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadUserCard() async {
+    try {
+      final apiService = ApiService();
+      final userJson = await apiService.getUser();
+      debugPrint('getUser JSON received: ' + userJson.toString());
+      final fetchedUser = User.fromJson(userJson);
+      setState(() {
+        _userCard = fetchedUser;
+      });
+    } catch (e) {
+      debugPrint('Error loading getUser for card: $e');
     }
   }
 
@@ -88,6 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final auth = Provider.of<AuthService>(context);
     final loc = Provider.of<LocalizationProvider>(context);
     final user = _user ?? auth.currentUser;
+    final userCard = _userCard ?? auth.currentUser;
 
     // Get calendar days from CalendarTabScreen (for demo, use SharedPreferences directly)
     // In production, refactor to pass calendar data via provider or callback
@@ -142,8 +159,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // User Profile Card
-                    _buildProfileCard(user, context),
+                    // User Profile Card (always use get_user)
+                    _buildProfileCard(userCard, context),
                     const SizedBox(height: 16),
                     if (nextPeriodDates.isNotEmpty)
                       Row(
