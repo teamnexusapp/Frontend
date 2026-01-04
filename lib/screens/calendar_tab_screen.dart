@@ -29,6 +29,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   bool _isSymptomsLoading = false;
   String? _fertileStart;
   String? _fertileEnd;
+  String? _ovulationDay;
 
   @override
   void initState() {
@@ -97,6 +98,11 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           } else {
             debugPrint('No symptoms found in latest cycle.');
           }
+          if (latestCycle['ovulation_day'] != null) {
+            setState(() {
+              _ovulationDay = latestCycle['ovulation_day'];
+            });
+          }
         } else if (data is Map) {
           debugPrint('Data is a Map: $data');
           if (data['fertile_period_start'] != null && data['fertile_period_end'] != null) {
@@ -119,6 +125,11 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             });
           } else {
             debugPrint('No symptoms found in data map.');
+          }
+          if (data['ovulation_day'] != null) {
+            setState(() {
+              _ovulationDay = data['ovulation_day'];
+            });
           }
         } else {
           debugPrint('Data is neither List nor Map: $data');
@@ -451,6 +462,16 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
         fertileWindowText = '';
       }
     }
+    // Format ovulation day
+    String ovulationDayText = '';
+    if (_ovulationDay != null) {
+      try {
+        final ovulationDate = DateTime.parse(_ovulationDay!);
+        ovulationDayText = DateFormat('d MMM').format(ovulationDate);
+      } catch (_) {
+        ovulationDayText = '';
+      }
+    }
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -512,7 +533,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
               Text(
-                'Gender Specific',
+                'Ovulation Day',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.black,
@@ -524,7 +545,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 '',
                 style: TextStyle(
                   fontSize: 15,
-                  color: Colors.grey,
+                  color: Colors.black,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Poppins',
                 ),
