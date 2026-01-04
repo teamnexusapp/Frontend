@@ -18,13 +18,15 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
   Map<String, List<String>> _multiSelectedOptions = {'Mood': []};
 
   List<String> get _selectedSymptoms {
-    // For multi-select symptoms, add all selected values
+    // For multi-select symptoms, add all selected values with container name
     List<String> symptoms = [];
     _selectedOptions.forEach((key, value) {
       if (key == 'Mood') {
-        symptoms.addAll(_multiSelectedOptions['Mood'] ?? []);
+        for (var mood in _multiSelectedOptions['Mood'] ?? []) {
+          symptoms.add('$key -$mood');
+        }
       } else if (value != null) {
-        symptoms.add(value!);
+        symptoms.add('$key -$value');
       }
     });
     return symptoms;
