@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import '../services/api_service.dart';
 import 'home_screen.dart';
 
@@ -29,16 +30,25 @@ class _GenderPredictionScreenState extends State<GenderPredictionScreen> {
       final api = ApiService();
       final headers = await api.getHeaders(includeAuth: true);
       final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
-      final response = await api.get(url, headers: headers);
+      final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
-        final data = response.data;
-        if (data is List && data.isNotEmpty) {
-          final latestCycle = data.last;
+        final data = response.body;
+        final decoded = data.isNotEmpty
+            ? (data.startsWith('[')
+                ? List<Map<String, dynamic>>.from(jsonDecode(data))
+                : Map<String, dynamic>.from(jsonDecode(data)))
+            : null;
+        if (decoded is List && decoded.isNotEmpty) {
+          final latestCycle = decoded.last;
           if (latestCycle['ovulation_day'] != null) {
             setState(() {
               _ovulationDay = DateTime.parse(latestCycle['ovulation_day']);
             });
           }
+        } else if (decoded is Map && decoded['ovulation_day'] != null) {
+          setState(() {
+            _ovulationDay = DateTime.parse(decoded['ovulation_day']);
+          });
         }
       }
     } catch (e) {
