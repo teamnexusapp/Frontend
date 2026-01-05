@@ -193,8 +193,7 @@ class _MonthGrid extends StatelessWidget {
 
     final totalCells = (firstWeekday + daysInMonth) <= 35 ? 35 : 42;
 
-    // Get next period days for this month grid
-    final nextPeriodDays = getNextPeriodDays();
+    // Use backend-driven period days only. Removed getNextPeriodDays().
 
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),

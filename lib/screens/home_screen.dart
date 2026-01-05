@@ -1,24 +1,7 @@
-  import 'dart:convert';
-  import 'package:http/http.dart' as http;
-  import 'package:flutter/material.dart';
-  import 'package:provider/provider.dart';
-  import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
-  import '../services/auth_service.dart';
-  import '../models/user.dart';
-  import 'profile/profile_screen.dart';
-  import 'support/support_screen.dart';
-  import 'tracking/log_symptom_screen.dart';
-  import 'onboarding/welcome_screen.dart';
-  import 'educational/educational_hub_screen.dart';
-  import 'calendar_tab_screen.dart';
-  import 'gender_prediction_screen.dart';
-  import '../services/insights_service.dart';
-  import 'package:shared_preferences/shared_preferences.dart';
- 
-  Map<String, dynamic>? _insightData;
-  String? _insightText;
-import 'package:flutter/material.dart';
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';

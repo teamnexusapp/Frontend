@@ -151,21 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // User Profile Card (always use get_user)
                     _buildProfileCard(userCard, context),
                     const SizedBox(height: 16),
-                    if (nextPeriodDates.isNotEmpty)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          for (int i = 0; i < nextPeriodDates.length; i++) ...[
-                            NextPeriodPredictionWidget(
-                              nextPeriodDate: nextPeriodDates[i],
-                              label: i == 0 ? 'Next Period' : 'Following',
-                            ),
-                            if (i < nextPeriodDates.length - 1)
-                              const SizedBox(width: 24),
-                          ],
-                        ],
-                      ),
-                    if (nextPeriodDates.isNotEmpty) const SizedBox(height: 16),
+                    // Removed nextPeriodDates display. Use backend-driven widgets only.
                     // Goals Section
                     _buildGoalsSection(),
                     const SizedBox(height: 16),
