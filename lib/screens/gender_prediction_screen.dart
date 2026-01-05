@@ -125,6 +125,29 @@ class _GenderPredictionScreenState extends State<GenderPredictionScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(24),
                 children: [
+                  // Disclaimer message before bubble section
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 18),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFE5E5),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Color(0xFFD32F2F), width: 1),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Icon(Icons.info_outline, color: Color(0xFFD32F2F)),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Disclaimer: This feature uses AI to provide gender prediction advice. These predictions may not be fully accurate and should not replace professional medical advice. Please consult a qualified doctor for health decisions.',
+                            style: TextStyle(fontSize: 15, color: Color(0xFFD32F2F)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   _chatBubble(
                     child: const Text('Select your gender expectation:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     isBot: true,

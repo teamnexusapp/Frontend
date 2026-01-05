@@ -151,6 +151,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                         "period_length": periodLength,
                         "symptoms": _selectedSymptoms,
                       };
+                      debugPrint('Sending log payload: ' + jsonEncode(payload));
                       final headers = await api.getHeaders(includeAuth: true);
                       final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
                       final response = await http.post(
@@ -158,6 +159,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                         headers: headers,
                         body: jsonEncode(payload),
                       );
+                      debugPrint('Log API response: ${response.statusCode} ${response.body}');
                       if (response.statusCode == 200 || response.statusCode == 201) {
                         Navigator.of(context).pop('refresh');
                       }

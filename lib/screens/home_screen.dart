@@ -1,3 +1,5 @@
+  Map<String, dynamic>? _insightData;
+  String? _insightText;
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -25,7 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? _fertileWindowText;
+  // String? _fertileWindowText; // Removed, now handled in CalendarTabScreen
   int _selectedIndex = 0;
   bool _showSideMenu = false;
   final ValueNotifier<bool> _calendarRefreshNotifier = ValueNotifier(false);
@@ -33,7 +35,72 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadFertileWindow();
+    // _loadFertileWindow(); // Removed, now handled in CalendarTabScreen
+    _sendInsightsPost();
+  }
+
+  Future<void> _sendInsightsPost() async {
+    try {
+      final api = ApiService();
+      final headers = await api.getHeaders(includeAuth: true);
+      // Fetch user profile to get period_length, cycle_length, last_period_date
+      Map<String, dynamic>? profile;
+      try {
+        profile = await api.getProfile();
+      } catch (e) {
+        // If fetching profile fails, show dialog to set up profile
+        if (mounted) {
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: const Text('Profile Required'),
+              content: const Text('You need to set up your profile before using this feature.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                    );
+                  },
+                  child: const Text('Set Up Profile'),
+                ),
+              ],
+            ),
+          );
+        }
+        return;
+      }
+      final int? cycleLength = profile['cycle_length'] is int ? profile['cycle_length'] : int.tryParse(profile['cycle_length']?.toString() ?? '');
+      final int? periodLength = profile['period_length'] is int ? profile['period_length'] : int.tryParse(profile['period_length']?.toString() ?? '');
+      final String? lastPeriodDate = profile['last_period_date']?.toString();
+      final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
+      final body = {
+        'cycle_length': cycleLength ?? 0,
+        'last_period_date': lastPeriodDate ?? '',
+        'period_length': periodLength ?? 0,
+        'symptoms': ['none'],
+      };
+      await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(body),
+      );
+      // Now GET insights/insights
+      final getResponse = await http.get(url, headers: headers);
+      if (getResponse.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(getResponse.body);
+        if (data.isNotEmpty && data[0] is Map<String, dynamic>) {
+          setState(() {
+            _insightData = data[0];
+            _insightText = data[0]['insight_text']?.toString();
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to send/get insights: $e');
+    }
   }
 
   @override
@@ -42,29 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Future<void> _loadFertileWindow() async {
-    String fertileWindowText = 'Fertility window unavailable';
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final fertileStartStr = prefs.getString('fertile_period_start');
-      final fertileEndStr = prefs.getString('fertile_period_end');
-      if (fertileStartStr != null && fertileEndStr != null) {
-        final start = DateTime.parse(fertileStartStr);
-        final end = DateTime.parse(fertileEndStr);
-        final monthFormatter = DateFormat('MMM');
-        final dayFormatter = DateFormat('d');
-        final month = monthFormatter.format(start); // e.g. Dec
-        final startDay = dayFormatter.format(start); // e.g. 23
-        final endDay = dayFormatter.format(end); // e.g. 27
-        fertileWindowText = 'Your next fertility\nwindow is from $month\n$startDay–$endDay';
-      }
-    } catch (_) {
-      // fallback to unavailable
-    }
-    setState(() {
-      _fertileWindowText = fertileWindowText;
-    });
-  }
+  // Removed _loadFertileWindow and related state, now handled in CalendarTabScreen
 
   // Removed _fetchInsight and related state
 
@@ -129,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _buildProfileCard(user),
                           const SizedBox(height: 20),
                           _buildMenuItem(
-                            label: 'Profile & Settings',
+                            label: 'Profile',
                             icon: Icons.person_outline,
                             onTap: () {
                               _toggleSideMenu();
@@ -341,15 +386,6 @@ class _HomeScreenState extends State<HomeScreen> {
     const buttonHeight = 64.0;
     final auth = Provider.of<AuthService>(context);
     final user = auth.currentUser;
-    final fertileWindowText = _fertileWindowText ?? 'unavailable';
-    // Default positive text and styling
-    final String homeText = 'Your next fertility window is $fertileWindowText.';
-    const TextStyle positiveTextStyle = TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w400,
-      fontFamily: 'Poppins',
-      color: Colors.green, // White
-    );
 
     return SingleChildScrollView(
       child: Column(
@@ -405,39 +441,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 70, left: 30),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Today's fertility insight",
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFFA8D497), // Light green
-                                  ),
+                        // Today's fertility insight paragraph
+                        if (_insightText != null && _insightText!.isNotEmpty)
+                          Positioned(
+                            top: 80,
+                            left: 0,
+                            right: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                _insightText!,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontFamily: 'Poppins',
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  fertileWindowText,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                const SizedBox(height: 8),
-                              ],
+                                textAlign: TextAlign.left,
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -495,15 +517,41 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          // Show the fertile window text below the green container
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-            child: Text(
-              homeText,
-              style: positiveTextStyle,
-              textAlign: TextAlign.left,
+          // Cycle summary table (below hero section)
+          if (_insightData != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Table(
+                border: TableBorder.all(color: Colors.white, width: 1),
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                children: [
+                  TableRow(children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Fertile Window', style: TextStyle(color: Color(0xFF2E683D), fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(_insightData!['fertile_period_start'] != null && _insightData!['fertile_period_end'] != null
+                          ? '${_insightData!['fertile_period_start']} - ${_insightData!['fertile_period_end']}'
+                          : '-',
+                        style: const TextStyle(color: Color(0xFF2E683D)),
+                      ),
+                    ),
+                  ]),
+                  TableRow(children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Ovulation Day', style: TextStyle(color: Color(0xFF2E683D), fontWeight: FontWeight.bold)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(_insightData!['ovulation_day'] ?? '-', style: const TextStyle(color: Color(0xFF2E683D))),
+                    ),
+                  ]),
+                ],
+              ),
             ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
