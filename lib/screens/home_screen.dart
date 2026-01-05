@@ -28,11 +28,18 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _fertileWindowText;
   int _selectedIndex = 0;
   bool _showSideMenu = false;
+  final ValueNotifier<bool> _calendarRefreshNotifier = ValueNotifier(false);
 
   @override
   void initState() {
     super.initState();
     _loadFertileWindow();
+  }
+
+  @override
+  void dispose() {
+    _calendarRefreshNotifier.dispose();
+    super.dispose();
   }
 
   Future<void> _loadFertileWindow() async {
@@ -74,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               _buildHomeTab(),
               EducationalHubScreen(),
-              CalendarTabScreen(),
+              CalendarTabScreen(refreshNotifier: _calendarRefreshNotifier),
               SupportScreen(),
             ],
           ),
@@ -341,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
       fontSize: 18,
       fontWeight: FontWeight.w400,
       fontFamily: 'Poppins',
-      color: Colors.white, // White
+      color: Colors.green, // White
     );
 
     return SingleChildScrollView(
@@ -450,10 +457,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (_) => const LogSymptomScreen(),
                             ),
                           );
-                          // Removed refreshHomeData call as requested
-                          // if (result == 'refresh') {
-                          //   await refreshHomeData();
-                          // }
+                          if (result == 'refresh') {
+                            _calendarRefreshNotifier.value = true;
+                            setState(() {
+                              _selectedIndex = 2; // Calendar tab
+                            });
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFA8D497),

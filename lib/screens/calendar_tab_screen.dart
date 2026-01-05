@@ -10,7 +10,8 @@ import 'tracking/log_symptom_screen.dart';
 import '../services/api_service.dart';
 
 class CalendarTabScreen extends StatefulWidget {
-  const CalendarTabScreen({Key? key}) : super(key: key);
+  final ValueNotifier<bool>? refreshNotifier;
+  const CalendarTabScreen({Key? key, this.refreshNotifier}) : super(key: key);
 
   @override
   State<CalendarTabScreen> createState() => _CalendarTabScreenState();
@@ -37,7 +38,22 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     _calendarScrollController.addListener(_onCalendarScroll);
     _loadTappedDays();
     _fetchLoggedSymptoms();
-    // No longer mark next period days after loading tapped days; will use API value.
+    // Listen for refresh requests from HomeScreen
+    widget.refreshNotifier?.addListener(_handleRefreshRequest);
+  }
+
+  void _handleRefreshRequest() {
+    if (widget.refreshNotifier?.value == true) {
+      _fetchLoggedSymptoms();
+      widget.refreshNotifier?.value = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.refreshNotifier?.removeListener(_handleRefreshRequest);
+    _calendarScrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadTappedDays() async {
