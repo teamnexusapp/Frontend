@@ -52,6 +52,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   @override
   void dispose() {
     widget.refreshNotifier?.removeListener(_handleRefreshRequest);
+    _calendarScrollController.removeListener(_onCalendarScroll);
     _calendarScrollController.dispose();
     super.dispose();
   }
@@ -202,12 +203,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
 
   // No longer needed: _markNextPeriodDays. Next period days will be set from API in _fetchLoggedSymptoms.
 
-  @override
-  void dispose() {
-    _calendarScrollController.removeListener(_onCalendarScroll);
-    _calendarScrollController.dispose();
-    super.dispose();
-  }
+  // Removed duplicate dispose method
 
   void _onCalendarScroll() {
     final currentOffset = _calendarScrollController.offset;
