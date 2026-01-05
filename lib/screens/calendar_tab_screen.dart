@@ -18,6 +18,9 @@ class CalendarTabScreen extends StatefulWidget {
 }
 
 class _CalendarTabScreenState extends State<CalendarTabScreen> {
+    String? _fertileStart;
+    String? _fertileEnd;
+    String? _ovulationDay;
   final ScrollController _calendarScrollController = ScrollController();
   bool _isCalendarCollapsed = false;
   double _lastScrollOffset = 0;

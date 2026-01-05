@@ -27,6 +27,8 @@ class HomeScreen extends StatefulWidget {
 
 
 class _HomeScreenState extends State<HomeScreen> {
+    Map<String, dynamic>? _insightData;
+    String? _insightText;
   // String? _fertileWindowText; // Removed, now handled in CalendarTabScreen
   int _selectedIndex = 0;
   bool _showSideMenu = false;

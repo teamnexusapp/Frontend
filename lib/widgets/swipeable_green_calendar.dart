@@ -218,7 +218,8 @@ class _MonthGrid extends StatelessWidget {
           );
 
           final isSelected = selectedDates.any((d) => _isSameDay(d, dayInfo.date));
-          final isNextPeriodDay = nextPeriodDays.any((d) => _isSameDay(d, dayInfo.date));
+          // TODO: Replace with backend-driven period day logic if needed
+          final isNextPeriodDay = false;
             final textColor = dayInfo.isOutside
               ? _accent.withOpacity(0.4)
               : isSelected
