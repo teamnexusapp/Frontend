@@ -450,9 +450,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (_) => const LogSymptomScreen(),
                             ),
                           );
-                          if (result == 'refresh') {
-                            await refreshHomeData();
-                          }
+                          // Removed refreshHomeData call as requested
+                          // if (result == 'refresh') {
+                          //   await refreshHomeData();
+                          // }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFA8D497),
