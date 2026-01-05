@@ -86,18 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  /// Predicts the next two period days based on last tapped calendar day and default cycle length.
-  List<DateTime> _getNextPeriodDatesFromCalendar(Set<DateTime> calendarDays, {int count = 2, int cycleLength = 28, int periodLength = 5}) {
-    if (calendarDays.isEmpty) return [];
-    try {
-      final lastDate = calendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
-      // Predict next period start dates using (cycleLength - periodLength)
-      final interval = cycleLength - periodLength;
-      return List.generate(count, (i) => lastDate.add(Duration(days: interval * (i + 1))));
-    } catch (_) {
-      return [];
-    }
-  }
+  // Removed local period/cycle prediction logic. Use backend values only.
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         calendarDays.addAll(savedDays.map((s) => DateTime.parse(s)));
       }
     });
-    final nextPeriodDates = _getNextPeriodDatesFromCalendar(calendarDays, count: 2, cycleLength: 28, periodLength: 5);
+    // Removed local prediction. Use backend-provided next period dates only.
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F0),

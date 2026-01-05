@@ -181,13 +181,7 @@ class _MonthGrid extends StatelessWidget {
 
   static const Color _accent = Color(0xFFA8D497);
 
-  // Add a helper to get next period days for styling
-  List<DateTime> getNextPeriodDays() {
-    if (selectedDates.isEmpty) return [];
-    final lastDate = selectedDates.reduce((a, b) => a.isAfter(b) ? a : b);
-    final nextPeriodStart = lastDate.add(const Duration(days: 28));
-    return List<DateTime>.generate(5, (i) => nextPeriodStart.add(Duration(days: i)));
-  }
+  // Removed local period prediction logic. Use period/cycle data from backend only.
 
   @override
   Widget build(BuildContext context) {
@@ -226,11 +220,11 @@ class _MonthGrid extends StatelessWidget {
 
           final isSelected = selectedDates.any((d) => _isSameDay(d, dayInfo.date));
           final isNextPeriodDay = nextPeriodDays.any((d) => _isSameDay(d, dayInfo.date));
-          final textColor = dayInfo.isOutside
+            final textColor = dayInfo.isOutside
               ? _accent.withOpacity(0.4)
               : isSelected
-                  ? const Color(0xFF2E683D)
-                  : Colors.white;
+                ? const Color(0xFFD32F2F) // Red for selected day
+                : Colors.white;
 
           return Center(
             child: GestureDetector(
@@ -242,13 +236,13 @@ class _MonthGrid extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isNextPeriodDay
-                      ? Colors.transparent
-                      : isSelected
-                          ? _accent
-                          : Colors.transparent,
+                    ? Colors.transparent
+                    : isSelected
+                      ? const Color(0xFFFFE5E5) // Light red/pink for selected day
+                      : Colors.transparent,
                   border: isNextPeriodDay
-                      ? Border.all(color: Colors.red, width: 2, style: BorderStyle.solid)
-                      : null,
+                    ? Border.all(color: Colors.red, width: 2, style: BorderStyle.solid)
+                    : null,
                 ),
                 alignment: Alignment.center,
                 child: Text(

@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
               '/welcome': (context) => const WelcomeScreen(),
               '/login': (context) => const LoginScreen(),
               '/forgot-password': (context) => const ForgotPasswordScreen(),
-              '/reset-password': (context) => const ResetPasswordScreen(),
+              '/reset_password': (context) => const ResetPasswordScreen(),
               '/password-updated': (context) => const PasswordUpdatedScreen(),
               // New screens:
               PrivacyAndSecurityScreen.routeName: (ctx) => const PrivacyAndSecurityScreen(),

@@ -60,7 +60,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: () => Navigator.of(context).pop(false),
                   child: const Icon(
                     Icons.arrow_back,
                     color: Color(0xFFA8D497),
@@ -108,7 +108,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.of(context).pop(false),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       side: const BorderSide(color: Color(0xFF2E683D)),
@@ -161,7 +161,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                       );
                       debugPrint('Log API response: ${response.statusCode} ${response.body}');
                       if (response.statusCode == 200 || response.statusCode == 201) {
-                        Navigator.of(context).pop('refresh');
+                        Navigator.of(context).pop(true);
                       }
                     },
                     style: ElevatedButton.styleFrom(
