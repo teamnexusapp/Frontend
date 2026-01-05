@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
           periodLength = profile['period_length'] is int ? profile['period_length'] : int.tryParse(profile['period_length']?.toString() ?? '');
           lastPeriodDate = profile['last_period_date']?.toString();
         }
-      final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
+      final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
       final body = {
         'cycle_length': cycleLength ?? 0,
         'last_period_date': lastPeriodDate ?? '',
