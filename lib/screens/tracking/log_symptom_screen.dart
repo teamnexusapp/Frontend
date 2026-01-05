@@ -256,10 +256,11 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                     onTap: () {
                       setState(() {
                         if (symptomName == 'Mood') {
+                          final current = _multiSelectedOptions['Mood'] ?? [];
                           if (isSelected) {
-                            _multiSelectedOptions['Mood']?.remove(option);
+                            _multiSelectedOptions['Mood'] = List.from(current)..remove(option);
                           } else {
-                            _multiSelectedOptions['Mood']?.add(option);
+                            _multiSelectedOptions['Mood'] = List.from(current)..add(option);
                           }
                         } else {
                           _selectedOptions[symptomName] = option;

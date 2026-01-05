@@ -465,10 +465,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Text(value, style: const TextStyle(fontSize: 14)),
               );
             }).toList(),
-            onChanged: (String? newValue) {
+            onChanged: (String? newValue) async {
+              if (newValue == null) return;
               setState(() {
-                selectedLanguage = newValue!;
+                selectedLanguage = newValue;
               });
+              // Map display name to code
+              String code = 'en';
+              switch (newValue) {
+                case 'English': code = 'en'; break;
+                case 'Igbo': code = 'ig'; break;
+                case 'Hausa': code = 'ha'; break;
+                case 'Yoruba': code = 'yo'; break;
+              }
+              try {
+                await ApiService().updateLanguage(code);
+              } catch (e) {
+                debugPrint('Failed to update language: $e');
+              }
             },
           ),
         ),
@@ -638,7 +652,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _isDeleting ? null : () { _showDeleteConfirmation(context); },
+                onPressed: _isDeleting
+                    ? null
+                    : () async {
+                        setState(() => _isDeleting = true);
+                        try {
+                          await ApiService().deleteUser();
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Account deleted successfully.'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            // Navigate to WelcomeScreen
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+                              (route) => false,
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to delete account: $e'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        } finally {
+                          if (mounted) setState(() => _isDeleting = false);
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
@@ -669,77 +714,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Account'),
-          content: const Text(
-            'Are you sure you want to delete your account? This action cannot be undone.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                try {
-                  if (mounted) setState(() => _isDeleting = true);
-                  // Attempt backend deletion
-                  try {
-                    await ApiService().deleteUser();
-                  } catch (e) {
-                    // If token expired or user already gone, continue to local cleanup
-                    final isAuthError = e is ApiException && (e.statusCode == 401 || e.statusCode == 403 || e.statusCode == 404);
-                    if (!isAuthError) {
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Failed to delete account: $e'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                      if (mounted) setState(() => _isDeleting = false);
-                      return;
-                    }
-                  }
-
-
-
-                  // Navigate back to welcome screen after deletion/cleanup
-                  if (mounted) {
-                    setState(() => _isDeleting = false);
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-                      (route) => false,
-                    );
-                  }
-                } catch (e) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Failed to delete account: $e'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                    setState(() => _isDeleting = false);
-                  }
-                }
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
-              ),
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // _showDeleteConfirmation removed; delete account feature is now disabled.
 }
 
 

@@ -37,8 +37,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     _calendarScrollController.addListener(_onCalendarScroll);
     _loadTappedDays();
     _fetchLoggedSymptoms();
-    // Mark next period days after loading tapped days
-    WidgetsBinding.instance.addPostFrameCallback((_) => _markNextPeriodDays());
+    // No longer mark next period days after loading tapped days; will use API value.
   }
 
   Future<void> _loadTappedDays() async {
@@ -83,11 +82,19 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
               _fertileEnd = latestCycle['fertile_period_end'];
             });
           }
-          if (latestCycle['last_period_date'] != null && latestCycle['period_length'] != null) {
-            _markPeriodDays(
-              lastPeriodDate: latestCycle['last_period_date'],
-              periodLength: latestCycle['period_length'],
-            );
+          if (latestCycle['next_period'] != null && latestCycle['period_length'] != null) {
+            // Use next_period and period_length from API to mark next period days
+            final nextPeriodStart = DateTime.parse(latestCycle['next_period']);
+            final periodLength = latestCycle['period_length'];
+            final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
+            setState(() {
+              _selectedCalendarDays = {..._selectedCalendarDays, ...nextPeriodDays};
+              _selectedCalendarDaysFormatted = _selectedCalendarDays
+                .map((d) => DateFormat('yyyy-MM-dd').format(d))
+                .toSet();
+            });
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
           }
           if (latestCycle['symptoms'] != null) {
             debugPrint('Symptoms found: ${latestCycle['symptoms']}');
@@ -111,11 +118,19 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
               _fertileEnd = data['fertile_period_end'];
             });
           }
-          if (data['last_period_date'] != null && data['period_length'] != null) {
-            _markPeriodDays(
-              lastPeriodDate: data['last_period_date'],
-              periodLength: data['period_length'],
-            );
+          if (data['next_period'] != null && data['period_length'] != null) {
+            // Use next_period and period_length from API to mark next period days
+            final nextPeriodStart = DateTime.parse(data['next_period']);
+            final periodLength = data['period_length'];
+            final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
+            setState(() {
+              _selectedCalendarDays = {..._selectedCalendarDays, ...nextPeriodDays};
+              _selectedCalendarDaysFormatted = _selectedCalendarDays
+                .map((d) => DateFormat('yyyy-MM-dd').format(d))
+                .toSet();
+            });
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
           }
           if (data['symptoms'] != null) {
             debugPrint('Symptoms found: ${data['symptoms']}');
@@ -169,22 +184,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     }
   }
 
-  // Calculate and mark next period days using last tapped day and default cycle/period length
-  void _markNextPeriodDays() async {
-    if (_selectedCalendarDays.isEmpty) return;
-    final lastDate = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
-    final nextPeriodStart = lastDate.add(const Duration(days: 25));
-    final nextPeriodDays = List<DateTime>.generate(5, (i) => nextPeriodStart.add(Duration(days: i)));
-    setState(() {
-      // Optionally, you can highlight these days differently or add to selected days
-      _selectedCalendarDays = {..._selectedCalendarDays, ...nextPeriodDays};
-      _selectedCalendarDaysFormatted = _selectedCalendarDays
-        .map((d) => DateFormat('yyyy-MM-dd').format(d))
-        .toSet();
-    });
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
-  }
+  // No longer needed: _markNextPeriodDays. Next period days will be set from API in _fetchLoggedSymptoms.
 
   @override
   void dispose() {
@@ -273,8 +273,21 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       body: SafeArea(
         child: Stack(
           children: [
+            // Back button
+            Positioned(
+              top: 10,
+              left: 10,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                tooltip: 'Back to Home',
+              ),
+            ),
             Column(
               children: [
+                const SizedBox(height: 40),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,

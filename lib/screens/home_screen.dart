@@ -25,21 +25,13 @@ class HomeScreen extends StatefulWidget {
 
 
 class _HomeScreenState extends State<HomeScreen> {
-      String? _fertileWindowText;
-    Future<void> refreshHomeData() async {
-      await _fetchInsight();
-      setState(() {}); // Force rebuild if needed
-    }
+  String? _fertileWindowText;
   int _selectedIndex = 0;
   bool _showSideMenu = false;
-  String? _insightText;
-  bool _insightLoading = false;
-  String? _insightError;
 
   @override
   void initState() {
     super.initState();
-    _fetchInsight();
     _loadFertileWindow();
   }
 
@@ -67,33 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _fetchInsight() async {
-    setState(() {
-      _insightLoading = true;
-      _insightError = null;
-    });
-    try {
-      final insights = await InsightsService().getInsights();
-      if (insights.isNotEmpty && insights[0]['insight_text'] != null) {
-        setState(() {
-          _insightText = insights[0]['insight_text'].toString();
-        });
-      } else {
-        setState(() {
-          _insightText = null;
-          _insightError = 'No insights available.';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _insightError = 'Failed to load insights.';
-      });
-    } finally {
-      setState(() {
-        _insightLoading = false;
-      });
-    }
-  }
+  // Removed _fetchInsight and related state
 
   @override
   Widget build(BuildContext context) {
@@ -368,14 +334,14 @@ class _HomeScreenState extends State<HomeScreen> {
     const buttonHeight = 64.0;
     final auth = Provider.of<AuthService>(context);
     final user = auth.currentUser;
-    final fertileWindowText = _fertileWindowText ?? 'Fertility window unavailable';
+    final fertileWindowText = _fertileWindowText ?? 'unavailable';
     // Default positive text and styling
-    const String defaultPositiveText = 'You are doing well! Keep tracking your symptoms and stay positive.';
+    final String homeText = 'Your next fertility window is $fertileWindowText.';
     const TextStyle positiveTextStyle = TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w400,
       fontFamily: 'Poppins',
-      color: Colors.white,
+      color: Colors.white, // White
     );
 
     return SingleChildScrollView(
@@ -519,23 +485,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          // Show insight text below the green container
+          // Show the fertile window text below the green container
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-            child: _insightLoading
-                ? const SizedBox(
-                    height: 36,
-                    child: Center(child: CircularProgressIndicator()),
-                  )
-                : Text(
-                    _insightError != null
-                        ? _insightError!
-                        : (_insightText != null && _insightText!.isNotEmpty)
-                            ? _insightText!
-                            : defaultPositiveText,
-                    style: positiveTextStyle,
-                    textAlign: TextAlign.left,
-                  ),
+            child: Text(
+              homeText,
+              style: positiveTextStyle,
+              textAlign: TextAlign.left,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),

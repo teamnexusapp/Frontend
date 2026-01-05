@@ -5,6 +5,23 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
+    // Update user language
+    Future<void> updateLanguage(String languageCode) async {
+      final headers = await getHeaders(includeAuth: true);
+      final body = jsonEncode({'language': languageCode});
+      final response = await http.put(
+        Uri.parse('$baseUrl/user/update_language_choice'),
+        headers: headers,
+        body: body,
+      );
+      debugPrint('Update Language Response: \\${response.statusCode}');
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        throw ApiException(
+          statusCode: response.statusCode,
+          message: _extractErrorMessage(response),
+        );
+      }
+    }
   static const String baseUrl = 'https://fertipath-fastapi.onrender.com';
   
   // Singleton pattern
