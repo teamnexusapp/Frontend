@@ -58,228 +58,186 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
     'Trying to conceive',
   ];
 
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => ArticleReadingScreen(
-                            imageUrl: article['image'] ?? '',
-                            title: article['title'] ?? '',
-                            articleText: article['excerpt'] ?? '',
-                          ),
-                        ),
-                      );
-                    },
-                    child: Card(
-                      color: Colors.white,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            final cardHeight = 320.0;
-                            final imageHeight = cardHeight * 0.6;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
-                                  child: Image.network(
-                                    article['image']!,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: imageHeight,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        height: imageHeight,
-                                        color: Colors.grey.shade300,
-                                        child: const Icon(Icons.image_not_supported),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFA8D497),
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Text(
-                                          article['category'] ?? '',
-                                          style: const TextStyle(
-                                            color: Color(0xFF2E683D),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        '5 mins read',
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
-                                  child: Text(
-                                    article['title'] ?? '',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
-                                  child: Text(
-                                    article['excerpt'] ?? '',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[700],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-                                    return Container(
-                                      height: imageHeight,
-                                      color: Colors.grey.shade300,
-                                      child: const Icon(Icons.image_not_supported),
-                                    );
-                                  },
-                                ),
-                              ),
-                              // Row: Category and Duration
-                              Padding(
-                                padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
-                                child: Row(
-                                  children: [
-                                    // Category
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFA8D497),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        article['category'] ?? '',
-                                        style: const TextStyle(
-                                          color: Color(0xFF2E683D),
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    // Duration (hardcoded for now)
-                                    Text(
-                                      '5 mins read',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Title
-                              Padding(
-                                padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
-                                child: Text(
-                                  article['title'] ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              // Paragraph
-                              Padding(
-                                padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
-                                child: Text(
-                                  article['excerpt'] ?? '',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                              ),
-                              // Last row: Listen, Language, Bookmark
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8, right: 8, top: 12),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    // Listen button
-                                    Container(
-                                      height: 32,
-                                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF2E683D),
-                                        borderRadius: BorderRadius.circular(0),
-                                      ),
-                                      child: Row(
-                                        children: const [
-                                          Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                                          SizedBox(width: 4),
-                                          Text('Listen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 3),
-                                    // Language
-                                    Container(
-                                      height: 32,
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFA8D497),
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          'English',
-                                          style: TextStyle(
-                                            color: Color(0xFF2E683D),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                  ],
-                                ),
-                              ),
-                            ],
+  Widget _buildArticleCard(Map<String, String> article) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ArticleReadingScreen(
+                imageUrl: article['image'] ?? '',
+                title: article['title'] ?? '',
+                articleText: article['excerpt'] ?? '',
+              ),
+            ),
+          );
+        },
+        child: Card(
+          color: Colors.white,
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final cardHeight = 320.0;
+                final imageHeight = cardHeight * 0.6;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
+                      child: Image.network(
+                        article['image']!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: imageHeight,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: imageHeight,
+                            color: Colors.grey.shade300,
+                            child: const Icon(Icons.image_not_supported),
                           );
                         },
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFA8D497),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              article['category'] ?? '',
+                              style: const TextStyle(
+                                color: Color(0xFF2E683D),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '5 mins read',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
+                      child: Text(
+                        article['title'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
+                      child: Text(
+                        article['excerpt'] ?? '',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8, top: 12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 32,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF2E683D),
+                              borderRadius: BorderRadius.circular(0),
+                            ),
+                            child: Row(
+                              children: const [
+                                Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                                SizedBox(width: 4),
+                                Text('Listen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 3),
+                          Container(
+                            height: 32,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFA8D497),
+                              borderRadius: BorderRadius.zero,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'English',
+                                style: TextStyle(
+                                  color: Color(0xFF2E683D),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    final filteredArticles = allArticles.where((article) => article['category'] == selectedCategory).toList();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Educational Hub'),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: DropdownButton<String>(
+              value: selectedCategory,
+              items: categories.map((category) {
+                return DropdownMenuItem<String>(
+                  value: category,
+                  child: Text(category),
                 );
               }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    selectedCategory = value;
+                  });
+                }
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              children: filteredArticles.map((article) => _buildArticleCard(article)).toList(),
             ),
           ),
         ],
