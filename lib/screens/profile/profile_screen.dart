@@ -476,7 +476,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(8),
-          child: Icon(Icons.language, size: 22, color: Color(0xFF2D5A3A)), // dark green
+          child: const Icon(Icons.language, size: 22, color: Color(0xFF2D5A3A)), // dark green
         ),
         const SizedBox(width: 12),
         const Expanded(
@@ -506,9 +506,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               debugPrint('Failed to update language: $e');
             }
           },
-        ),
-      ],
-    );
         ),
       ],
     );

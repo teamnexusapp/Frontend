@@ -1,5 +1,5 @@
 ﻿name: Fertipath
-description: A new Flutter project.
+description: An app built to help african women on their path to becoming mothers.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -35,6 +35,6 @@ flutter_native_splash:
   image: assets/images/app_logo.png
   android: true
   ios: true
-  web: false
+  web: true
   android_gravity: center
   ios_content_mode: scaleAspectFit
