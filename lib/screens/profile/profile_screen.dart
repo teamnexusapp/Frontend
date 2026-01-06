@@ -433,13 +433,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             value: selectedLanguage,
             underline: const SizedBox(),
             isDense: true,
-            items: ['English', 'Igbo', 'Hausa', 'Yoruba']
-                .map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value, style: const TextStyle(fontSize: 14)),
-              );
-            }).toList(),
+            items: (() {
+              // List of all languages
+              final allLanguages = ['English', 'Igbo', 'Hausa', 'Yoruba'];
+              // Move selectedLanguage to the front
+              final reordered = [selectedLanguage, ...allLanguages.where((l) => l != selectedLanguage)];
+              return reordered.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: const TextStyle(fontSize: 14)),
+                );
+              }).toList();
+            })(),
             onChanged: (String? newValue) async {
               if (newValue == null) return;
               setState(() {
@@ -455,6 +460,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
               try {
                 await ApiService().updateLanguage(code);
+                // Refresh home page after successful update
+                if (mounted) {
+                  Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+                }
               } catch (e) {
                 debugPrint('Failed to update language: $e');
               }

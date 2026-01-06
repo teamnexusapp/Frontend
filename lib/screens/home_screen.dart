@@ -473,22 +473,37 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        // Today's fertility insight paragraph
+                        // Today's fertility insight heading and paragraph
                         if (_insightText != null && _insightText!.isNotEmpty)
                           Positioned(
-                            top: 80,
+                            bottom: 30,
                             left: 0,
                             right: 0,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                _insightText!,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontFamily: 'Poppins',
-                                ),
-                                textAlign: TextAlign.left,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Today's Fertility Insight",
+                                    style: const TextStyle(
+                                      fontSize: 30,
+                                      color: Color(0xFFA8D497), // light green
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    _insightText!,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
