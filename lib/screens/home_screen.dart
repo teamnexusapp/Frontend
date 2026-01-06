@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:Fertipath/flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../services/api_service.dart';
 import '../models/user.dart';

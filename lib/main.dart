@@ -2,7 +2,7 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'config/feature_flags.dart';
-import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:Fertipath/flutter_gen/gen_l10n/app_localizations.dart';
 import 'services/auth_service.dart';
 
 import 'services/localization_provider.dart' as loc_provider;
