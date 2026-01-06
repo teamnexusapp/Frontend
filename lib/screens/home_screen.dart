@@ -30,6 +30,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic>? _insightData;
     String? _insightText;
+
+    // Default fallback data
+    static const Map<String, dynamic> _defaultCycleSummary = {
+      'fertile_period_start': 'N/A',
+      'fertile_period_end': 'N/A',
+      'ovulation_day': 'N/A',
+    };
+    static const String _defaultInsightText =
+        'Track your cycle and get personalized insights here. Once you log your symptoms and cycle data, helpful tips and predictions will appear!';
   // String? _fertileWindowText; // Removed, now handled in CalendarTabScreen
   int _selectedIndex = 0;
   bool _showSideMenu = false;
@@ -73,17 +82,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         }
+        // Show fallback data
+        setState(() {
+          _insightData = Map<String, dynamic>.from(_defaultCycleSummary);
+          _insightText = _defaultInsightText;
+        });
         return;
       }
-        int? cycleLength;
-        int? periodLength;
-        String? lastPeriodDate;
-        if (profile != null) {
-          cycleLength = profile['cycle_length'] is int ? profile['cycle_length'] : int.tryParse(profile['cycle_length']?.toString() ?? '');
-          periodLength = profile['period_length'] is int ? profile['period_length'] : int.tryParse(profile['period_length']?.toString() ?? '');
-          lastPeriodDate = profile['last_period_date']?.toString();
-        }
-      final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
+      int? cycleLength;
+      int? periodLength;
+      String? lastPeriodDate;
+      if (profile != null) {
+        cycleLength = profile['cycle_length'] is int ? profile['cycle_length'] : int.tryParse(profile['cycle_length']?.toString() ?? '');
+        periodLength = profile['period_length'] is int ? profile['period_length'] : int.tryParse(profile['period_length']?.toString() ?? '');
+        lastPeriodDate = profile['last_period_date']?.toString();
+      }
+      final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
       final body = {
         'cycle_length': cycleLength ?? 0,
         'last_period_date': lastPeriodDate ?? '',
@@ -102,12 +116,22 @@ class _HomeScreenState extends State<HomeScreen> {
         if (data.isNotEmpty && data[0] is Map<String, dynamic>) {
           setState(() {
             _insightData = data[0];
-            _insightText = data[0]['insight_text']?.toString();
+            _insightText = data[0]['insight_text']?.toString() ?? _defaultInsightText;
           });
+          return;
         }
       }
+      // If no data or bad response, show fallback
+      setState(() {
+        _insightData = Map<String, dynamic>.from(_defaultCycleSummary);
+        _insightText = _defaultInsightText;
+      });
     } catch (e) {
       debugPrint('Failed to send/get insights: $e');
+      setState(() {
+        _insightData = Map<String, dynamic>.from(_defaultCycleSummary);
+        _insightText = _defaultInsightText;
+      });
     }
   }
 

@@ -8,8 +8,8 @@ class ApiService {
     // Update user language
     Future<void> updateLanguage(String languageCode) async {
       final headers = await getHeaders(includeAuth: true);
-      final body = jsonEncode({'language': languageCode});
-      final response = await http.put(
+      final body = jsonEncode({'language_preference': languageCode});
+      final response = await http.patch(
         Uri.parse('$baseUrl/user/update_language_choice'),
         headers: headers,
         body: body,
