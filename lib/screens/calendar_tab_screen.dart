@@ -110,24 +110,26 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
               _fertileEnd = latestCycle['fertile_period_end'];
             });
           }
-          if (latestCycle['next_period'] != null && latestCycle['period_length'] != null) {
-            debugPrint('API next_period: \'${latestCycle['next_period']}\'');
-            debugPrint('API period_length: \'${latestCycle['period_length']}\'');
-            // Mark the whole next period range
-            final nextPeriodStart = DateTime.parse(latestCycle['next_period']);
-            final periodLength = latestCycle['period_length'];
+          if (_lastPeriodDate != null) {
+            // Fallback: calculate next period days in frontend
+            int cycleLength = 28;
+            int periodLength = 5;
+            try {
+              final api = ApiService();
+              final profileJson = await api.getProfile();
+              final userData = profileJson['data'] ?? profileJson;
+              cycleLength = userData['cycle_length'] ?? userData['cycleLength'] ?? 28;
+              periodLength = userData['period_length'] ?? userData['periodLength'] ?? 5;
+            } catch (e) {
+              debugPrint('Could not fetch user profile for cycle/period length, using defaults.');
+            }
+            final lastPeriod = DateTime.parse(_lastPeriodDate!);
+            final nextPeriodStart = lastPeriod.add(Duration(days: cycleLength));
             final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
-            debugPrint('Calculated nextPeriodDays: ' + nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
+            debugPrint('Fallback nextPeriodDays: ' + nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
             setState(() {
               _nextPeriodDays = nextPeriodDays.toSet();
-              _selectedCalendarDays = {..._selectedCalendarDays};
-              _selectedCalendarDaysFormatted = _selectedCalendarDays
-                .map((d) => DateFormat('yyyy-MM-dd').format(d))
-                .toSet();
             });
-            debugPrint('State _nextPeriodDays: ' + _nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
           }
           if (latestCycle['symptoms'] != null) {
             debugPrint('Symptoms found: ${latestCycle['symptoms']}');
@@ -151,25 +153,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
               _fertileEnd = data['fertile_period_end'];
             });
           }
-          if (data['next_period'] != null && data['period_length'] != null) {
-            debugPrint('API next_period: \'${data['next_period']}\'');
-            debugPrint('API period_length: \'${data['period_length']}\'');
-            // Mark the whole next period range
-            final nextPeriodStart = DateTime.parse(data['next_period']);
-            final periodLength = data['period_length'];
-            final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
-            debugPrint('Calculated nextPeriodDays: ' + nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
-            setState(() {
-              _nextPeriodDays = nextPeriodDays.toSet();
-              _selectedCalendarDays = {..._selectedCalendarDays};
-              _selectedCalendarDaysFormatted = _selectedCalendarDays
-                .map((d) => DateFormat('yyyy-MM-dd').format(d))
-                .toSet();
-            });
-            debugPrint('State _nextPeriodDays: ' + _nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
-          }
+          // Removed API next_period logic; only using frontend fallback
           if (data['symptoms'] != null) {
             debugPrint('Symptoms found: ${data['symptoms']}');
             setState(() {
@@ -254,18 +238,24 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       _selectedCalendarDaysFormatted = _selectedCalendarDays
           .map((d) => DateFormat('yyyy-MM-dd').format(d))
           .toSet();
-      // The last period date is now the minimum (earliest) tapped day in the current month.
+
+      // Group days by year and month
       if (_selectedCalendarDays.isNotEmpty) {
-        final now = DateTime.now();
-        final currentMonthDays = _selectedCalendarDays.where((d) => d.year == now.year && d.month == now.month).toList();
-        if (currentMonthDays.isNotEmpty) {
-          final earliest = currentMonthDays.reduce((a, b) => a.isBefore(b) ? a : b);
-          _lastPeriodDate = DateFormat('yyyy-MM-dd').format(earliest);
-        } else {
-          // fallback: use the earliest of all selected days
-          final earliest = _selectedCalendarDays.reduce((a, b) => a.isBefore(b) ? a : b);
-          _lastPeriodDate = DateFormat('yyyy-MM-dd').format(earliest);
+        final Map<String, List<DateTime>> grouped = {};
+        for (final d in _selectedCalendarDays) {
+          final key = '${d.year}-${d.month.toString().padLeft(2, '0')}';
+          grouped.putIfAbsent(key, () => []).add(d);
         }
+        // Find the latest year-month
+        final latestKey = grouped.keys.reduce((a, b) {
+          final aParts = a.split('-').map(int.parse).toList();
+          final bParts = b.split('-').map(int.parse).toList();
+          if (aParts[0] != bParts[0]) return aParts[0] > bParts[0] ? a : b;
+          return aParts[1] > bParts[1] ? a : b;
+        });
+        final latestMonthDays = grouped[latestKey]!;
+        final earliest = latestMonthDays.reduce((a, b) => a.isBefore(b) ? a : b);
+        _lastPeriodDate = DateFormat('yyyy-MM-dd').format(earliest);
       } else {
         _lastPeriodDate = null;
       }
