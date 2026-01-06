@@ -70,8 +70,16 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             .toSet();
         // Update last period date
         if (_selectedCalendarDays.isNotEmpty) {
-          final latest = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
-          _lastPeriodDate = DateFormat('yyyy-MM-dd').format(latest);
+          final now = DateTime.now();
+          final currentMonthDays = _selectedCalendarDays.where((d) => d.year == now.year && d.month == now.month).toList();
+          if (currentMonthDays.isNotEmpty) {
+            final earliest = currentMonthDays.reduce((a, b) => a.isBefore(b) ? a : b);
+            _lastPeriodDate = DateFormat('yyyy-MM-dd').format(earliest);
+          } else {
+            // fallback: use the earliest of all selected days
+            final earliest = _selectedCalendarDays.reduce((a, b) => a.isBefore(b) ? a : b);
+            _lastPeriodDate = DateFormat('yyyy-MM-dd').format(earliest);
+          }
         } else {
           _lastPeriodDate = null;
         }
@@ -102,10 +110,13 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             });
           }
           if (latestCycle['next_period'] != null && latestCycle['period_length'] != null) {
-            // Use next_period and period_length from API to mark next period days
+            debugPrint('API next_period: \'${latestCycle['next_period']}\'');
+            debugPrint('API period_length: \'${latestCycle['period_length']}\'');
+            // Mark the whole next period range
             final nextPeriodStart = DateTime.parse(latestCycle['next_period']);
             final periodLength = latestCycle['period_length'];
             final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
+            debugPrint('Calculated nextPeriodDays: ' + nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
             setState(() {
               _nextPeriodDays = nextPeriodDays.toSet();
               _selectedCalendarDays = {..._selectedCalendarDays};
@@ -113,6 +124,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 .map((d) => DateFormat('yyyy-MM-dd').format(d))
                 .toSet();
             });
+            debugPrint('State _nextPeriodDays: ' + _nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
             final prefs = await SharedPreferences.getInstance();
             await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
           }
@@ -139,10 +151,13 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             });
           }
           if (data['next_period'] != null && data['period_length'] != null) {
-            // Use next_period and period_length from API to mark next period days
+            debugPrint('API next_period: \'${data['next_period']}\'');
+            debugPrint('API period_length: \'${data['period_length']}\'');
+            // Mark the whole next period range
             final nextPeriodStart = DateTime.parse(data['next_period']);
             final periodLength = data['period_length'];
             final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
+            debugPrint('Calculated nextPeriodDays: ' + nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
             setState(() {
               _nextPeriodDays = nextPeriodDays.toSet();
               _selectedCalendarDays = {..._selectedCalendarDays};
@@ -150,6 +165,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 .map((d) => DateFormat('yyyy-MM-dd').format(d))
                 .toSet();
             });
+            debugPrint('State _nextPeriodDays: ' + _nextPeriodDays.map((d) => d.toIso8601String()).join(', '));
             final prefs = await SharedPreferences.getInstance();
             await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
           }
@@ -237,12 +253,18 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       _selectedCalendarDaysFormatted = _selectedCalendarDays
           .map((d) => DateFormat('yyyy-MM-dd').format(d))
           .toSet();
-      // The last period date is always the latest (maximum) tapped day,
-      // regardless of order or grouping. This ensures that if the user taps
-      // 2 Jan and 5 Jan, the last period date is 5 Jan.
+      // The last period date is now the minimum (earliest) tapped day in the current month.
       if (_selectedCalendarDays.isNotEmpty) {
-        final latest = _selectedCalendarDays.reduce((a, b) => a.isAfter(b) ? a : b);
-        _lastPeriodDate = DateFormat('yyyy-MM-dd').format(latest);
+        final now = DateTime.now();
+        final currentMonthDays = _selectedCalendarDays.where((d) => d.year == now.year && d.month == now.month).toList();
+        if (currentMonthDays.isNotEmpty) {
+          final earliest = currentMonthDays.reduce((a, b) => a.isBefore(b) ? a : b);
+          _lastPeriodDate = DateFormat('yyyy-MM-dd').format(earliest);
+        } else {
+          // fallback: use the earliest of all selected days
+          final earliest = _selectedCalendarDays.reduce((a, b) => a.isBefore(b) ? a : b);
+          _lastPeriodDate = DateFormat('yyyy-MM-dd').format(earliest);
+        }
       } else {
         _lastPeriodDate = null;
       }
@@ -296,7 +318,10 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
+                  );
                 },
                 tooltip: 'Back to Home',
               ),

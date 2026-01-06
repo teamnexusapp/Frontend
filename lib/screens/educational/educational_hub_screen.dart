@@ -213,26 +213,49 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Educational Hub'),
+        backgroundColor: Color(0xFF2E683D), // Dark green
+        elevation: 0,
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: DropdownButton<String>(
-              value: selectedCategory,
-              items: categories.map((category) {
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    selectedCategory = value;
-                  });
-                }
-              },
+          Container(
+            color: const Color(0xFF2E683D),
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: categories.map((category) {
+                  final isSelected = selectedCategory == category;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: ChoiceChip(
+                      label: Text(
+                        category,
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : const Color(0xFF2E683D),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      selected: isSelected,
+                      selectedColor: const Color(0xFF2E683D),
+                      backgroundColor: Colors.white,
+                      shape: StadiumBorder(
+                        side: BorderSide(
+                          color: isSelected ? const Color(0xFF2E683D) : Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(() {
+                            selectedCategory = category;
+                          });
+                        }
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
           Expanded(
