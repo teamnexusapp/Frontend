@@ -25,6 +25,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   bool _isCalendarCollapsed = false;
   double _lastScrollOffset = 0;
   Set<DateTime> _selectedCalendarDays = {};
+  Set<DateTime> _nextPeriodDays = {};
   // Store tapped days as yyyy-mm-dd strings
   Set<String> _selectedCalendarDaysFormatted = {};
   // Store last period date as yyyy-mm-dd string
@@ -106,7 +107,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             final periodLength = latestCycle['period_length'];
             final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
             setState(() {
-              _selectedCalendarDays = {..._selectedCalendarDays, ...nextPeriodDays};
+              _nextPeriodDays = nextPeriodDays.toSet();
+              _selectedCalendarDays = {..._selectedCalendarDays};
               _selectedCalendarDaysFormatted = _selectedCalendarDays
                 .map((d) => DateFormat('yyyy-MM-dd').format(d))
                 .toSet();
@@ -142,7 +144,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             final periodLength = data['period_length'];
             final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
             setState(() {
-              _selectedCalendarDays = {..._selectedCalendarDays, ...nextPeriodDays};
+              _nextPeriodDays = nextPeriodDays.toSet();
+              _selectedCalendarDays = {..._selectedCalendarDays};
               _selectedCalendarDaysFormatted = _selectedCalendarDays
                 .map((d) => DateFormat('yyyy-MM-dd').format(d))
                 .toSet();
@@ -317,6 +320,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                             SwipeableGreenCalendar(
                               initialMonth: DateTime.now(),
                               selectedDates: _selectedCalendarDays,
+                              nextPeriodDays: _nextPeriodDays,
                               onDateToggle: _toggleCalendarDate,
                             ),
                           ] else ...[

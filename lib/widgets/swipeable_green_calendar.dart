@@ -1,17 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+// Add required import for Set
 
 class SwipeableGreenCalendar extends StatefulWidget {
   const SwipeableGreenCalendar({
     super.key,
     required this.initialMonth,
     required this.selectedDates,
+    required this.nextPeriodDays,
     this.onDateToggle,
   });
 
   final DateTime initialMonth;
   final Set<DateTime> selectedDates;
+  final Set<DateTime> nextPeriodDays;
   final ValueChanged<DateTime>? onDateToggle;
 
   @override
@@ -96,6 +99,7 @@ class _SwipeableGreenCalendarState extends State<SwipeableGreenCalendar> {
               return _MonthGrid(
                 month: month,
                 selectedDates: _localSelection,
+                nextPeriodDays: widget.nextPeriodDays,
                 onToggle: _handleDateToggle,
               );
             },
@@ -172,11 +176,13 @@ class _MonthGrid extends StatelessWidget {
   const _MonthGrid({
     required this.month,
     required this.selectedDates,
+    required this.nextPeriodDays,
     required this.onToggle,
   });
 
   final DateTime month;
   final Set<DateTime> selectedDates;
+  final Set<DateTime> nextPeriodDays;
   final ValueChanged<DateTime> onToggle;
 
   static const Color _accent = Color(0xFFA8D497);
@@ -218,13 +224,14 @@ class _MonthGrid extends StatelessWidget {
           );
 
           final isSelected = selectedDates.any((d) => _isSameDay(d, dayInfo.date));
-          // TODO: Replace with backend-driven period day logic if needed
-          final isNextPeriodDay = false;
-            final textColor = dayInfo.isOutside
+          final isNextPeriodDay = nextPeriodDays.any((d) => _isSameDay(d, dayInfo.date));
+          final textColor = dayInfo.isOutside
               ? _accent.withOpacity(0.4)
-              : isSelected
-                ? const Color(0xFFD32F2F) // Red for selected day
-                : Colors.white;
+              : isNextPeriodDay
+                ? Colors.red
+                : isSelected
+                  ? const Color(0xFFD32F2F)
+                  : Colors.white;
 
           return Center(
             child: GestureDetector(
@@ -238,7 +245,7 @@ class _MonthGrid extends StatelessWidget {
                   color: isNextPeriodDay
                     ? Colors.transparent
                     : isSelected
-                      ? const Color(0xFFFFE5E5) // Light red/pink for selected day
+                      ? const Color(0xFFFFE5E5)
                       : Colors.transparent,
                   border: isNextPeriodDay
                     ? Border.all(color: Colors.red, width: 2, style: BorderStyle.solid)
