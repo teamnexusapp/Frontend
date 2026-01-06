@@ -444,7 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // ... other positioned widgets ...
                         if (_insightText != null && _insightText!.isNotEmpty)
                           Positioned(
-                            bottom: 70,
+                            bottom: 100,
                             left: 0,
                             right: 0,
                             child: Padding(

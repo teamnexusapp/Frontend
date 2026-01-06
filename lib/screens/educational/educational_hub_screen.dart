@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'article_reading_screen.dart';
 
 class EducationalHubScreen extends StatefulWidget {
   static const routeName = '/educational-hub';
@@ -57,132 +58,110 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
     'Trying to conceive',
   ];
 
-  List<Map<String, String>> get filteredArticles {
-    // Normalize category names for matching (case-insensitive, ignore & vs and)
-    String normalize(String s) => s.toLowerCase().replaceAll('&', 'and').replaceAll(' ', '').replaceAll('-', '');
-    final selectedNorm = normalize(selectedCategory);
-    return allArticles.where((article) {
-      final cat = article['category'] ?? '';
-      return normalize(cat) == selectedNorm;
-    }).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: 110,
-            margin: const EdgeInsets.only(bottom: 16),
-            padding: const EdgeInsets.only(left: 30, right: 30),
-            decoration: const BoxDecoration(
-              color: Color(0xFF2E683D),
-            ),
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Educational Hub',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Poppins',
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => ArticleReadingScreen(
+                            imageUrl: article['image'] ?? '',
+                            title: article['title'] ?? '',
+                            articleText: article['excerpt'] ?? '',
+                          ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            final cardHeight = 320.0;
+                            final imageHeight = cardHeight * 0.6;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
+                                  child: Image.network(
+                                    article['image']!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: imageHeight,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: imageHeight,
+                                        color: Colors.grey.shade300,
+                                        child: const Icon(Icons.image_not_supported),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFA8D497),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          article['category'] ?? '',
+                                          style: const TextStyle(
+                                            color: Color(0xFF2E683D),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '5 mins read',
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
+                                  child: Text(
+                                    article['title'] ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
+                                  child: Text(
+                                    article['excerpt'] ?? '',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          // Filter bubbles
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: categories.map((category) {
-                  final bool isActive = selectedCategory == category;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedCategory = category;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: isActive ? const Color(0xFF2E683D) : Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: isActive ? const Color(0xFF2E683D) : Colors.grey.shade300,
-                            width: 1.5,
-                          ),
-                          boxShadow: isActive
-                              ? [
-                                  BoxShadow(
-                                    color: Colors.green.withOpacity(0.08),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ]
-                              : [],
-                        ),
-                        child: Text(
-                          category,
-                          style: TextStyle(
-                            color: isActive ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.only(bottom: 16),
-              children: filteredArticles.map((article) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final cardHeight = 320.0;
-                          final imageHeight = cardHeight * 0.6;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Image (60% of card height)
-                              ClipRRect(
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
-                                child: Image.network(
-                                  article['image']!,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: imageHeight,
-                                  errorBuilder: (context, error, stackTrace) {
+                );
                                     return Container(
                                       height: imageHeight,
                                       color: Colors.grey.shade300,
