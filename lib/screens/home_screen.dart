@@ -444,7 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // ... other positioned widgets ...
                         if (_insightText != null && _insightText!.isNotEmpty)
                           Positioned(
-                            bottom: 50,
+                            bottom: 70,
                             left: 0,
                             right: 0,
                             child: Padding(
@@ -475,6 +475,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
+                        // Hamburger menu icon
+                        Positioned(
+                          top: 30,
+                          left: 15,
+                          child: GestureDetector(
+                            onTap: _toggleSideMenu,
+                            child: const Icon(
+                              Icons.menu,
+                              color: Color(0xFFA8D497),
+                              size: 28,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
