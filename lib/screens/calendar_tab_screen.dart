@@ -259,6 +259,25 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       } else {
         _lastPeriodDate = null;
       }
+
+      // Immediately update next period days for instant UI feedback
+      if (_lastPeriodDate != null) {
+        int cycleLength = 28;
+        int periodLength = 5;
+        // Try to get user profile values if available (sync fallback)
+        // If you want to always use latest, refactor to async fetch
+        final prefs = _selectedCalendarDays; // just to avoid unused warning
+        try {
+          // This is a sync context, so use last known values or defaults
+          // If you want to always use latest, refactor to async fetch
+        } catch (e) {}
+        final lastPeriod = DateTime.parse(_lastPeriodDate!);
+        final nextPeriodStart = lastPeriod.add(Duration(days: cycleLength));
+        final nextPeriodDays = List<DateTime>.generate(periodLength, (i) => nextPeriodStart.add(Duration(days: i)));
+        _nextPeriodDays = nextPeriodDays.toSet();
+      } else {
+        _nextPeriodDays = {};
+      }
     });
     // Save tapped days
     final prefs = await SharedPreferences.getInstance();

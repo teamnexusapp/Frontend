@@ -457,6 +457,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLanguageRow() {
+    final languageOptions = <String, String>{
+      'en': 'English',
+      'ig': 'Igbo',
+      'ha': 'Hausa',
+      'yo': 'Yoruba',
+    };
+    // Find the code for the current selectedLanguage
+    String selectedCode = languageOptions.entries.firstWhere(
+      (e) => e.value == selectedLanguage,
+      orElse: () => const MapEntry('en', 'English'),
+    ).key;
     return Row(
       children: [
         Container(
@@ -474,52 +485,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(fontSize: 15),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: DropdownButton<String>(
-            value: selectedLanguage,
-            underline: const SizedBox(),
-            isDense: true,
-            items: (() {
-              // List of all languages
-              final allLanguages = ['English', 'Igbo', 'Hausa', 'Yoruba'];
-              // Move selectedLanguage to the front
-              final reordered = [selectedLanguage, ...allLanguages.where((l) => l != selectedLanguage)];
-              return reordered.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: const TextStyle(fontSize: 14)),
-                );
-              }).toList();
-            })(),
-            onChanged: (String? newValue) async {
-              if (newValue == null) return;
-              setState(() {
-                selectedLanguage = newValue;
-              });
-              // Map display name to code
-              String code = 'en';
-              switch (newValue) {
-                case 'English': code = 'en'; break;
-                case 'Igbo': code = 'ig'; break;
-                case 'Hausa': code = 'ha'; break;
-                case 'Yoruba': code = 'yo'; break;
-              }
-              try {
-                await ApiService().updateLanguage(code);
-                // Refresh home page after successful update
-                if (mounted) {
-                  Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
-                }
-              } catch (e) {
-                debugPrint('Failed to update language: $e');
-              }
-            },
-          ),
+        DropdownButton<String>(
+          value: selectedCode,
+          underline: const SizedBox(),
+          isDense: true,
+          items: languageOptions.entries.map((entry) {
+            return DropdownMenuItem<String>(
+              value: entry.key,
+              child: Text(entry.value, style: const TextStyle(fontSize: 14)),
+            );
+          }).toList(),
+          onChanged: (String? newCode) async {
+            if (newCode == null) return;
+            setState(() {
+              selectedLanguage = languageOptions[newCode]!;
+            });
+            try {
+              await ApiService().updateLanguage(newCode);
+            } catch (e) {
+              debugPrint('Failed to update language: $e');
+            }
+          },
+        ),
+      ],
+    );
         ),
       ],
     );
