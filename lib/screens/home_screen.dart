@@ -431,83 +431,75 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: heroHeight,
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF2E683D),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          bottom: 50,
-                          right: -40,
-                          child: Transform.rotate(
-                            angle: -0.3,
-                            child: Opacity(
-                              opacity: 0.15,
-                              child: Text(
-                                ';',
-                                style: TextStyle(
-                                  fontSize: 320,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Poppins',
-                                  color: Colors.white,
-                                  height: 1,
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: heroHeight + (buttonHeight / 2),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  height: heroHeight,
+                                  width: double.infinity,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF2E683D),
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(30),
+                                      bottomRight: Radius.circular(30),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                                    child: Stack(
+                                      children: [
+                                        ...existing code...
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 30,
-                          left: 15,
-                          child: GestureDetector(
-                            onTap: _toggleSideMenu,
-                            child: const Icon(
-                              Icons.menu,
-                              color: Color(0xFFA8D497),
-                              size: 28,
-                            ),
-                          ),
-                        ),
-                        // Today's fertility insight heading and paragraph
-                        if (_insightText != null && _insightText!.isNotEmpty)
-                          Positioned(
-                            bottom: 30,
-                            left: 0,
-                            right: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Today's Fertility Insight",
-                                    style: const TextStyle(
-                                      fontSize: 30,
-                                      color: Color(0xFFA8D497), // light green
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w600,
+                                Positioned(
+                                  top: heroHeight - (buttonHeight / 2),
+                                  left: 0,
+                                  right: 0,
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 280,
+                                      height: buttonHeight,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _selectedIndex = 2; // Calendar tab
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color(0xFFA8D497),
+                                          foregroundColor: const Color(0xFF2E683D),
+                                          elevation: 4,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(Icons.water_drop, color: Color(0xFF2E683D)),
+                                            SizedBox(width: 12),
+                                            Text(
+                                              'Log symptoms',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Poppins',
+                                                color: Color(0xFF2E683D),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    _insightText!,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontFamily: 'Poppins',
-                                    ),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                      ],
+                                ),
                     ),
                   ),
                 ),

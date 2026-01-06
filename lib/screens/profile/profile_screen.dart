@@ -230,6 +230,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ],
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          const Icon(Icons.language, size: 16, color: Color(0xFF2E683D)),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Language: ',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            _getLanguageDisplayName(user?.preferredLanguage ?? 'en'),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF2E683D),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

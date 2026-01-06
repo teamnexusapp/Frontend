@@ -161,10 +161,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
                       );
                       debugPrint('Log API response: ${response.statusCode} ${response.body}');
                       if (response.statusCode == 200 || response.statusCode == 201) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (_) => CalendarTabScreen()),
-                          (route) => false,
-                        );
+                        Navigator.of(context).pop(true);
                       }
                     },
                     style: ElevatedButton.styleFrom(

@@ -1,5 +1,4 @@
 ﻿import 'package:flutter/material.dart';
-import 'bookmark_screen.dart';
 
 class EducationalHubScreen extends StatefulWidget {
   static const routeName = '/educational-hub';
@@ -95,28 +94,6 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 57,
-                  top: 0,
-                  bottom: 0,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => BookmarkScreen(bookmarkedArticles: allArticles),
-                          ),
-                        );
-                      },
-                      child: const Icon(
-                        Icons.bookmark,
-                        color: Colors.white,
-                        size: 32,
                       ),
                     ),
                   ),
@@ -313,15 +290,6 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
                                       ),
                                     ),
                                     const Spacer(),
-                                    // Bookmark icon
-                                    IconButton(
-                                      icon: const Icon(Icons.bookmark_border, color: Color(0xFF2E683D)),
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('Bookmarked: ${article['title']}')),
-                                        );
-                                      },
-                                    ),
                                   ],
                                 ),
                               ),
