@@ -199,7 +199,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: MediaQuery.of(context).size.width * 0.5,
                   height: MediaQuery.of(context).size.height,
                   decoration: const BoxDecoration(
-                    // ...existing code...
+                    color: Color(0xFFA8D497),
+                    // Add other BoxDecoration properties here if needed
                   ),
                 ),
               ),
@@ -215,101 +216,6 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: const Icon(Icons.add),
         tooltip: 'Log Symptoms',
-      ),
-    );
-                    color: Color(0xFFA8D497),
-                  ),
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15, top: 30, right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.close,
-                                  color: Color(0xFF2E683D),
-                                  size: 28,
-                                ),
-                                onPressed: _toggleSideMenu,
-                                padding: EdgeInsets.zero,
-                                alignment: Alignment.centerLeft,
-                              ),
-                              _buildAvatar(user),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          _buildProfileCard(user),
-                          const SizedBox(height: 20),
-                          _buildMenuItem(
-                            label: 'Profile',
-                            icon: Icons.person_outline,
-                            onTap: () {
-                              _toggleSideMenu();
-                              Navigator.of(context).pushNamed('/profile');
-                            },
-                          ),
-                          _buildMenuItem(
-                            label: 'Support',
-                            icon: Icons.help_outline,
-                            onTap: () {
-                              _toggleSideMenu();
-                              Navigator.of(context).pushNamed('/support');
-                            },
-                          ),
-                          const Spacer(),
-                          _buildMenuItem(
-                            label: 'Log out',
-                            icon: Icons.logout,
-                            iconColor: Colors.grey.shade600,
-                            textColor: Colors.grey.shade700,
-                            onTap: () async {
-                              _toggleSideMenu();
-                              await auth.signOut();
-                              if (mounted) {
-                                Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF2E683D),
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: false,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: _selectedIndex == 0 ? AppLocalizations.of(context)!.home : '',
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.school),
-            label: _selectedIndex == 1 ? AppLocalizations.of(context)!.learn : '',
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.timeline),
-            label: _selectedIndex == 2 ? 'Track' : '',
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.support_agent),
-            label: _selectedIndex == 3 ? 'Support' : '',
-          ),
-        ],
       ),
     );
   }
