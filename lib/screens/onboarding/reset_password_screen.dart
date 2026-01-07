@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:Fertipath/services/api_service.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  final String? email; // Optionally pass email or token if needed
-  const ResetPasswordScreen({Key? key, this.email}) : super(key: key);
+  final String? token;
+  const ResetPasswordScreen({Key? key, this.token}) : super(key: key);
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -21,11 +21,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   void initState() {
     super.initState();
-    // Extract token from URL query parameters
-    final token = Uri.base.queryParameters['token'];
-    setState(() {
-      _token = token;
-    });
+    _token = widget.token;
   }
 
   @override

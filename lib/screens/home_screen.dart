@@ -15,6 +15,7 @@ import 'educational/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
 import 'gender_prediction_screen.dart';
 import '../services/insights_service.dart';
+import '../services/localization_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
