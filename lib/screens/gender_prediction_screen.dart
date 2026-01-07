@@ -104,20 +104,7 @@ class _GenderPredictionScreenState extends State<GenderPredictionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2D5A3A),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
-            );
-          },
-        ),
-        title: const Text('Gender Prediction', style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-      ),
+      // Removed fixed header (AppBar with 'Gender Prediction')
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : Container(

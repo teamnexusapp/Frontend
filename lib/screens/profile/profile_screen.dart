@@ -502,6 +502,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             });
             try {
               await ApiService().updateLanguage(newCode);
+              // Only refetch data, do not rebuild localization
+              if (HomeScreen.refreshInsights != null) {
+                HomeScreen.refreshInsights!();
+              }
             } catch (e) {
               debugPrint('Failed to update language: $e');
             }

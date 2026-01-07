@@ -23,12 +23,19 @@ import 'package:intl/intl.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  static void Function()? refreshInsights;
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 
 class _HomeScreenState extends State<HomeScreen> {
+        @override
+        void didChangeDependencies() {
+          super.didChangeDependencies();
+          HomeScreen.refreshInsights = _sendInsightsPost;
+        }
       late LocalizationProvider _localizationProvider;
       late VoidCallback _languageListener;
     Map<String, dynamic>? _insightData;
@@ -53,15 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // _loadFertileWindow(); // Removed, now handled in CalendarTabScreen
     _sendInsightsPost();
-
-    // Listen for language changes and re-fetch data
-    _languageListener = () {
-      _sendInsightsPost();
-    };
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _localizationProvider = Provider.of<LocalizationProvider>(context, listen: false);
-      _localizationProvider.addListener(_languageListener);
-    });
+    // Removed localizationProvider listener to avoid unnecessary data refreshes on localization rebuilds
   }
 
   Future<void> _sendInsightsPost() async {
@@ -171,15 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2E683D),
-        elevation: 0,
-        title: const Text('Nexus Fertility'),
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Color(0xFFA8D497)),
-          onPressed: _toggleSideMenu,
-        ),
-      ),
+      // Removed fixed header (AppBar with 'Nexus Fertility')
       body: Stack(
         children: [
           IndexedStack(
@@ -208,89 +199,80 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Color(0xFFA8D497),
                 ),
                 child: SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Stack(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: _buildProfileCard(user),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: _buildProfileCard(user),
+                          ),
+                          _buildMenuItem(
+                            label: 'Profile',
+                            icon: Icons.person,
+                            onTap: () {
+                              Navigator.of(context).pushNamed('/profile');
+                              setState(() {
+                                _showSideMenu = false;
+                              });
+                            },
+                          ),
+                          _buildMenuItem(
+                            label: 'Support',
+                            icon: Icons.support_agent,
+                            onTap: () {
+                              setState(() {
+                                _showSideMenu = false;
+                              });
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Contact Support'),
+                                  content: const Text(
+                                    'For any app issues, please reach out to our team at:\n\nteamnexus@techlaunchpadi.com',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      child: const Text('Close'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          'Features',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2E683D),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
+                          child: _buildMenuItem(
+                            label: 'Log Out',
+                            icon: Icons.logout,
+                            onTap: () async {
+                              try {
+                                await ApiService().logout();
+                                if (!mounted) return;
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+                                  (route) => false,
+                                );
+                              } catch (e) {
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Logout failed. Please try again.')),
+                                );
+                              }
+                            },
+                            iconColor: Colors.grey,
+                            textColor: Colors.grey,
                           ),
                         ),
-                      ),
-                      _buildMenuItem(
-                        label: 'Home',
-                        icon: Icons.home,
-                        onTap: () {
-                          setState(() {
-                            _selectedIndex = 0;
-                            _showSideMenu = false;
-                          });
-                        },
-                      ),
-                      _buildMenuItem(
-                        label: 'Educational',
-                        icon: Icons.school,
-                        onTap: () {
-                          setState(() {
-                            _selectedIndex = 1;
-                            _showSideMenu = false;
-                          });
-                        },
-                      ),
-                      _buildMenuItem(
-                        label: 'Calendar',
-                        icon: Icons.calendar_today,
-                        onTap: () {
-                          setState(() {
-                            _selectedIndex = 2;
-                            _showSideMenu = false;
-                          });
-                        },
-                      ),
-                      _buildMenuItem(
-                        label: 'Support',
-                        icon: Icons.support_agent,
-                        onTap: () {
-                          setState(() {
-                            _showSideMenu = false;
-                          });
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Contact Support'),
-                              content: const Text(
-                                'For any app issues, please reach out to our team at:\n\nteamnexus@techlaunchpadi.com',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text('Close'),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      const Spacer(),
-                      _buildMenuItem(
-                        label: 'Profile',
-                        icon: Icons.person,
-                        onTap: () {
-                          Navigator.of(context).pushNamed('/profile');
-                          setState(() {
-                            _showSideMenu = false;
-                          });
-                        },
                       ),
                     ],
                   ),
