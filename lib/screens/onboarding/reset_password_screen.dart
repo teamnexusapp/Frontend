@@ -17,6 +17,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool _isLoading = false;
   String? _error;
   String? _token;
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   @override
   void initState() {
@@ -72,7 +74,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               ],
               TextFormField(
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: !_passwordVisible,
                 decoration: InputDecoration(
                   labelText: 'New Password',
                   labelStyle: const TextStyle(color: Color(0xFF2E683D)),
@@ -86,6 +88,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                   fillColor: Colors.white,
                   filled: true,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: const Color(0xFF2E683D),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'Enter new password';
@@ -96,7 +109,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _confirmPasswordController,
-                obscureText: true,
+                obscureText: !_confirmPasswordVisible,
                 decoration: InputDecoration(
                   labelText: 'Confirm Password',
                   labelStyle: const TextStyle(color: Color(0xFF2E683D)),
@@ -110,6 +123,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                   fillColor: Colors.white,
                   filled: true,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _confirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: const Color(0xFF2E683D),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _confirmPasswordVisible = !_confirmPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
                 validator: (value) {
                   if (value != _passwordController.text) return 'Passwords do not match';

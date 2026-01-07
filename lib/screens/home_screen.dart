@@ -171,7 +171,15 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
     return Scaffold(
-      appBar: null,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF2E683D),
+        elevation: 0,
+        title: const Text('Nexus Fertility'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Color(0xFFA8D497)),
+          onPressed: _toggleSideMenu,
+        ),
+      ),
       body: Stack(
         children: [
           IndexedStack(
@@ -193,29 +201,131 @@ class _HomeScreenState extends State<HomeScreen> {
           if (_showSideMenu)
             Align(
               alignment: Alignment.centerLeft,
-              child: GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFA8D497),
-                    // Add other BoxDecoration properties here if needed
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFA8D497),
+                ),
+                child: SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: _buildProfileCard(user),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          'Features',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2E683D),
+                          ),
+                        ),
+                      ),
+                      _buildMenuItem(
+                        label: 'Home',
+                        icon: Icons.home,
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 0;
+                            _showSideMenu = false;
+                          });
+                        },
+                      ),
+                      _buildMenuItem(
+                        label: 'Educational',
+                        icon: Icons.school,
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 1;
+                            _showSideMenu = false;
+                          });
+                        },
+                      ),
+                      _buildMenuItem(
+                        label: 'Calendar',
+                        icon: Icons.calendar_today,
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 2;
+                            _showSideMenu = false;
+                          });
+                        },
+                      ),
+                      _buildMenuItem(
+                        label: 'Support',
+                        icon: Icons.support_agent,
+                        onTap: () {
+                          setState(() {
+                            _showSideMenu = false;
+                          });
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Contact Support'),
+                              content: const Text(
+                                'For any app issues, please reach out to our team at:\n\nteamnexus@techlaunchpadi.com',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('Close'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      const Spacer(),
+                      _buildMenuItem(
+                        label: 'Profile',
+                        icon: Icons.person,
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/profile');
+                          setState(() {
+                            _showSideMenu = false;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await Navigator.of(context).pushNamed('/log_symptom');
-          if (result == true) {
-            _calendarRefreshNotifier.value = true;
-          }
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
         },
-        child: const Icon(Icons.add),
-        tooltip: 'Log Symptoms',
+        selectedItemColor: const Color(0xFF2E683D),
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'Educational',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.support_agent),
+            label: 'Support',
+          ),
+        ],
       ),
     );
   }
