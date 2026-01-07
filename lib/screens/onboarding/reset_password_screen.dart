@@ -45,10 +45,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     try {
       await ApiService().resetPassword(token: _token!, newPassword: _passwordController.text);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password reset successful!')),
-      );
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacementNamed('/password-updated');
     } catch (e) {
       setState(() { _error = 'Failed to reset password.'; });
     } finally {
@@ -59,7 +56,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Reset Password')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xFF2E683D)),
+        title: const Text('Reset Password', style: TextStyle(color: Color(0xFF2E683D), fontWeight: FontWeight.w600)),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -74,7 +77,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'New Password'),
+                decoration: InputDecoration(
+                  labelText: 'New Password',
+                  labelStyle: const TextStyle(color: Color(0xFF2E683D)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF2E683D)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF2E683D), width: 2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'Enter new password';
                   if (value.length < 6) return 'Password must be at least 6 characters';
@@ -85,7 +101,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               TextFormField(
                 controller: _confirmPasswordController,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'Confirm Password'),
+                decoration: InputDecoration(
+                  labelText: 'Confirm Password',
+                  labelStyle: const TextStyle(color: Color(0xFF2E683D)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF2E683D)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF2E683D), width: 2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
                 validator: (value) {
                   if (value != _passwordController.text) return 'Passwords do not match';
                   return null;
@@ -93,10 +122,21 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               ),
               const SizedBox(height: 24),
               _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: _resetPassword,
-                      child: const Text('Reset Password'),
+                  ? const CircularProgressIndicator(color: Color(0xFF2E683D))
+                  : SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF2E683D),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: _resetPassword,
+                        child: const Text('Reset Password', style: TextStyle(fontWeight: FontWeight.w600)),
+                      ),
                     ),
             ],
           ),

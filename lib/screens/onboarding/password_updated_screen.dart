@@ -48,11 +48,7 @@ class PasswordUpdatedScreen extends StatelessWidget {
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ),
-                      );
+                      Navigator.of(context).pushReplacementNamed('/login');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E683D),

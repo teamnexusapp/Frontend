@@ -115,6 +115,22 @@ class MyApp extends StatelessWidget {
               '/settings': (context) => const SettingsScreen(),
               '/sex_timing': (context) => const SexTimingPreferencesScreen(),
             },
+            onGenerateRoute: (settings) {
+              Uri? uri;
+              if (settings.name != null) {
+                uri = Uri.tryParse(settings.name!);
+              }
+              // Handle hash route for reset password
+              if (uri != null && (uri.path == '/reset_password' || uri.path == '/#/reset_password')) {
+                final token = uri.queryParameters['token'];
+                return MaterialPageRoute(
+                  builder: (context) => ResetPasswordScreen(token: token),
+                  settings: settings,
+                );
+              }
+              // Fallback to default
+              return null;
+            },
           );
         },
       ),

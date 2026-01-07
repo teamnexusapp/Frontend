@@ -212,14 +212,15 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
     final filteredArticles = allArticles.where((article) => article['category'] == selectedCategory).toList();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Educational Hub'),
+        title: const Text('Educational Hub', style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF2E683D), // Dark green
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
-            color: const Color(0xFF2E683D),
+            color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,

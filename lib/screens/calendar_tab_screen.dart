@@ -12,7 +12,8 @@ import '../services/api_service.dart';
 
 class CalendarTabScreen extends StatefulWidget {
   final ValueNotifier<bool>? refreshNotifier;
-  const CalendarTabScreen({Key? key, this.refreshNotifier}) : super(key: key);
+  final ValueNotifier<bool>? symptomRefreshNotifier;
+  const CalendarTabScreen({Key? key, this.refreshNotifier, this.symptomRefreshNotifier}) : super(key: key);
 
   @override
   State<CalendarTabScreen> createState() => _CalendarTabScreenState();
@@ -47,7 +48,12 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
 
   void _handleRefreshRequest() {
     if (widget.refreshNotifier?.value == true) {
-      _fetchLoggedSymptoms();
+      _fetchLoggedSymptoms().then((_) {
+        // Notify home screen after symptoms are refreshed
+        if (widget.symptomRefreshNotifier != null) {
+          widget.symptomRefreshNotifier!.value = true;
+        }
+      });
       widget.refreshNotifier?.value = false;
     }
   }

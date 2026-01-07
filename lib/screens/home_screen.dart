@@ -28,6 +28,8 @@ class HomeScreen extends StatefulWidget {
 
 
 class _HomeScreenState extends State<HomeScreen> {
+      late LocalizationProvider _localizationProvider;
+      late VoidCallback _languageListener;
     Map<String, dynamic>? _insightData;
     String? _insightText;
 
@@ -43,12 +45,22 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool _showSideMenu = false;
   final ValueNotifier<bool> _calendarRefreshNotifier = ValueNotifier(false);
+  final ValueNotifier<bool> _symptomRefreshNotifier = ValueNotifier(false);
 
   @override
   void initState() {
     super.initState();
     // _loadFertileWindow(); // Removed, now handled in CalendarTabScreen
     _sendInsightsPost();
+
+    // Listen for language changes and re-fetch data
+    _languageListener = () {
+      _sendInsightsPost();
+    };
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _localizationProvider = Provider.of<LocalizationProvider>(context, listen: false);
+      _localizationProvider.addListener(_languageListener);
+    });
   }
 
   Future<void> _sendInsightsPost() async {
@@ -72,9 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                    );
+                    Navigator.of(context).pushNamed('/profile');
                   },
                   child: const Text('Set Up Profile'),
                 ),
@@ -138,6 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _calendarRefreshNotifier.dispose();
+    if (mounted) {
+      _localizationProvider.removeListener(_languageListener);
+    }
     super.dispose();
   }
 
@@ -149,6 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     final user = auth.currentUser;
+    // Listen for symptom refresh from calendar screen
+    _symptomRefreshNotifier.addListener(() {
+      if (_symptomRefreshNotifier.value == true) {
+        _sendInsightsPost();
+        _symptomRefreshNotifier.value = false;
+      }
+    });
     return Scaffold(
       appBar: null,
       body: Stack(
@@ -158,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               _buildHomeTab(),
               EducationalHubScreen(),
-              CalendarTabScreen(refreshNotifier: _calendarRefreshNotifier),
+              CalendarTabScreen(refreshNotifier: _calendarRefreshNotifier, symptomRefreshNotifier: _symptomRefreshNotifier),
               SupportScreen(),
             ],
           ),
@@ -178,6 +198,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: MediaQuery.of(context).size.width * 0.5,
                   height: MediaQuery.of(context).size.height,
                   decoration: const BoxDecoration(
+                    // ...existing code...
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.of(context).pushNamed('/log_symptom');
+          if (result == true) {
+            _calendarRefreshNotifier.value = true;
+          }
+        },
+        child: const Icon(Icons.add),
+        tooltip: 'Log Symptoms',
+      ),
+    );
                     color: Color(0xFFA8D497),
                   ),
                   child: SafeArea(
@@ -210,11 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: Icons.person_outline,
                             onTap: () {
                               _toggleSideMenu();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const ProfileScreen(),
-                                ),
-                              );
+                              Navigator.of(context).pushNamed('/profile');
                             },
                           ),
                           _buildMenuItem(
@@ -222,11 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: Icons.help_outline,
                             onTap: () {
                               _toggleSideMenu();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const SupportScreen(),
-                                ),
-                              );
+                              Navigator.of(context).pushNamed('/support');
                             },
                           ),
                           const Spacer(),
@@ -239,10 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               _toggleSideMenu();
                               await auth.signOut();
                               if (mounted) {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-                                  (route) => false,
-                                );
+                                Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
                               }
                             },
                           ),
