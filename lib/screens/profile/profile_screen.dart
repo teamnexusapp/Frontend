@@ -388,31 +388,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         if (label == 'Faith Preference')
-          DropdownButton<String>(
-            value: _user?.faithPreference ?? 'neutral',
-            underline: const SizedBox(),
-            isDense: true,
-            items: <String>['christian', 'muslim', 'neutral']
-                .map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value[0].toUpperCase() + value.substring(1),
-                  style: const TextStyle(fontSize: 14),
-                ),
-              );
-            }).toList(),
-            onChanged: (String? newValue) async {
-              if (newValue == null) return;
-              setState(() {
-                _user = _user?.copyWith(faithPreference: newValue);
-              });
-              try {
-                await ApiService().updateProfile(faithPreference: newValue);
-              } catch (e) {
-                debugPrint('Failed to update faith preference: $e');
-              }
-            },
+          Text(
+            (_user?.faithPreference ?? 'Not set')[0].toUpperCase() + (_user?.faithPreference ?? 'Not set').substring(1),
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
           )
         else
           Text(

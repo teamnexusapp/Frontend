@@ -45,8 +45,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final List<String> _faithPreferences = [
     'Christian',
     'Muslim',
-    'Jewish',
-    'None'
+    'Neutral'
   ];
 
   // Removed language options
@@ -379,6 +378,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
+        color: const Color(0xFFA8D497), // Light green background
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -394,6 +394,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           );
         }).toList(),
         onChanged: onChanged,
+        dropdownColor: const Color(0xFFA8D497), // Light green dropdown
       ),
     );
   }
