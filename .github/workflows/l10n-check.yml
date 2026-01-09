@@ -1,0 +1,17 @@
+﻿name: L10n Check
+on:
+  pull_request:
+    paths:
+      - "lib/l10n/**"
+      - "pubspec.yaml"
+      - ".github/scripts/check_locales.sh"
+jobs:
+  check-locales:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Make script executable
+        run: chmod +x .github/scripts/check_locales.sh
+      - name: Run locale check
+        run: ./.github/scripts/check_locales.sh
