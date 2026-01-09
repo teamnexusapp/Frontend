@@ -81,7 +81,12 @@ class MyApp extends StatelessWidget {
             ),
             locale: localizationProvider.locale,
 
-            supportedLocales: AppLocalizations.supportedLocales,
+            supportedLocales: const [
+  Locale('en'),
+  Locale('yo'),
+  Locale('ig'),
+  Locale('ha'),
+],
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -183,6 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 
 
 
