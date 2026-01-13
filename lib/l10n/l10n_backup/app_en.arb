@@ -140,6 +140,7 @@
   "genderMale": "Male",
   "genderFemale": "Female",
   "genderOther": "Other",
+
   "selectGender": "Select Gender",
   "welcomeToJourney": "Welcome to your journey",
   "choosePreferredLanguage": "Choose your preferred language",
@@ -225,14 +226,5 @@
   "passwordLabel": "Password",
   "enterPassword": "Enter password",
   "forgotPassword": "Forgot Password?",
-  "logIn": "Log In",
-  "continue": "Continue",
-  "joined": "Joined",
-  "audioLessons": "Audio Learning",
-  "play": "Play",
-  "stop": "Stop",
-  "supportHub": "Support Hub",
-  "dailyAffirmation": "Daily Affirmations",
-  "chooseSupportMode": "Choose your support mode",
-  "exploreCommunityGroups": "Explore Community Groups"
+  "logIn": "Log In"
 }
