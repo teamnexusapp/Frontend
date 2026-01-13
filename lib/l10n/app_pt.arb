@@ -1,0 +1,96 @@
+{
+  "@@locale": "pt",
+  "appTitle": "Nexus Fertilidade",
+  "welcomeTitle": "Bem-vindo ao Nexus Fertilidade",
+  "welcomeSubtitle": "Seu companheiro pessoal de fertilidade",
+  "selectLanguage": "Selecionar Idioma",
+  "english": "English",
+  "yoruba": "Yoruba",
+  "igbo": "Igbo",
+  "hausa": "Hausa",
+  "pidgin": "Pidgin",
+  "german": "Deutsch",
+  "next": "Próximo",
+  "back": "Voltar",
+  "skip": "Pular",
+  "done": "Concluído",
+  "createAccount": "Criar Conta",
+  "signIn": "Entrar",
+  "email": "Email",
+  "phoneNumber": "Número de Telefone",
+  "password": "Senha",
+  "confirmPassword": "Confirmar Senha",
+  "firstName": "Primeiro Nome",
+  "lastName": "Sobrenome",
+  "dateOfBirth": "Data de Nascimento",
+  "selectDate": "Selecionar Data",
+  "profilePicture": "Foto de Perfil",
+  "uploadPhoto": "Carregar Foto",
+  "takePhoto": "Tirar Foto",
+  "chooseFromGallery": "Escolher da Galeria",
+  "verifyEmail": "Verificar Email",
+  "verifyPhone": "Verificar Telefone",
+  "enterOTP": "Digite o OTP",
+  "otpSentTo": "OTP enviado para {email}",
+  "@otpSentTo": {
+    "description": "Mensagem exibida após enviar OTP",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Reenviar Código",
+  "codeExpires": "Código expira em {minutes}:{seconds}",
+  "@codeExpires": {
+    "description": "Temporizador de expiração de OTP",
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "invalidEmail": "Por favor, insira um endereço de email válido",
+  "invalidPhone": "Por favor, insira um número de telefone válido",
+  "passwordMismatch": "As senhas não coincidem",
+  "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
+  "accountCreatedSuccessfully": "Conta criada com sucesso!",
+  "profileSetupComplete": "A configuração do seu perfil está completa",
+  "termsAndConditions": "Concordo com os Termos e Condições",
+  "privacyPolicy": "Concordo com a Política de Privacidade",
+  "acceptTerms": "Por favor, aceite os termos e condições",
+  "emailAlreadyExists": "Email já registrado",
+  "phoneAlreadyExists": "Número de telefone já registrado",
+  "verificationFailed": "Verificação falhou. Por favor, tente novamente",
+  "tryAgain": "Tentar Novamente",
+  "loading": "Carregando...",
+  "error": "Erro",
+  "success": "Sucesso",
+  "cancel": "Cancelar",
+  "save": "Salvar",
+  "logout": "Sair",
+  "genderMale": "Masculino",
+  "genderFemale": "Feminino",
+  "genderOther": "Outro",
+  "selectGender": "Selecionar Gênero"
+  ,
+  "profileTitle": "Perfil",
+  "editProfile": "Editar perfil",
+  "audioGuidance": "Orientação de Áudio",
+  "ttcHistory": "Histórico TTC",
+  "faithPreference": "Preferência de Fé",
+  "cycleLength": "Duração do Ciclo",
+  "lastPeriodDate": "Data da Última Menstruação",
+  "continue": "Continuar",
+  "joined": "Registrado",
+  "audioLessons": "Aprendizado em Áudio",
+  "play": "Reproduzir",
+  "stop": "Parar",
+  "supportHub": "Central de Suporte",
+  "dailyAffirmation": "Afirmações Diárias",
+  "chooseSupportMode": "Escolha seu modo de suporte",
+  "exploreCommunityGroups": "Explorar Grupos Comunitários"
+}

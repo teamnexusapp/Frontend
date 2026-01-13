@@ -1,5 +1,6 @@
+<<<<<<< HEAD
 ﻿import 'package:flutter/material.dart';
-import 'article_reading_screen.dart';
+import 'bookmark_screen.dart';
 
 class EducationalHubScreen extends StatefulWidget {
   static const routeName = '/educational-hub';
@@ -58,201 +59,126 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
     'Trying to conceive',
   ];
 
-  Widget _buildArticleCard(Map<String, String> article) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => ArticleReadingScreen(
-                imageUrl: article['image'] ?? '',
-                title: article['title'] ?? '',
-                articleText: article['excerpt'] ?? '',
-              ),
-            ),
-          );
-        },
-        child: Card(
-          color: Colors.white,
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final cardHeight = 320.0;
-                final imageHeight = cardHeight * 0.6;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
-                      child: Image.network(
-                        article['image']!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: imageHeight,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: imageHeight,
-                            color: Colors.grey.shade300,
-                            child: const Icon(Icons.image_not_supported),
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFA8D497),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              article['category'] ?? '',
-                              style: const TextStyle(
-                                color: Color(0xFF2E683D),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '5 mins read',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
-                      child: Text(
-                        article['title'] ?? '',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
-                      child: Text(
-                        article['excerpt'] ?? '',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8, top: 12),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 32,
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2E683D),
-                              borderRadius: BorderRadius.circular(0),
-                            ),
-                            child: Row(
-                              children: const [
-                                Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                                SizedBox(width: 4),
-                                Text('Listen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 3),
-                          Container(
-                            height: 32,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFA8D497),
-                              borderRadius: BorderRadius.zero,
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'English',
-                                style: TextStyle(
-                                  color: Color(0xFF2E683D),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
+  List<Map<String, String>> get filteredArticles {
+    // Normalize category names for matching (case-insensitive, ignore & vs and)
+    String normalize(String s) => s.toLowerCase().replaceAll('&', 'and').replaceAll(' ', '').replaceAll('-', '');
+    final selectedNorm = normalize(selectedCategory);
+    return allArticles.where((article) {
+      final cat = article['category'] ?? '';
+      return normalize(cat) == selectedNorm;
+    }).toList();
   }
+=======
+import 'package:flutter/material.dart';
+import '../../theme.dart';
+
+class EducationalHubScreen extends StatelessWidget {
+  const EducationalHubScreen({super.key});
+>>>>>>> origin/main
+
   @override
   Widget build(BuildContext context) {
-    final filteredArticles = allArticles.where((article) => article['category'] == selectedCategory).toList();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Educational Hub', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF2E683D), // Dark green
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
+<<<<<<< HEAD
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+            width: double.infinity,
+            height: 110,
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            decoration: const BoxDecoration(
+              color: Color(0xFF2E683D),
+            ),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Educational Hub',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 57,
+                  top: 0,
+                  bottom: 0,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => BookmarkScreen(bookmarkedArticles: allArticles),
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        Icons.bookmark,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Filter bubbles
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: categories.map((category) {
-                  final isSelected = selectedCategory == category;
+                  final bool isActive = selectedCategory == category;
                   return Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: ChoiceChip(
-                      label: Text(
-                        category,
-                        style: TextStyle(
-                          color: isSelected ? Colors.white : const Color(0xFF2E683D),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      selected: isSelected,
-                      selectedColor: const Color(0xFF2E683D),
-                      backgroundColor: Colors.white,
-                      shape: StadiumBorder(
-                        side: BorderSide(
-                          color: isSelected ? const Color(0xFF2E683D) : Colors.white,
-                          width: 2,
-                        ),
-                      ),
-                      onSelected: (selected) {
-                        if (selected) {
-                          setState(() {
-                            selectedCategory = category;
-                          });
-                        }
+                    padding: const EdgeInsets.only(right: 12),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = category;
+                        });
                       },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isActive ? const Color(0xFF2E683D) : Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: isActive ? const Color(0xFF2E683D) : Colors.grey.shade300,
+                            width: 1.5,
+                          ),
+                          boxShadow: isActive
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.green.withOpacity(0.08),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Text(
+                          category,
+                          style: TextStyle(
+                            color: isActive ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
                     ),
                   );
                 }).toList(),
@@ -261,10 +187,179 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
           ),
           Expanded(
             child: ListView(
-              children: filteredArticles.map((article) => _buildArticleCard(article)).toList(),
+              padding: const EdgeInsets.only(bottom: 16),
+              children: filteredArticles.map((article) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final cardHeight = 320.0;
+                          final imageHeight = cardHeight * 0.6;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Image (60% of card height)
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
+                                child: Image.network(
+                                  article['image']!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: imageHeight,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      height: imageHeight,
+                                      color: Colors.grey.shade300,
+                                      child: const Icon(Icons.image_not_supported),
+                                    );
+                                  },
+                                ),
+                              ),
+                              // Row: Category and Duration
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
+                                child: Row(
+                                  children: [
+                                    // Category
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFA8D497),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        article['category'] ?? '',
+                                        style: const TextStyle(
+                                          color: Color(0xFF2E683D),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    // Duration (hardcoded for now)
+                                    Text(
+                                      '5 mins read',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Title
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
+                                child: Text(
+                                  article['title'] ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              // Paragraph
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 6),
+                                child: Text(
+                                  article['excerpt'] ?? '',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ),
+                              // Last row: Listen, Language, Bookmark
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8, right: 8, top: 12),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // Listen button
+                                    Container(
+                                      height: 32,
+                                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF2E683D),
+                                        borderRadius: BorderRadius.circular(0),
+                                      ),
+                                      child: Row(
+                                        children: const [
+                                          Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                                          SizedBox(width: 4),
+                                          Text('Listen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 3),
+                                    // Language
+                                    Container(
+                                      height: 32,
+                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFA8D497),
+                                        borderRadius: BorderRadius.zero,
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'English',
+                                          style: TextStyle(
+                                            color: Color(0xFF2E683D),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    // Bookmark icon
+                                    IconButton(
+                                      icon: const Icon(Icons.bookmark_border, color: Color(0xFF2E683D)),
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Bookmarked: ${article['title']}')),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ],
+=======
+      backgroundColor: AppColors.primary,
+      appBar: AppBar(backgroundColor: AppColors.primary, title: const Text('Educational Hub', style: TextStyle(color: Colors.white))),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(children: [
+          Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)), child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('Fertility Basics', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            Text('Infertility isn\'t a curse - educational article preview...'),
+          ])),
+          const SizedBox(height: 12),
+          ListTile(leading: const Icon(Icons.book), title: const Text('Fertility Basics'), subtitle: const Text('5 mins read'), onTap: () => Navigator.of(context).pushNamed('/educational')),
+        ]),
+>>>>>>> origin/main
       ),
     );
   }

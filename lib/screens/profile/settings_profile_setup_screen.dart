@@ -24,16 +24,6 @@ class SettingsProfileSetupScreen extends StatelessWidget {
             const SizedBox(height: 12),
             TextFormField(decoration: const InputDecoration(labelText: 'Profile Picture (upload)')),
             const SizedBox(height: 12),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Cycle Length (days)'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Period Length (days)'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               children: const [
@@ -45,15 +35,7 @@ class SettingsProfileSetupScreen extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2F6F3E)),
-              onPressed: () async {
-                // TODO: Collect form values and call updateProfile from ApiService
-                // Example:
-                // await ApiService().updateProfile(
-                //   cycleLength: ...,
-                //   periodLength: ...,
-                  // other fields
-                // );
-              },
+              onPressed: () {},
               child: const Text('Save'),
             ),
           ],

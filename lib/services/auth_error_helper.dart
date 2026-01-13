@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Fertipath/flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import 'auth_exception.dart';
 
 /// Helper function to translate auth error codes to localized messages

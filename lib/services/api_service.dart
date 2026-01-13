@@ -1,28 +1,14 @@
+
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+
 class ApiService {
-    // Update user language
-    Future<void> updateLanguage(String languageCode) async {
-      final headers = await getHeaders(includeAuth: true);
-      final body = jsonEncode({'language_preference': languageCode});
-      final response = await http.patch(
-        Uri.parse('$baseUrl/user/update_language_choice'),
-        headers: headers,
-        body: body,
-      );
-      debugPrint('Update Language Response: \\${response.statusCode}');
-      if (response.statusCode != 200 && response.statusCode != 204) {
-        throw ApiException(
-          statusCode: response.statusCode,
-          message: _extractErrorMessage(response),
-        );
-      }
-    }
-  static const String baseUrl = 'https://fertipath-fastapi.onrender.com';
+  static const String baseUrl = 'https://fertility-fastapi.onrender.com';
   
   // Singleton pattern
   static final ApiService _instance = ApiService._internal();
@@ -482,7 +468,31 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // Only return /user/profile data, never call getUser as fallback
+        // If email is missing or empty, fall back to the more complete get_user endpoint
+        try {
+          final map = (data is Map<String, dynamic>)
+              ? data
+              : (data is Map ? Map<String, dynamic>.from(data) : <String, dynamic>{});
+          var candidate = map;
+          if (candidate['data'] is Map<String, dynamic>) {
+            candidate = Map<String, dynamic>.from(candidate['data']);
+          }
+          if (candidate['user'] is Map<String, dynamic>) {
+            candidate = {...candidate, ...Map<String, dynamic>.from(candidate['user'])};
+          }
+          final email = candidate['email'] ?? candidate['email_address'];
+          if (email is! String || email.trim().isEmpty) {
+            debugPrint('Profile missing email; fetching from /user/get_user');
+            final fullUser = await getUser();
+            return fullUser;
+          }
+        } catch (e) {
+          debugPrint('Profile parsing error, attempting fallback get_user: $e');
+          try {
+            final fullUser = await getUser();
+            return fullUser;
+          } catch (_) {}
+        }
         return data;
       } else {
         throw ApiException(
@@ -500,7 +510,6 @@ class ApiService {
   Future<Map<String, dynamic>> updateProfile({
     int? age,
     int? cycleLength,
-    int? periodLength,
     String? lastPeriodDate,
     String? ttcHistory,
     String? faithPreference,
@@ -511,13 +520,12 @@ class ApiService {
       final body = <String, dynamic>{};
       if (age != null) body['age'] = age;
       if (cycleLength != null) body['cycle_length'] = cycleLength;
-      if (periodLength != null) body['period_length'] = periodLength;
       if (lastPeriodDate != null) body['last_period_date'] = lastPeriodDate;
       if (ttcHistory != null) body['ttc_history'] = ttcHistory;
       if (faithPreference != null) body['faith_preference'] = faithPreference;
       if (audioPreference != null) body['audio_preference'] = audioPreference;
 
-      final response = await http.patch(
+      final response = await http.put(
         Uri.parse('$baseUrl/user/profile'),
         headers: headers,
         body: jsonEncode(body),

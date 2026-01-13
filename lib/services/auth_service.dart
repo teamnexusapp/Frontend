@@ -1,6 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+<<<<<<< HEAD
+=======
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+>>>>>>> origin/main
 import '../models/user.dart';
 import 'auth_exception.dart';
 import 'api_service.dart';
@@ -54,9 +59,14 @@ abstract class AuthServiceInterface {
   Stream<User?> authStateChanges();
 }
 
+<<<<<<< HEAD
 class AuthService extends ChangeNotifier implements AuthServiceInterface {
   // Removed SharedPreferences; using in-memory storage for simplicity
   final Map<String, String> _inMemoryPrefs = {};
+=======
+class AuthServiceImpl extends ChangeNotifier implements AuthService {
+  late SharedPreferences _prefs;
+>>>>>>> origin/main
   User? _currentUser;
   final StreamController<User?> _authStateController =
       StreamController<User?>.broadcast();
@@ -64,8 +74,12 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
 
   User? get currentUser => _currentUser;
 
+<<<<<<< HEAD
   AuthService() {
     // Minimal initialization; token will be managed by ApiService
+=======
+  AuthServiceImpl({String backendBaseUrl = ''}) : _backendBaseUrl = backendBaseUrl {
+>>>>>>> origin/main
     _initialize();
   }
 
@@ -89,6 +103,22 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     _inMemoryPrefs.remove(key);
   }
 
+<<<<<<< HEAD
+=======
+  void _loadUserFromPrefs() {
+    final userJson = _prefs.getString('user');
+    if (userJson != null) {
+      try {
+        _currentUser = User.fromJson(Map<String, dynamic>.from(
+          (userJson as dynamic) as Map,
+        ));
+      } catch (e) {
+        debugPrint('Error loading user: $e');
+      }
+    }
+  }
+
+>>>>>>> origin/main
   Future<void> _saveUserToPrefs(User user) async {
     _currentUser = user;
     _authStateController.add(user);
@@ -99,11 +129,17 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     return jsonEncode(data);
   }
 
+<<<<<<< HEAD
   Map<String, dynamic> _jsonDecode(String data) {
     final decoded = jsonDecode(data);
     return decoded is Map<String, dynamic>
         ? decoded
         : Map<String, dynamic>.from(decoded as Map);
+=======
+  String _backendEndpoint(String path) {
+    final base = _backendBaseUrl.replaceAll(RegExp(r'/+$'), '');
+    return '$base$path';
+>>>>>>> origin/main
   }
 
   Future<User?> signUpWithEmail({
@@ -116,18 +152,36 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     String? preferredLanguage,
   }) async {
     try {
-      // Validate email format
       if (!_isValidEmail(email)) {
         debugPrint('Invalid email format: $email');
         throw AuthException(AuthErrorCodes.invalidEmail);
       }
+      if (_backendBaseUrl.isNotEmpty) {
+        final uri = Uri.parse(_backendEndpoint('/api/register'));
+        final res = await http.post(uri,
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'email': email,
+              'password': password,
+            }));
+        if (res.statusCode == 200 || res.statusCode == 201) {
+          final data = jsonDecode(res.body) as Map<String, dynamic>;
+          final user = User.fromJson(data);
+          await _saveUserToPrefs(user);
+          return user;
+        } else {
+          throw AuthException(AuthErrorCodes.serverError,
+              message: 'Register failed: ${res.body}');
+        }
+      }
 
-      // Validate password strength
+      // Fallback/local behaviour
       if (password.length < 8) {
         debugPrint('Password too short: ${password.length} characters');
         throw AuthException(AuthErrorCodes.passwordTooShort);
       }
 
+<<<<<<< HEAD
       // Validate required fields for OTP
         if (username == null || username.isEmpty || 
           firstName == null || firstName.isEmpty || 
@@ -160,6 +214,14 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       }
 
       // Create temporary user object for local tracking
+=======
+      // Check if user already exists
+      final existingUser = _prefs.getString('user_$email');
+      if (existingUser != null) {
+        throw AuthException(AuthErrorCodes.emailAlreadyRegistered);
+      }
+
+>>>>>>> origin/main
       final user = User(
         email: email,
         username: username,
@@ -172,6 +234,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         createdAt: DateTime.now(),
       );
 
+<<<<<<< HEAD
       // Store registration data for later verification (keyed by email)
       await _setString('registration_data_$email', _jsonEncode({
         'email': email,
@@ -186,6 +249,14 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
 
       debugPrint('OTP sent to email $email for user with phone $phoneNumber');
 
+=======
+      // Store temporary user for verification
+      await _prefs.setString('temp_user_$email', _jsonEncode(user.toJson()));
+      await _prefs.setString('user_password_$email', password);
+
+      // In production, send OTP via email
+      debugPrint('Sending OTP to $email');
+>>>>>>> origin/main
       return user;
     } on ApiException catch (e) {
       debugPrint('API sign up error: Status ${e.statusCode}, Message: ${e.message}');
@@ -221,9 +292,39 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     String? password,
     String? preferredLanguage,
   }) async {
+<<<<<<< HEAD
     // Validate phone format
     if (!_isValidPhoneNumber(phoneNumber)) {
       throw AuthException(AuthErrorCodes.invalidPhone);
+=======
+    try {
+      if (!_isValidPhoneNumber(phoneNumber)) {
+        throw AuthException(AuthErrorCodes.invalidPhone);
+      }
+
+      // Check if phone already registered
+      final existingUser = _prefs.getString('user_$phoneNumber');
+      if (existingUser != null) {
+        throw AuthException(AuthErrorCodes.phoneAlreadyRegistered);
+      }
+
+      final user = User(
+        email: '',
+        phoneNumber: phoneNumber,
+        phoneVerified: false,
+        createdAt: DateTime.now(),
+      );
+
+      // Store temporary user
+      await _prefs.setString('temp_user_$phoneNumber', _jsonEncode(user.toJson()));
+
+      // In production, send OTP via SMS
+      debugPrint('Sending OTP to $phoneNumber');
+      return user;
+    } catch (e) {
+      debugPrint('Sign up error: $e');
+      rethrow;
+>>>>>>> origin/main
     }
 
     // Since we only verify email, delegate to signUpWithEmail if email is provided
@@ -353,11 +454,50 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
         throw AuthException(AuthErrorCodes.userNotFound,
           details: 'Registration data not found. Please start signup again.');
       }
+      if (_backendBaseUrl.isNotEmpty) {
+        final uri = Uri.parse(_backendEndpoint('/api/verify-phone'));
+        final res = await http.post(uri,
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'phone': phoneNumber, 'otp': otp}));
+        if (res.statusCode == 200) {
+          final data = jsonDecode(res.body) as Map<String, dynamic>;
+          final user = User.fromJson(data);
+          await _saveUserToPrefs(user);
+          return true;
+        } else {
+          throw AuthException(AuthErrorCodes.serverError,
+              message: 'OTP verify failed: ${res.body}');
+        }
+      }
 
+<<<<<<< HEAD
       debugPrint('Found email $foundEmail for phone $phoneNumber, verifying...');
       // Verify using email
       return verifyEmailOTP(email: foundEmail, otp: otp);
     } on AuthException {
+=======
+      debugPrint('Verifying OTP: $otp for phone: $phoneNumber');
+
+      // Get temporary user
+      final tempUserJson = _prefs.getString('temp_user_$phoneNumber');
+      if (tempUserJson == null) {
+        throw AuthException(AuthErrorCodes.userNotFound);
+      }
+
+      final user = User(
+        email: '',
+        phoneNumber: phoneNumber,
+        phoneVerified: true,
+        createdAt: DateTime.now(),
+      );
+
+      await _saveUserToPrefs(user);
+      await _removeString('temp_user_$phoneNumber');
+
+      return true;
+    } catch (e) {
+      debugPrint('OTP verification error: $e');
+>>>>>>> origin/main
       rethrow;
     } catch (e) {
       debugPrint('Unexpected phone OTP verification error: $e');
@@ -456,6 +596,27 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       if (_currentUser == null) {
         throw AuthException(AuthErrorCodes.noUserLoggedIn);
       }
+      if (_backendBaseUrl.isNotEmpty) {
+        final uri = Uri.parse(_backendEndpoint('/api/users/$userId'));
+        final res = await http.put(uri,
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'firstName': firstName,
+              'lastName': lastName,
+              'dateOfBirth': dateOfBirth?.toIso8601String(),
+              'gender': gender,
+              'profileImageUrl': profileImagePath,
+            }));
+        if (res.statusCode == 200) {
+          final data = jsonDecode(res.body) as Map<String, dynamic>;
+          final updated = User.fromJson(data);
+          await _saveUserToPrefs(updated);
+          return updated;
+        } else {
+          throw AuthException(AuthErrorCodes.serverError,
+              message: 'Update failed: ${res.body}');
+        }
+      }
 
       final updatedUser = _currentUser!.copyWith(
         firstName: firstName,
@@ -468,7 +629,6 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       );
 
       await _saveUserToPrefs(updatedUser);
-
       return updatedUser;
     } catch (e) {
       debugPrint('Update profile error: $e');
@@ -482,6 +642,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
     required String password,
   }) async {
     try {
+<<<<<<< HEAD
       // Login with email address
       await _apiService.login(
         email: email,
@@ -502,15 +663,27 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       if (e.statusCode == 401 || e.message.toLowerCase().contains('credentials')) {
         throw AuthException(AuthErrorCodes.invalidCredentials);
       } else if (e.message.toLowerCase().contains('not found')) {
+=======
+      // In production, call backend authentication
+      final userJson = _prefs.getString('user_$email');
+      if (userJson == null) {
+>>>>>>> origin/main
         throw AuthException(AuthErrorCodes.userNotFound);
       } else if (e.statusCode >= 500) {
         throw AuthException(AuthErrorCodes.serverError,
           details: 'The backend server is temporarily unavailable. This may be because the server is starting up (this can take up to 30 seconds). Please wait a moment and try again.');
       }
+<<<<<<< HEAD
       throw AuthException(AuthErrorCodes.serverError, details: e.message);
     } on TimeoutException {
       throw AuthException(AuthErrorCodes.serverError,
         details: 'The server took too long to respond. It may be starting up. Please wait 30 seconds and try again.');
+=======
+
+      // Load and return user
+      _loadUserFromPrefs();
+      return _currentUser;
+>>>>>>> origin/main
     } catch (e) {
       debugPrint('Sign in error: $e');
       rethrow; // Propagate errors; never return null

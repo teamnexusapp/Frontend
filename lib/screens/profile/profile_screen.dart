@@ -1,39 +1,30 @@
 import 'package:flutter/material.dart';
-import './_next_period_prediction_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
-
-import 'package:Fertipath/screens/home_screen.dart';
-
 import '../onboarding/welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool faithBasedContent = false;
+  String selectedLanguage = 'English';
+  String selectedTheme = 'Light';
   bool _isLoading = true;
   User? _user;
-  User? _userCard;
   bool _isDeleting = false;
-
-  // Add missing fields for preferences
-  String selectedLanguage = 'English';
-  bool faithBasedContent = false;
-  String selectedTheme = 'Light';
 
   @override
   void initState() {
     super.initState();
     _loadUserProfile();
-    _loadUserCard();
   }
 
   Future<void> _loadUserProfile() async {
@@ -61,20 +52,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _loadUserCard() async {
-    try {
-      final apiService = ApiService();
-      final userJson = await apiService.getUser();
-      debugPrint('getUser JSON received: ' + userJson.toString());
-      final fetchedUser = User.fromJson(userJson);
-      setState(() {
-        _userCard = fetchedUser;
-      });
-    } catch (e) {
-      debugPrint('Error loading getUser for card: $e');
-    }
-  }
-
   String _getLanguageDisplayName(String code) {
     switch (code.toLowerCase()) {
       case 'en': return 'English';
@@ -88,28 +65,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  // Removed local period/cycle prediction logic. Use backend values only.
-
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     final loc = Provider.of<LocalizationProvider>(context);
     final user = _user ?? auth.currentUser;
-    final userCard = _userCard ?? auth.currentUser;
-
-    // Get calendar days from CalendarTabScreen (for demo, use SharedPreferences directly)
-    // In production, refactor to pass calendar data via provider or callback
-    final Set<DateTime> calendarDays = {};
-    // Load tapped days from SharedPreferences synchronously (for demo only)
-    // In production, this should be async and handled in state
-    // This is a workaround for demonstration
-    SharedPreferences.getInstance().then((prefs) {
-      final savedDays = prefs.getStringList('tapped_days');
-      if (savedDays != null && savedDays.isNotEmpty) {
-        calendarDays.addAll(savedDays.map((s) => DateTime.parse(s)));
-      }
-    });
-    // Removed local prediction. Use backend-provided next period dates only.
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F0),
@@ -142,34 +102,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2D5A3A)),
               ),
             )
-          : RefreshIndicator(
-              onRefresh: _loadUserProfile,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // User Profile Card (always use get_user)
-                    _buildProfileCard(userCard, context),
-                    const SizedBox(height: 16),
-                    // Removed nextPeriodDates display. Use backend-driven widgets only.
-                    // Goals Section
-                    _buildGoalsSection(),
-                    const SizedBox(height: 16),
-                    // Preferences Section
-                    _buildPreferencesSection(),
-                    const SizedBox(height: 16),
-                    // Privacy & Security Section
-                    _buildPrivacySection(),
-                    const SizedBox(height: 16),
-                    // Delete Account Section
-                    _buildDeleteAccountSection(context),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ),
-            ),
+          : SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // User Profile Card
+            _buildProfileCard(user, context),
+            const SizedBox(height: 16),
+            
+            // Goals Section
+            _buildGoalsSection(),
+            const SizedBox(height: 16),
+            
+            // Preferences Section
+            _buildPreferencesSection(),
+            const SizedBox(height: 16),
+            
+            // Privacy & Security Section
+            _buildPrivacySection(),
+            const SizedBox(height: 16),
+            
+            // Delete Account Section
+            _buildDeleteAccountSection(context),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
     );
   }
 
@@ -232,29 +191,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ],
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          const Icon(Icons.language, size: 16, color: Color(0xFF2E683D)),
-                          const SizedBox(width: 6),
-                          Text(
-                            'Language: ',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            _getLanguageDisplayName(user?.preferredLanguage ?? 'en'),
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFF2E683D),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ),
@@ -330,14 +266,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildGoalsSection() {
     // Dynamically display user profile data fetched from API
-    if (_isLoading) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -387,24 +315,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: Colors.grey[600],
           ),
         ),
-        if (label == 'Faith Preference')
-          Text(
-            (_user?.faithPreference ?? 'Not set')[0].toUpperCase() + (_user?.faithPreference ?? 'Not set').substring(1),
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
-          )
-        else
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
           ),
+        ),
       ],
     );
   }
@@ -441,17 +359,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLanguageRow() {
-    final languageOptions = <String, String>{
-      'en': 'English',
-      'ig': 'Igbo',
-      'ha': 'Hausa',
-      'yo': 'Yoruba',
-    };
-    // Find the code for the current selectedLanguage
-    String selectedCode = languageOptions.entries.firstWhere(
-      (e) => e.value == selectedLanguage,
-      orElse: () => const MapEntry('en', 'English'),
-    ).key;
     return Row(
       children: [
         Container(
@@ -460,7 +367,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(8),
-          child: const Icon(Icons.language, size: 22, color: Color(0xFF2D5A3A)), // dark green
+          child: Icon(Icons.language, size: 22, color: Color(0xFF2D5A3A)), // dark green
         ),
         const SizedBox(width: 12),
         const Expanded(
@@ -469,31 +376,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(fontSize: 15),
           ),
         ),
-        DropdownButton<String>(
-          value: selectedCode,
-          underline: const SizedBox(),
-          isDense: true,
-          items: languageOptions.entries.map((entry) {
-            return DropdownMenuItem<String>(
-              value: entry.key,
-              child: Text(entry.value, style: const TextStyle(fontSize: 14)),
-            );
-          }).toList(),
-          onChanged: (String? newCode) async {
-            if (newCode == null) return;
-            setState(() {
-              selectedLanguage = languageOptions[newCode]!;
-            });
-            try {
-              await ApiService().updateLanguage(newCode);
-              // Only refetch data, do not rebuild localization
-              if (HomeScreen.refreshInsights != null) {
-                HomeScreen.refreshInsights!();
-              }
-            } catch (e) {
-              debugPrint('Failed to update language: $e');
-            }
-          },
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: DropdownButton<String>(
+            value: selectedLanguage,
+            underline: const SizedBox(),
+            isDense: true,
+            items: ['English', 'Igbo', 'Hausa', 'Yoruba']
+                .map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value, style: const TextStyle(fontSize: 14)),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedLanguage = newValue!;
+              });
+            },
+          ),
         ),
       ],
     );
@@ -661,38 +566,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _isDeleting
-                    ? null
-                    : () async {
-                        setState(() => _isDeleting = true);
-                        try {
-                          await ApiService().deleteUser();
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Account deleted successfully.'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                            // Navigate to WelcomeScreen
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-                              (route) => false,
-                            );
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Failed to delete account: $e'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        } finally {
-                          if (mounted) setState(() => _isDeleting = false);
-                        }
-                      },
+                onPressed: _isDeleting ? null : () { _showDeleteConfirmation(context); },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
@@ -723,7 +597,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // _showDeleteConfirmation removed; delete account feature is now disabled.
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Account'),
+          content: const Text(
+            'Are you sure you want to delete your account? This action cannot be undone.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                try {
+                  if (mounted) setState(() => _isDeleting = true);
+                  // Attempt backend deletion
+                  try {
+                    await ApiService().deleteUser();
+                  } catch (e) {
+                    // If token expired or user already gone, continue to local cleanup
+                    final isAuthError = e is ApiException && (e.statusCode == 401 || e.statusCode == 403 || e.statusCode == 404);
+                    if (!isAuthError) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to delete account: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                      if (mounted) setState(() => _isDeleting = false);
+                      return;
+                    }
+                  }
+
+                  // Always clear local auth state
+                  final auth = Provider.of<AuthService>(context, listen: false);
+                  await auth.signOut();
+
+                  // Navigate back to welcome screen after deletion/cleanup
+                  if (mounted) {
+                    setState(() => _isDeleting = false);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+                      (route) => false,
+                    );
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to delete account: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    setState(() => _isDeleting = false);
+                  }
+                }
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
-
-

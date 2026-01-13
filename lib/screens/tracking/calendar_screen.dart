@@ -28,7 +28,6 @@ class CalendarScreen extends StatelessWidget {
                   child: SwipeableGreenCalendar(
                     initialMonth: DateTime.now(),
                     selectedDates: const <DateTime>{},
-                    nextPeriodDays: const <DateTime>{},
                   ),
                 ),
               ),

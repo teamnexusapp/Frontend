@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:Fertipath/flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
 import 'profile_setup_screen.dart';

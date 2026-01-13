@@ -1,0 +1,96 @@
+{
+  "@@locale": "es",
+  "appTitle": "Nexus Fertilidad",
+  "welcomeTitle": "Bienvenido a Nexus Fertilidad",
+  "welcomeSubtitle": "Tu compañero personal de fertilidad",
+  "selectLanguage": "Seleccionar Idioma",
+  "english": "English",
+  "yoruba": "Yoruba",
+  "igbo": "Igbo",
+  "hausa": "Hausa",
+  "pidgin": "Pidgin",
+  "german": "Deutsch",
+  "next": "Siguiente",
+  "back": "Atrás",
+  "skip": "Omitir",
+  "done": "Hecho",
+  "createAccount": "Crear Cuenta",
+  "signIn": "Iniciar Sesión",
+  "email": "Correo Electrónico",
+  "phoneNumber": "Número de Teléfono",
+  "password": "Contraseña",
+  "confirmPassword": "Confirmar Contraseña",
+  "firstName": "Nombre",
+  "lastName": "Apellido",
+  "dateOfBirth": "Fecha de Nacimiento",
+  "selectDate": "Seleccionar Fecha",
+  "profilePicture": "Foto de Perfil",
+  "uploadPhoto": "Subir Foto",
+  "takePhoto": "Tomar Foto",
+  "chooseFromGallery": "Elegir de la Galería",
+  "verifyEmail": "Verificar Correo",
+  "verifyPhone": "Verificar Teléfono",
+  "enterOTP": "Ingrese OTP",
+  "otpSentTo": "OTP enviado a {email}",
+  "@otpSentTo": {
+    "description": "Mensaje mostrado después de enviar OTP",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Reenviar Código",
+  "codeExpires": "El código vence en {minutes}:{seconds}",
+  "@codeExpires": {
+    "description": "Temporizador para vencimiento de OTP",
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "invalidEmail": "Por favor, ingrese una dirección de correo válida",
+  "invalidPhone": "Por favor, ingrese un número de teléfono válido",
+  "passwordMismatch": "Las contraseñas no coinciden",
+  "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+  "accountCreatedSuccessfully": "¡Cuenta creada exitosamente!",
+  "profileSetupComplete": "Su configuración de perfil está completa",
+  "termsAndConditions": "Acepto los Términos y Condiciones",
+  "privacyPolicy": "Acepto la Política de Privacidad",
+  "acceptTerms": "Por favor, acepte los términos y condiciones",
+  "emailAlreadyExists": "Correo ya registrado",
+  "phoneAlreadyExists": "Número de teléfono ya registrado",
+  "verificationFailed": "Verificación fallida. Por favor, intente nuevamente",
+  "tryAgain": "Intentar de Nuevo",
+  "loading": "Cargando...",
+  "error": "Error",
+  "success": "Éxito",
+  "cancel": "Cancelar",
+  "save": "Guardar",
+  "logout": "Cerrar Sesión",
+  "genderMale": "Masculino",
+  "genderFemale": "Femenino",
+  "genderOther": "Otro",
+  "selectGender": "Seleccionar Género"
+  ,
+  "profileTitle": "Perfil",
+  "editProfile": "Editar perfil",
+  "audioGuidance": "Guía de Audio",
+  "ttcHistory": "Historial TTC",
+  "faithPreference": "Preferencia de Fe",
+  "cycleLength": "Duración del Ciclo",
+  "lastPeriodDate": "Fecha de la Última Menstruación",
+  "continue": "Continuar",
+  "joined": "Registrado",
+  "audioLessons": "Aprendizaje de Audio",
+  "play": "Reproducir",
+  "stop": "Detener",
+  "supportHub": "Centro de Apoyo",
+  "dailyAffirmation": "Afirmaciones Diarias",
+  "chooseSupportMode": "Elige tu modo de apoyo",
+  "exploreCommunityGroups": "Explorar Grupos Comunitarios"
+}
