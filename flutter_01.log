@@ -1,0 +1,75 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter analyze
+
+## exception
+
+_Exception: Exception: analysis server exited with code -1073740791 and output:
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\auth_service.dart","errors":[{"severity":"ERROR","type":"COMPILE_TIME_ERROR","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\auth_service.dart","offset":559,"length":4,"startLine":20,"startColumn":10,"endLine":20,"endColumn":14},"message":"The name 'User' is defined in the libraries 'package:firebase_auth/firebase_auth.dart' and 'package:nexus_fertility_app/models/user.dart'.","correction":"Try using 'as prefix' for one of the import directives, or hiding the name from all but one of the imports.","code":"ambiguous_import","url":"https://dart.dev/diagnostics/ambiguous_import","hasFix":false},{"severity":"ERROR","type":"COMPILE_TIME_ERROR","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\auth_service.dart","offset":880,"length":4,"startLine":32,"startColumn":10,"endLine":32,"endColumn":14},"message":"The name 'User' is defined in the libraries 'package:firebase_auth/firebase_auth.dart' and 'package:nexus_fertility_app/models/user.dart'.","correction":"Try using 'as prefix' for one of the import directives, or hiding the name from all but one of the imports.","code":"ambiguous_import","url":"https://dart.dev/diagnostics/ambiguous_import","hasFix":false},{"severity":"ERROR","type":"COMPILE_TIME_ERROR","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\auth_service.dart","offset":2855,"length":4,"startLine":102,"startColumn":3,"endLine":102,"endColumn":7},"message":"The name 'User' is defined in the libraries 'package:firebase_auth/firebase_auth.dart' and 'package:nexus_fertility_app/models/user.dart'.","correction":"Try using 'as prefix' for one of the import directives, or hiding the name from all but one of the imports.","code":"ambiguous_import","url":"https://dart.dev/diagnostics/ambiguous_import","hasFix":false},{"severity":"WARNING","type":"STATIC_WARNING","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\auth_service.dart","offset":407,"length":6,"startLine":10,"startColumn":22,"endLine":10,"endColumn":28},"message":"The value of the field '_prefs' isn't used.","correction":"Try removing the field, or using it.","code":"unused_field","url":"https://dart.dev/diagnostics/unused_field","hasFix":false},{"severity":"INFO","type":"LINT","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\auth_service.dart","offset":1330,"length":20,"startLine":46,"startColumn":26,"endLine":46,"endColumn":46},"message":"Use 'const' with the constructor to improve performance.","correction":"Try adding the 'const' keyword to the constructor invocation.","code":"prefer_const_constructors","url":"https://dart.dev/diagnostics/prefer_const_constructors","hasFix":false},{"severity":"INFO","type":"LINT","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\auth_service.dart","offset":2455,"length":20,"startLine":83,"startColumn":26,"endLine":83,"endColumn":46},"message":"Use 'const' with the constructor to improve performance.","correction":"Try adding the 'const' keyword to the constructor invocation.","code":"prefer_const_constructors","url":"https://dart.dev/diagnostics/prefer_const_constructors","hasFix":false}]}}
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\encouragement_service.dart","errors":[{"severity":"WARNING","type":"STATIC_WARNING","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\encouragement_service.dart","offset":1167,"length":7,"startLine":33,"startColumn":7,"endLine":33,"endColumn":14},"message":"This default clause is covered by the previous cases.","correction":"Try removing the default clause, or restructuring the preceding patterns.","code":"unreachable_switch_default","url":"https://dart.dev/diagnostics/unreachable_switch_default","hasFix":false},{"severity":"WARNING","type":"STATIC_WARNING","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\encouragement_service.dart","offset":1499,"length":7,"startLine":45,"startColumn":7,"endLine":45,"endColumn":14},"message":"This default clause is covered by the previous cases.","correction":"Try removing the default clause, or restructuring the preceding patterns.","code":"unreachable_switch_default","url":"https://dart.dev/diagnostics/unreachable_switch_default","hasFix":false}]}}
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\health_check_service.dart","errors":[]}}
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\localization_provider.dart","errors":[]}}
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\services\\tts_service.dart","errors":[]}}
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\theme.dart","errors":[]}}
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\widgets\\swipeable_green_calendar.dart","errors":[{"severity":"INFO","type":"HINT","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\widgets\\swipeable_green_calendar.dart","offset":7071,"length":11,"startLine":218,"startColumn":25,"endLine":218,"endColumn":36},"message":"'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss.","correction":"Try replacing the use of the deprecated member with the replacement.","code":"deprecated_member_use","url":"https://dart.dev/diagnostics/deprecated_member_use","hasFix":false},{"severity":"WARNING","type":"STATIC_WARNING","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\widgets\\swipeable_green_calendar.dart","offset":682,"length":7,"startLine":23,"startColumn":22,"endLine":23,"endColumn":29},"message":"The value of the field '_accent' isn't used.","correction":"Try removing the field, or using it.","code":"unused_field","url":"https://dart.dev/diagnostics/unused_field","hasFix":false},{"severity":"INFO","type":"LINT","location":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\lib\\widgets\\swipeable_green_calendar.dart","offset":91,"length":24,"startLine":3,"startColumn":8,"endLine":3,"endColumn":32},"message":"The imported package 'intl' isn't a dependency of the importing package.","correction":"Try adding a dependency for 'intl' in the 'pubspec.yaml' file.","code":"depend_on_referenced_packages","url":"https://dart.dev/diagnostics/depend_on_referenced_packages","hasFix":false}]}}
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\test\\auth_service_test.dart","errors":[]}}
+[stderr] ../../runtime/vm/os_thread.cc: 349: error: Could not start thread DartWorker: 22 (The device does not recognize the command.
+[stderr] 
+[stderr] )
+[stderr] version=3.10.1 (stable) (Tue Nov 18 11:02:31 2025 -0800) on "windows_x64"
+[stderr] pid=9740, thread=18308, isolate_group=(nil)(0000000000000000), isolate=(nil)(0000000000000000)
+[stderr] os=windows, arch=x64, comp=no, sim=no
+[stderr] isolate_instructions=0, vm_instructions=7ff7f4188080
+[stderr] fp=45e3aff310, sp=45e3aff2c8, pc=7ff7f446da13
+[stderr]   pc 0x00007ff7f446da13 fp 0x00000045e3aff310 C:\Users\hp\OneDrive\Documents\flutter\lib\flutter\bin\cache\dart-sdk\bin\dartvm.exe+0x2eda13
+[stderr] -- End of DumpStackTrace
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\test\\user_from_json_test.dart","errors":[]}}
+[stdout] {"event":"analysis.errors","params":{"file":"C:\\Users\\hp\\OneDrive\\Documents\\nexus_fertility_app\\test\\widget_test.dart","errors":[]}}
+
+```
+```
+
+## flutter doctor
+
+```
+[✓] Flutter (Channel stable, 3.38.3, on Microsoft Windows [Version 10.0.22631.5189], locale en-US) [2.3s]
+    • Flutter version 3.38.3 on channel stable at C:\Users\hp\OneDrive\Documents\flutter\lib\flutter
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision 19074d12f7 (7 weeks ago), 2025-11-20 17:53:13 -0500
+    • Engine revision 13e658725d
+    • Dart version 3.10.1
+    • DevTools version 2.51.1
+    • Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop, enable-android, enable-ios, cli-animations, enable-native-assets, omit-legacy-version-file, enable-lldb-debugging
+
+[✓] Windows Version (11 Pro 64-bit, 23H2, 2009) [36.1s]
+
+[✗] Android toolchain - develop for Android devices [330ms]
+    ✗ Unable to locate Android SDK.
+      Install Android Studio from: https://developer.android.com/studio/index.html
+      On first launch it will assist you in installing the Android SDK components.
+      (or visit https://flutter.dev/to/windows-android-setup for detailed instructions).
+      If the Android SDK has been installed to a custom location, please use
+      `flutter config --android-sdk` to update to that location.
+
+
+[✓] Chrome - develop for the web [80ms]
+    • Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[✗] Visual Studio - develop Windows apps [67ms]
+    ✗ Visual Studio not installed; this is necessary to develop Windows apps.
+      Download at https://visualstudio.microsoft.com/downloads/.
+      Please install the "Desktop development with C++" workload, including all of its default components
+
+[✓] Connected device (3 available) [1,544ms]
+    • Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.22631.5189]
+    • Chrome (web)      • chrome  • web-javascript • Google Chrome 143.0.7499.171
+    • Edge (web)        • edge    • web-javascript • Microsoft Edge 143.0.3650.96
+
+[✓] Network resources [1,838ms]
+    • All expected network resources are available.
+
+! Doctor found issues in 2 categories.
+```

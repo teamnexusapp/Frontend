@@ -1,56 +1,72 @@
-﻿# Flutter
-**/ios/**/*.mode1v3
-**/ios/**/*.mode2v3
-**/ios/**/*.moved-aside
-**/ios/**/*.pbxuser
-**/ios/**/*.perspectivev3
-**/ios/**/*sync/
-**/ios/**/.sconsign.dblite
-**/ios/**/.tags*
-**/ios/**/.vagrant/
-**/ios/**/DerivedData/
-**/ios/**/Icon?
-**/ios/**/Pods/
-**/ios/**/.symlinks/
-**/ios/**/profile
-**/ios/**/xcuserdata
-**/ios/.generated/
-**/ios/Flutter/App.framework
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Flutter.podspec
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/ephemeral/
-**/ios/ServiceDefinitions.json
-**/ios/Runner/GeneratedPluginRegistrant.*
-
-# Android
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
-**/android/local.properties
-**/android/**/GeneratedPluginRegistrant.java
-**/android/key.properties
-**/android/**/flutter/gradle*
-**/*/flutter/gradle*
-
-# Build
-/build/
-/.dart_tool/
-/.packages
-/.flutter-plugins
-/.flutter-plugins-dependencies
+﻿# Flutter/Dart
+.dart_tool/
+.packages
 .pub-cache/
 .pub/
-/pubspec.lock
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.fvm/
+*.dill
+*.dill.track.dill
+.generated/
+
+# Android
+**/android/**/build/
+**/android/**/.gradle/
+**/android/**/local.properties
+*.apk
+*.ap_
+*.aab
+*.aar
+*.keystore
+
+# iOS
+**/ios/**/build/
+**/ios/**/.symlinks/
+**/ios/**/Pods/
+*.ipa
+*.p12
+*.mobileprovision
 
 # Web
-.webpack/
+**/web/**/canvaskit/
 
-# VS Code
+# Windows
+**/windows/**/flutter/generated/
+**/windows/**/Runner/Build/
+
+# Linux
+**/linux/**/flutter/generated/
+
+# macOS
+**/macos/**/Flutter/Generated/
+
+# Coverage
+coverage/
+
+# IDEs
 .vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+flutter_*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# User-specific
+login.json

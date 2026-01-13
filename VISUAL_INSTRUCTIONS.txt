@@ -1,0 +1,23 @@
+﻿╔══════════════════════════════════════════════╗
+║         🎯 TRANSLATION INSTALLATION          ║
+╠══════════════════════════════════════════════╣
+║  STEP 1: Download ZIP                        ║
+║  STEP 2: Extract in PROJECT ROOT             ║
+║  STEP 3: Run install.ps1 (or install.bat)    ║
+║  STEP 4: Done! ✅                            ║
+╚══════════════════════════════════════════════╝
+
+📁 Project Root Structure:
+├── 📂 lib/
+│   └── 📂 l10n/  ← Translations go here
+├── 📂 android/
+├── 📂 ios/
+└── 📄 COMPLETE_TRANSLATIONS_FINAL.zip  ← Place here
+
+🎯 What happens when you run install.ps1:
+1. ✅ Backs up existing translations
+2. ✅ Copies 4 new ARB files to lib/l10n/
+3. ✅ Shows completion message
+4. ✅ Provides next steps
+
+⏱ Time required: 30 seconds
