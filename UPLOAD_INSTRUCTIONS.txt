@@ -1,0 +1,27 @@
+﻿## 📤 Upload Instructions
+
+### Step 1: Upload to Cloud
+1. Go to Google Drive, Dropbox, or OneDrive
+2. Upload: COMPLETE_TRANSLATIONS_FINAL.zip
+3. Get a shareable link
+
+### Step 2: Share with Team
+Send them this link along with these instructions:
+
+**Installation:**
+1. Download the ZIP file
+2. Extract it in your project ROOT folder (where 'lib' folder is)
+3. Run install.ps1 or install.bat
+4. Follow on-screen instructions
+
+**Verification (after installation):**
+\\\ash
+dart run lib/tools/check_arb_keys.dart
+flutter gen-l10n
+flutter run
+\\\
+
+**Files in package:**
+- 4 ARB files (100% complete translations)
+- Installation scripts
+- README with detailed instructions
