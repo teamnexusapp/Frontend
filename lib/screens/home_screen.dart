@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withAlpha(26),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -511,7 +511,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(width: 16),
                 _buildFeatureCard(
-                  icon: Icons.pregnancy,
+                  icon: Icons.child_friendly,
                   label: 'Predictions',
                   onTap: () {
                     // Navigate to prediction screen
@@ -629,3 +629,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+

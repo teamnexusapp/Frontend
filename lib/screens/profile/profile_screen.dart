@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../models/user.dart';
@@ -31,9 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final apiService = ApiService();
       final profileJson = await apiService.getProfile();
-      debugPrint('Profile JSON received: ' + profileJson.toString());
+      print('Profile JSON received: ' + profileJson.toString());
       final fetchedUser = User.fromJson(profileJson);
-      debugPrint('Parsed User: ttcHistory=' + (fetchedUser.ttcHistory?.toString() ?? 'null') +
+      print('Parsed User: ttcHistory=' + (fetchedUser.ttcHistory?.toString() ?? 'null') +
           ', faithPreference=' + (fetchedUser.faithPreference?.toString() ?? 'null') +
           ', cycleLength=' + (fetchedUser.cycleLength?.toString() ?? 'null') +
           ', lastPeriodDate=' + (fetchedUser.lastPeriodDate?.toString() ?? 'null'));
@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      debugPrint('Error loading profile: $e');
+      print('Error loading profile: $e');
       setState(() {
         _isLoading = false;
       });
@@ -671,3 +671,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

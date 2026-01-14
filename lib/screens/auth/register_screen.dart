@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 
@@ -18,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthServiceImpl>(context, listen: false);
+    final auth = Provider.of<AuthService>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Register')),
@@ -64,7 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 );
                                 if (user != null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Registered — verify OTP')), 
+                                    const SnackBar(content: Text('Registered â€” verify OTP')), 
                                   );
                                   Navigator.pushReplacementNamed(context, '/profile');
                                 }
@@ -94,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     final user = await auth.signUpWithPhone(phoneNumber: phone);
                     if (user != null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Phone registered — verify OTP')),
+                        const SnackBar(content: Text('Phone registered â€” verify OTP')),
                       );
                       Navigator.pushReplacementNamed(context, '/profile');
                     }
@@ -113,3 +113,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+

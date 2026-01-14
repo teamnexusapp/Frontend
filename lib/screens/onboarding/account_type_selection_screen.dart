@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import 'email_signup_screen.dart';
 import 'phone_signup_screen.dart';
@@ -117,7 +117,7 @@ class _AccountTypeCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withAlpha(26),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -174,3 +174,4 @@ class _AccountTypeCard extends StatelessWidget {
     );
   }
 }
+

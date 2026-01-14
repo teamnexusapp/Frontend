@@ -1,4 +1,4 @@
-{
+﻿{
   "@@locale": "en",
   "appTitle": "Nexus Fertility",
   "welcomeTitle": "Welcome to Nexus Fertility",
@@ -228,3 +228,4 @@
   "forgotPassword": "Forgot Password?",
   "logIn": "Log In"
 }
+

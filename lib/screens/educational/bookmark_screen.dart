@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class BookmarkScreen extends StatelessWidget {
   final List<Map<String, String>> bookmarkedArticles;
@@ -147,3 +147,4 @@ class _ArticleCard extends StatelessWidget {
     );
   }
 }
+

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -8,11 +8,17 @@ class SwipeableGreenCalendar extends StatefulWidget {
     required this.initialMonth,
     required this.selectedDates,
     this.onDateToggle,
+    this.ovulationDates,
+    this.periodDates,
+    this.nextPeriodDate,
   });
 
   final DateTime initialMonth;
   final Set<DateTime> selectedDates;
   final ValueChanged<DateTime>? onDateToggle;
+  final Set<DateTime>? ovulationDates;
+  final Set<DateTime>? periodDates;
+  final DateTime? nextPeriodDate;
 
   @override
   State<SwipeableGreenCalendar> createState() => _SwipeableGreenCalendarState();
@@ -94,9 +100,12 @@ class _SwipeableGreenCalendarState extends State<SwipeableGreenCalendar> {
             itemBuilder: (context, pageIndex) {
               final month = _monthForPage(pageIndex);
               return _MonthGrid(
-                month: month,
-                selectedDates: _localSelection,
-                onToggle: _handleDateToggle,
+                 month: month,
+                 selectedDates: _localSelection,
+                 onToggle: _handleDateToggle,
+                 ovulationDates: widget.ovulationDates ?? {},
+                 periodDates: widget.periodDates ?? {},
+                 nextPeriodDate: widget.nextPeriodDate,
               );
             },
           ),
@@ -173,11 +182,17 @@ class _MonthGrid extends StatelessWidget {
     required this.month,
     required this.selectedDates,
     required this.onToggle,
+    this.ovulationDates,
+    this.periodDates,
+    this.nextPeriodDate,
   });
 
   final DateTime month;
   final Set<DateTime> selectedDates;
   final ValueChanged<DateTime> onToggle;
+  final Set<DateTime>? ovulationDates;
+  final Set<DateTime>? periodDates;
+  final DateTime? nextPeriodDate;
 
   static const Color _accent = Color(0xFFA8D497);
 
@@ -214,11 +229,30 @@ class _MonthGrid extends StatelessWidget {
           );
 
           final isSelected = selectedDates.any((d) => _isSameDay(d, dayInfo.date));
-          final textColor = dayInfo.isOutside
-              ? _accent.withOpacity(0.4)
-              : isSelected
-                  ? const Color(0xFF2E683D)
-                  : Colors.white;
+
+          final isPeriod = periodDates?.any((d) => _isSameDay(d, dayInfo.date)) ?? false;
+          final isOvulation = ovulationDates?.any((d) => _isSameDay(d, dayInfo.date)) ?? false;
+          final isNextPeriod = nextPeriodDate != null && _isSameDay(nextPeriodDate!, dayInfo.date);
+
+          Color bg = Colors.transparent;
+          Color txtColor = dayInfo.isOutside ? _accent.withOpacity(0.4) : Colors.white;
+
+          if (isPeriod) {
+            bg = Colors.red.withOpacity(0.95);
+            txtColor = Colors.white;
+          } else if (isOvulation) {
+            bg = const Color(0xFFA8D497);
+            txtColor = const Color(0xFF2E683D);
+          } else if (isSelected) {
+            bg = _accent;
+            txtColor = const Color(0xFF2E683D);
+          }
+
+          final boxDecoration = BoxDecoration(
+            shape: BoxShape.circle,
+            color: bg,
+            border: isNextPeriod ? Border.all(color: Colors.orange, width: 2) : null,
+          );
 
           return Center(
             child: GestureDetector(
@@ -227,10 +261,7 @@ class _MonthGrid extends StatelessWidget {
               child: Container(
                 width: 36,
                 height: 36,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isSelected ? _accent : Colors.transparent,
-                ),
+                decoration: boxDecoration,
                 alignment: Alignment.center,
                 child: Text(
                   '${dayInfo.date.day}',
@@ -238,7 +269,7 @@ class _MonthGrid extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins',
-                    color: textColor,
+                    color: txtColor,
                   ),
                 ),
               ),
@@ -281,3 +312,4 @@ class _DayDetail {
   final DateTime date;
   final bool isOutside;
 }
+

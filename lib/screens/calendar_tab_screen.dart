@@ -1,7 +1,8 @@
-
+﻿
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/calendar_storage.dart';
 import '../widgets/swipeable_green_calendar.dart';
 import 'tracking/log_symptom_screen.dart';
 import '../services/api_service.dart';
@@ -25,6 +26,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   // Default values for period and cycle length
   int _periodLength = 5; // days
   int _cycleLength = 28; // days
+  Set<DateTime> _ovulationPredictions = {};
 
   // Symptoms fetched from backend
   List<String> _loggedSymptoms = [];
@@ -42,9 +44,9 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       final symptoms = await ApiService().getCycleSymptoms();
       // Remove duplicates while preserving order
       final seen = <String>{};
-      final uniqueSymptoms = symptoms.where((s) => seen.add(s)).toList();
+      final uniqueSymptoms = symptoms.where((s) => seen.add(s['name'] ?? '')).toList();
       setState(() {
-        _loggedSymptoms = uniqueSymptoms;
+        _loggedSymptoms = uniqueSymptoms.map((s) => s['name'] ?? '').toList();
       });
     } catch (e) {
       debugPrint('Failed to fetch symptoms: $e');
@@ -68,6 +70,9 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           _lastPeriodDate = null;
         }
       });
+      // Load any existing ovulation predictions
+      final preds = await CalendarStorage.loadOvulationPredictions();
+      setState(() => _ovulationPredictions = preds.toSet());
     } else {
       // Set default value: today as period day
       final today = DateTime.now();
@@ -78,6 +83,10 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
         _lastPeriodDate = todayStr;
       });
       await prefs.setStringList('tapped_days', [todayStr]);
+      // compute and save predictions for today as last period date
+      await CalendarStorage.computeAndSavePredictions(lastPeriodStart: DateTime.now(), cycleLength: _cycleLength);
+      final preds = await CalendarStorage.loadOvulationPredictions();
+      setState(() => _ovulationPredictions = preds.toSet());
     }
   }
 
@@ -129,6 +138,15 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     // Save tapped days (as unique list)
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('tapped_days', _selectedCalendarDaysFormatted.toList());
+    // If last period date changed, (re)compute ovulation predictions
+    if (_lastPeriodDate != null) {
+      try {
+        final lp = DateTime.parse(_lastPeriodDate!);
+        await CalendarStorage.computeAndSavePredictions(lastPeriodStart: lp, cycleLength: _cycleLength);
+        final preds = await CalendarStorage.loadOvulationPredictions();
+        setState(() => _ovulationPredictions = preds.toSet());
+      } catch (_) {}
+    }
   }
 
   bool _isSameDay(DateTime a, DateTime b) =>
@@ -170,6 +188,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                               initialMonth: DateTime.now(),
                               selectedDates: _selectedCalendarDays,
                               onDateToggle: _toggleCalendarDate,
+                              ovulationDates: _ovulationPredictions,
+                              periodDates: _selectedCalendarDays,
                             ),
                           ] else ...[
                             const SizedBox(height: 8),
@@ -367,7 +387,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 ),
               ),
               Text(
-                '21–27 Dec',
+                '21â€“27 Dec',
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.black,
@@ -487,3 +507,5 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     );
   }
 }
+
+

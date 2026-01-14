@@ -1,41 +1,21 @@
-{
+﻿{
   "@@locale": "ig",
   "appTitle": "Nexus Fertility",
-<<<<<<< HEAD
-  "welcomeTitle": "Welcome to Nexus Fertility",
-  "welcomeSubtitle": "Your personal fertility companion",
-  "selectLanguage": "Select Language",
-  "english": "English",
-  "yoruba": "Yorùbá",
-=======
-
   "welcomeTitle": "Nnọọ na Nexus Fertility",
-  "welcomeSubtitle": "Onye enyemaka ọmụmụ gị nke onwe gị",
+  "welcomeSubtitle": "Onye enyemaka ọmụmụ nke onwe gị",
   "selectLanguage": "Họrọ Asụsụ",
   "english": "English",
   "yoruba": "Yoruba",
-
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
   "igbo": "Igbo",
   "hausa": "Hausa",
   "pidgin": "Pidgin",
   "german": "Deutsch",
-<<<<<<< HEAD
-  "next": "Next",
-  "back": "Back",
-  "skip": "Skip",
-  "done": "Done",
-  "createAccount": "Create Account",
-  "signIn": "Sign In",
-=======
-
   "next": "Osote",
   "back": "Laghachi Azụ",
   "skip": "Mafee",
   "done": "Emechaa",
   "createAccount": "Mepụta Akaụntụ",
   "signIn": "Banye",
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
   "email": "Email",
   "phoneNumber": "Phone Number",
   "password": "Password",
@@ -54,52 +34,12 @@
   "otpSentTo": "OTP sent to {email}",
   "@otpSentTo": {
     "description": "Message shown after OTP is sent",
-    "placeholders": {"email": {"type": "String"}}
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
   },
-<<<<<<< HEAD
-  "resendCode": "Resend Code",
-  "codeExpires": "Code expires in {minutes}:{seconds}",
-  "@codeExpires": {"description": "Timer for OTP expiration","placeholders": {"minutes": {"type": "String"},"seconds": {"type": "String"}}},
-  "invalidEmail": "Please enter a valid email address",
-  "invalidPhone": "Please enter a valid phone number",
-  "passwordMismatch": "Passwords do not match",
-  "passwordTooShort": "Password must be at least 8 characters",
-  "accountCreatedSuccessfully": "Account created successfully!",
-  "profileSetupComplete": "Your profile setup is complete",
-  "termsAndConditions": "I agree to the Terms and Conditions",
-  "privacyPolicy": "I agree to the Privacy Policy",
-  "acceptTerms": "Please accept the terms and conditions",
-  "emailAlreadyExists": "Email already registered",
-  "phoneAlreadyExists": "Phone number already registered",
-  "verificationFailed": "Verification failed. Please try again",
-  "tryAgain": "Try Again",
-  "loading": "Loading...",
-  "error": "Error",
-  "success": "Success",
-  "cancel": "Cancel",
-  "save": "Save",
-  "logout": "Logout",
-  "genderMale": "Male",
-  "genderFemale": "Female",
-  "genderOther": "Other",
-  "selectGender": "Select Gender",
-  "profileTitle": "Profile",
-  "editProfile": "Edit profile",
-  "audioGuidance": "Audio Guidance",
-  "ttcHistory": "TTC History",
-  "faithPreference": "Faith Preference",
-  "cycleLength": "Cycle Length",
-  "lastPeriodDate": "Last Period Date",
-  "continueButton": "Continue",
-  "joined": "Joined",
-  "audioLessons": "Audio Learning",
-  "play": "Play",
-  "stop": "Stop",
-  "supportHub": "Support Hub",
-  "dailyAffirmation": "Daily Affirmations",
-  "chooseSupportMode": "Choose your support mode",
-  "exploreCommunityGroups": "Explore Community Groups"
-=======
   "resendCode": "Zigharia Koodu Ọzọ",
   "codeExpires": "Koodu ga-agwụ na {minutes}:{seconds}",
   "@codeExpires": {
@@ -128,7 +68,7 @@
   "tryAgain": "Nwaa Ọzọ",
   "loading": "Na-ebu...",
   "error": "Njehie",
-  "success": "Ihe Ịga Nke Ọma",
+  "success": "Ihe Ọga Nke Ọma",
   "cancel": "Kagbuo",
   "save": "Chekwa",
   "logout": "Pụọ",
@@ -211,10 +151,10 @@
   "home": "Ụlọ",
   "calendar": "Kalenda",
   "learn": "Mụta",
-  "todaysFertilityInsight": "Nghọta ịmụ nwa taa",
-  "nextFertilityWindow": "Windo ịmụ nwa gị na-esote sitere na Dec 23",
-  "trackingBenefits": "Site n'ịchọpụta ịmụ nwa gị, ị na-enweta nghọta ka mma banyere okirikiri gị.",
-  "stayPositive": "Ị na-eme nke ọma! Nọrọ na-adị mma ma lekwasị anya!",
+  "todaysFertilityInsight": "Nghọta ọmụmụ nwa taa",
+  "nextFertilityWindow": "Windo ọmụmụ nwa gị na-esote sitere na Dec 23",
+  "trackingBenefits": "Site n'ịchọpụta ọmụmụ nwa gị, ị na-enweta nghọta ka mma banyere okirikiri gị.",
+  "stayPositive": "Ị na-eme nke ọma! Nụrụ na-adị mma ma lekwasị anya!",
   "learnHub": "Ebe mmụta",
   "logSymptoms": "Debanye aha ihe mgbaàmà",
   "bleeding": "Ọbara",
@@ -240,6 +180,5 @@
   "enterPassword": "Tinye paswọọdụ",
   "forgotPassword": "Ị chefuru paswọọdụ?",
   "logIn": "Banye"
-
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
 }
+

@@ -1,346 +1,53 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/localization_provider.dart';
-<<<<<<< HEAD
-import '../../theme.dart';
-=======
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
 
 class SupportScreen extends StatefulWidget {
-  const SupportScreen({super.key});
+  const SupportScreen({Key? key}) : super(key: key);
 
   @override
   State<SupportScreen> createState() => _SupportScreenState();
 }
 
 class _SupportScreenState extends State<SupportScreen> {
-    int _selectedIndex = 3;
-
-    void _onNavBarTap(int index) {
-      if (index == _selectedIndex) return;
-      // Use Navigator to switch tabs if not already on this tab
-      // This assumes the parent (home) will handle the navigation
-      Navigator.of(context).popUntil((route) => route.isFirst);
-      // Optionally, you can use a callback or a state management solution to switch tabs
-    }
-  String _currentAffirmation = "Every challenge is an opportunity to grow stronger and wiser.";
-
   @override
   Widget build(BuildContext context) {
-    final loc = Provider.of<LocalizationProvider>(context);
-
     return Scaffold(
-<<<<<<< HEAD
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          // Green appbar
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 20),
-            decoration: const BoxDecoration(
-              color: Color(0xFF2E683D),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-=======
-<<<<<<< HEAD
-      backgroundColor: AppColors.primary,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        title: Text(loc.translate('supportHub'), style: const TextStyle(color: Colors.white)),
+        title: Text('Support'),
       ),
-      body: SingleChildScrollView(
-=======
-      appBar: AppBar(title: Text(loc.translate('supportHub'))),
       body: Padding(
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-<<<<<<< HEAD
-            const SizedBox(height: 8),
-            Text(loc.translate('chooseSupportMode'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-=======
-            Text(loc.translate('chooseSupportMode'),
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
-            const SizedBox(height: 12),
-            Row(
->>>>>>> origin/main
-              children: [
-                const Text(
-                  'Support hub',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Mental health support and daily affirmations',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ],
-            ),
-<<<<<<< HEAD
-          ),
-          // Body with daily affirmation and other content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Daily affirmation card
-                  Container(
-                    width: 361,
-                    height: 130,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFA8D497).withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: const Color(0xFF2E683D),
-                        width: 1,
-                      ),
-                    ),
-=======
-            const SizedBox(height: 20),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-<<<<<<< HEAD
-                color: Colors.white,
+                color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(8)),
-                    child: const Icon(Icons.favorite, color: AppColors.primary),
+                  Text(
+                    'Need help?',
+                    style: Theme.of(context).textTheme.headline5,
                   ),
-=======
-                color: Colors.pink.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.pink.shade100),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.favorite, color: Colors.pink),
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
-                  const SizedBox(width: 12),
-                  Expanded(
->>>>>>> origin/main
-                    child: Column(
-                      children: [
-<<<<<<< HEAD
-                        // Top row: spark icon, text, refresh button
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.flash_on,
-                              color: const Color(0xFF2E683D),
-                              size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'Daily affirmation',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2E683D),
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _currentAffirmation = "You are stronger than you think.";
-                                });
-                              },
-                              child: Container(
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.refresh,
-                                    size: 16,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        // Affirmation text (2 lines)
-                        Text(
-                          _currentAffirmation,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF2E683D),
-                            fontFamily: 'Poppins',
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Contact us at support@nexusfertility.com',
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Cultural Guidance',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade200),
-                    ),
-                    child: Text(
-                      'Coping with family pressure and finding peace in community support. Explore recommended readings and groups.',
-                      style: TextStyle(color: Colors.grey.shade700),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(loc.translate('exploreCommunityGroups')),
-                    ),
-=======
-<<<<<<< HEAD
-                        Text(loc.translate('dailyAffirmation'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-=======
-                        Text(loc.translate('dailyAffirmation'),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
-                        const SizedBox(height: 6),
-                        Text(message, style: TextStyle(color: Colors.grey.shade700)),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-<<<<<<< HEAD
-                    icon: Icon(tts.isPlaying ? Icons.pause : Icons.play_arrow, color: AppColors.primary),
-=======
-                    icon: Icon(tts.isPlaying ? Icons.pause : Icons.play_arrow,
-                        color: Colors.pink),
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
-                    onPressed: () async {
-                      if (tts.isPlaying) {
-                        await tts.stop();
-                      } else {
-                        await tts.speak(message);
-                      }
-                    },
->>>>>>> origin/main
+                  SizedBox(height: 16),
+                  Text(
+                    'Or call us at +1 (555) 123-4567',
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ],
               ),
             ),
-<<<<<<< HEAD
-          ),
-        ],
-=======
-            const SizedBox(height: 16),
-<<<<<<< HEAD
-            const Text('Cultural Guidance', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-=======
-            const Text('Cultural Guidance',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-<<<<<<< HEAD
-=======
-                border: Border.all(color: Colors.grey.shade200),
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
-              ),
-              child: Text(
-                'Coping with family pressure and finding peace in community support. Explore recommended readings and groups.',
-                style: TextStyle(color: Colors.grey.shade700),
-              ),
-            ),
-            const SizedBox(height: 16),
-<<<<<<< HEAD
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pushNamed('/community_groups'),
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                child: Text(loc.translate('exploreCommunityGroups')),
-              ),
-            ),
-=======
-            ElevatedButton(
-              onPressed: () {},
-              child: Text(loc.translate('exploreCommunityGroups')),
-            )
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _modeButton(FaithMode mode, String label) {
-    final isSelected = _mode == mode;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => _mode = mode),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-<<<<<<< HEAD
-            color: isSelected ? AppColors.primaryLight : Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Center(child: Text(label, style: TextStyle(color: isSelected ? AppColors.primary : Colors.grey.shade700))),
-=======
-            color: isSelected ? Colors.pink.shade100 : Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Center(
-            child: Text(label,
-                style: TextStyle(
-                    color: isSelected ? Colors.pink : Colors.grey.shade700)),
-          ),
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
-        ),
->>>>>>> origin/main
       ),
     );
   }
