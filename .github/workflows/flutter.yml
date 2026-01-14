@@ -1,0 +1,41 @@
+﻿name: Flutter CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+    
+    - name: Install dependencies
+      run: flutter pub get
+    
+    - name: Generate localizations
+      run: flutter gen-l10n
+    
+    - name: Analyze code
+      run: flutter analyze
+    
+    - name: Test
+      run: flutter test
+    
+    - name: Build web
+      run: flutter build web
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-build
+        path: build/web/
+        retention-days: 7
