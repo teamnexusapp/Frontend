@@ -1,0 +1,23 @@
+﻿name: Flutter CI
+
+on:
+  push:
+    branches: [final-ci-fix]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          
+      - name: Install dependencies
+        run: flutter pub get
+      
+      - name: Build Release APK
+        run: flutter build apk --release --dart-define=API_URL=${{ secrets.API_URL }}
