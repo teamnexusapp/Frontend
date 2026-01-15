@@ -95,3 +95,4 @@ jobs:
       with:
         name: debug-apk
         path: build/app/outputs/flutter-apk/app-debug.apk
+
