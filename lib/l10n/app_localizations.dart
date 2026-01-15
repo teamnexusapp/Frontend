@@ -66,12 +66,12 @@ import 'app_localizations_yo.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -89,11 +89,11 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -101,7 +101,7 @@ abstract class AppLocalizations {
     Locale('ha'),
     Locale('ig'),
     Locale('pcm'),
-    Locale('yo')
+    Locale('yo'),
   ];
 
   /// No description provided for @appTitle.
@@ -110,23 +110,29 @@ abstract class AppLocalizations {
   /// **'Nexus Fertility'**
   String get appTitle;
 
-  /// No description provided for @welcomeTitle.
+  /// No description provided for @welcome.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Nexus Fertility'**
-  String get welcomeTitle;
+  /// **'Welcome'**
+  String get welcome;
 
-  /// No description provided for @welcomeSubtitle.
+  /// No description provided for @home.
   ///
   /// In en, this message translates to:
-  /// **'Your personal fertility companion'**
-  String get welcomeSubtitle;
+  /// **'Home'**
+  String get home;
 
-  /// No description provided for @selectLanguage.
+  /// No description provided for @settings.
   ///
   /// In en, this message translates to:
-  /// **'Select Language'**
-  String get selectLanguage;
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
 
   /// No description provided for @english.
   ///
@@ -158,11 +164,11 @@ abstract class AppLocalizations {
   /// **'Pidgin'**
   String get pidgin;
 
-  /// No description provided for @german.
+  /// No description provided for @selectLanguage.
   ///
   /// In en, this message translates to:
-  /// **'Deutsch'**
-  String get german;
+  /// **'Select Language'**
+  String get selectLanguage;
 
   /// No description provided for @next.
   ///
@@ -236,161 +242,35 @@ abstract class AppLocalizations {
   /// **'Last Name'**
   String get lastName;
 
-  /// No description provided for @dateOfBirth.
+  /// No description provided for @profile.
   ///
   /// In en, this message translates to:
-  /// **'Date of Birth'**
-  String get dateOfBirth;
+  /// **'Profile'**
+  String get profile;
 
-  /// No description provided for @selectDate.
+  /// No description provided for @logout.
   ///
   /// In en, this message translates to:
-  /// **'Select date'**
-  String get selectDate;
+  /// **'Logout'**
+  String get logout;
 
-  /// No description provided for @profilePicture.
+  /// No description provided for @save.
   ///
   /// In en, this message translates to:
-  /// **'Profile Picture'**
-  String get profilePicture;
+  /// **'Save'**
+  String get save;
 
-  /// No description provided for @uploadPhoto.
+  /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
-  /// **'Upload Photo'**
-  String get uploadPhoto;
+  /// **'Cancel'**
+  String get cancel;
 
-  /// No description provided for @takePhoto.
+  /// No description provided for @ok.
   ///
   /// In en, this message translates to:
-  /// **'Take Photo'**
-  String get takePhoto;
-
-  /// No description provided for @chooseFromGallery.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose from Gallery'**
-  String get chooseFromGallery;
-
-  /// No description provided for @verifyEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Verify Email'**
-  String get verifyEmail;
-
-  /// No description provided for @verifyPhone.
-  ///
-  /// In en, this message translates to:
-  /// **'Verify Phone'**
-  String get verifyPhone;
-
-  /// No description provided for @enterOTP.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter OTP'**
-  String get enterOTP;
-
-  /// Message shown after OTP is sent
-  ///
-  /// In en, this message translates to:
-  /// **'OTP sent to {email}'**
-  String otpSentTo(String email);
-
-  /// No description provided for @resendCode.
-  ///
-  /// In en, this message translates to:
-  /// **'Resend Code'**
-  String get resendCode;
-
-  /// Timer for OTP expiration
-  ///
-  /// In en, this message translates to:
-  /// **'Code expires in {minutes}:{seconds}'**
-  String codeExpires(String minutes, String seconds);
-
-  /// No description provided for @invalidEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid email address'**
-  String get invalidEmail;
-
-  /// No description provided for @invalidPhone.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid phone number'**
-  String get invalidPhone;
-
-  /// No description provided for @passwordMismatch.
-  ///
-  /// In en, this message translates to:
-  /// **'Passwords do not match'**
-  String get passwordMismatch;
-
-  /// No description provided for @passwordTooShort.
-  ///
-  /// In en, this message translates to:
-  /// **'Password must be at least 8 characters'**
-  String get passwordTooShort;
-
-  /// No description provided for @accountCreatedSuccessfully.
-  ///
-  /// In en, this message translates to:
-  /// **'Account created successfully!'**
-  String get accountCreatedSuccessfully;
-
-  /// No description provided for @profileSetupComplete.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile setup complete!'**
-  String get profileSetupComplete;
-
-  /// No description provided for @termsAndConditions.
-  ///
-  /// In en, this message translates to:
-  /// **'I agree to the Terms and Conditions'**
-  String get termsAndConditions;
-
-  /// No description provided for @privacyPolicy.
-  ///
-  /// In en, this message translates to:
-  /// **'I agree to the Privacy Policy'**
-  String get privacyPolicy;
-
-  /// No description provided for @acceptTerms.
-  ///
-  /// In en, this message translates to:
-  /// **'Please accept the terms and conditions'**
-  String get acceptTerms;
-
-  /// No description provided for @emailAlreadyExists.
-  ///
-  /// In en, this message translates to:
-  /// **'Email already registered'**
-  String get emailAlreadyExists;
-
-  /// No description provided for @phoneAlreadyExists.
-  ///
-  /// In en, this message translates to:
-  /// **'Phone number already registered'**
-  String get phoneAlreadyExists;
-
-  /// No description provided for @verificationFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'Verification failed. Please try again'**
-  String get verificationFailed;
-
-  /// No description provided for @tryAgain.
-  ///
-  /// In en, this message translates to:
-  /// **'Try Again'**
-  String get tryAgain;
-
-  /// No description provided for @loading.
-  ///
-  /// In en, this message translates to:
-  /// **'Loading...'**
-  String get loading;
+  /// **'OK'**
+  String get ok;
 
   /// No description provided for @error.
   ///
@@ -404,191 +284,23 @@ abstract class AppLocalizations {
   /// **'Success'**
   String get success;
 
-  /// No description provided for @cancel.
+  /// No description provided for @loading.
   ///
   /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
+  /// **'Loading...'**
+  String get loading;
 
-  /// No description provided for @save.
+  /// No description provided for @tryAgain.
   ///
   /// In en, this message translates to:
-  /// **'Save'**
-  String get save;
+  /// **'Try Again'**
+  String get tryAgain;
 
-  /// No description provided for @logout.
+  /// No description provided for @selectOption.
   ///
   /// In en, this message translates to:
-  /// **'Logout'**
-  String get logout;
-
-  /// No description provided for @genderMale.
-  ///
-  /// In en, this message translates to:
-  /// **'Male'**
-  String get genderMale;
-
-  /// No description provided for @genderFemale.
-  ///
-  /// In en, this message translates to:
-  /// **'Female'**
-  String get genderFemale;
-
-  /// No description provided for @genderOther.
-  ///
-  /// In en, this message translates to:
-  /// **'Other'**
-  String get genderOther;
-
-  /// No description provided for @selectGender.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Gender'**
-  String get selectGender;
-
-  /// No description provided for @welcomeToJourney.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome to your journey'**
-  String get welcomeToJourney;
-
-  /// No description provided for @choosePreferredLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose your preferred language'**
-  String get choosePreferredLanguage;
-
-  /// No description provided for @choosePreferredMethod.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose your preferred method'**
-  String get choosePreferredMethod;
-
-  /// No description provided for @createAccountWithEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Create account with email'**
-  String get createAccountWithEmail;
-
-  /// No description provided for @createAccountWithPhone.
-  ///
-  /// In en, this message translates to:
-  /// **'Create account with phone'**
-  String get createAccountWithPhone;
-
-  /// No description provided for @emailSignupTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Create Account with Email'**
-  String get emailSignupTitle;
-
-  /// No description provided for @emailSignupSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter your email and password'**
-  String get emailSignupSubtitle;
-
-  /// No description provided for @emailAddressLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Email Address'**
-  String get emailAddressLabel;
-
-  /// No description provided for @emailHint.
-  ///
-  /// In en, this message translates to:
-  /// **'you@example.com'**
-  String get emailHint;
-
-  /// No description provided for @emailRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Email is required'**
-  String get emailRequired;
-
-  /// No description provided for @invalidEmailFormat.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid email format'**
-  String get invalidEmailFormat;
-
-  /// No description provided for @passwordHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter password'**
-  String get passwordHint;
-
-  /// No description provided for @passwordRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Password is required'**
-  String get passwordRequired;
-
-  /// No description provided for @confirmPasswordHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm password'**
-  String get confirmPasswordHint;
-
-  /// No description provided for @confirmPasswordRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Please confirm password'**
-  String get confirmPasswordRequired;
-
-  /// No description provided for @phoneSignupTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Create Account with Phone'**
-  String get phoneSignupTitle;
-
-  /// No description provided for @phoneSignupSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'We will send you an OTP code'**
-  String get phoneSignupSubtitle;
-
-  /// No description provided for @phoneNumberLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Phone Number'**
-  String get phoneNumberLabel;
-
-  /// No description provided for @phoneNumberHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Phone number'**
-  String get phoneNumberHint;
-
-  /// No description provided for @phoneRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Phone is required'**
-  String get phoneRequired;
-
-  /// No description provided for @invalidPhoneForCountry.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid phone number for this country'**
-  String get invalidPhoneForCountry;
-
-  /// No description provided for @otpInfoMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'We\'ll send an OTP code to verify your phone number'**
-  String get otpInfoMessage;
-
-  /// No description provided for @continueText.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get continueText;
-
-  /// No description provided for @verifyEmailTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Verify Email'**
-  String get verifyEmailTitle;
+  /// **'Please select an option'**
+  String get selectOption;
 
   /// No description provided for @verifyPhoneTitle.
   ///
@@ -596,23 +308,17 @@ abstract class AppLocalizations {
   /// **'Verify Phone Number'**
   String get verifyPhoneTitle;
 
-  /// Message showing where OTP was sent
+  /// Message indicating a code was sent
   ///
   /// In en, this message translates to:
-  /// **'Enter the code we sent to {email}'**
-  String codeSentToEmail(String email);
-
-  /// Message showing where OTP was sent
-  ///
-  /// In en, this message translates to:
-  /// **'Enter the code we sent to {phone}'**
+  /// **'A verification code has been sent to {phone}'**
   String codeSentToPhone(String phone);
 
-  /// Timer showing code expiration
+  /// Message showing code expiration time
   ///
   /// In en, this message translates to:
-  /// **'Code expires in {time}'**
-  String codeExpiresIn(String time);
+  /// **'Code expires in {minutes} minutes'**
+  String codeExpiresIn(int minutes);
 
   /// No description provided for @verify.
   ///
@@ -623,308 +329,74 @@ abstract class AppLocalizations {
   /// No description provided for @didntReceiveCode.
   ///
   /// In en, this message translates to:
-  /// **'Didn\'t receive code? Resend'**
+  /// **'Didn\'t receive the code?'**
   String get didntReceiveCode;
 
-  /// No description provided for @enterAll6Digits.
+  /// No description provided for @choosePreferredMethod.
   ///
   /// In en, this message translates to:
-  /// **'Please enter all 6 digits'**
-  String get enterAll6Digits;
+  /// **'Choose your preferred signup method'**
+  String get choosePreferredMethod;
 
-  /// No description provided for @profile.
+  /// No description provided for @createAccountWithEmail.
   ///
   /// In en, this message translates to:
-  /// **'Profile'**
-  String get profile;
+  /// **'Create account with Email'**
+  String get createAccountWithEmail;
 
-  /// No description provided for @profileTitle.
+  /// No description provided for @createAccountWithPhone.
   ///
   /// In en, this message translates to:
-  /// **'Profile'**
-  String get profileTitle;
+  /// **'Create account with Phone'**
+  String get createAccountWithPhone;
 
-  /// No description provided for @editProfile.
+  /// No description provided for @selectDate.
   ///
   /// In en, this message translates to:
-  /// **'Edit profile'**
-  String get editProfile;
+  /// **'Select Date'**
+  String get selectDate;
 
-  /// No description provided for @completeProfile.
+  /// No description provided for @continueText.
   ///
   /// In en, this message translates to:
-  /// **'Let\'s complete your profile'**
-  String get completeProfile;
+  /// **'Continue'**
+  String get continueText;
 
-  /// No description provided for @personalizeGuide.
+  /// No description provided for @profileSetupComplete.
   ///
   /// In en, this message translates to:
-  /// **'This will help us personalize your cycle guide'**
-  String get personalizeGuide;
+  /// **'Profile setup complete!'**
+  String get profileSetupComplete;
 
-  /// No description provided for @age.
+  /// No description provided for @supportHub.
   ///
   /// In en, this message translates to:
-  /// **'Age'**
-  String get age;
+  /// **'Support Hub'**
+  String get supportHub;
 
-  /// No description provided for @cycleLength.
+  /// No description provided for @dailyAffirmation.
   ///
   /// In en, this message translates to:
-  /// **'Cycle Length'**
-  String get cycleLength;
-
-  /// No description provided for @days.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} Days'**
-  String days(Object count);
-
-  /// No description provided for @averageDaysBetweenPeriods.
-  ///
-  /// In en, this message translates to:
-  /// **'Average number of days between your periods'**
-  String get averageDaysBetweenPeriods;
-
-  /// No description provided for @lastPeriodDate.
-  ///
-  /// In en, this message translates to:
-  /// **'Last Period Date'**
-  String get lastPeriodDate;
-
-  /// No description provided for @whenLastBleeding.
-  ///
-  /// In en, this message translates to:
-  /// **'When your last menstrual bleeding started'**
-  String get whenLastBleeding;
-
-  /// No description provided for @ttcHistory.
-  ///
-  /// In en, this message translates to:
-  /// **'TTC History'**
-  String get ttcHistory;
-
-  /// No description provided for @faithPreference.
-  ///
-  /// In en, this message translates to:
-  /// **'Faith Preference'**
-  String get faithPreference;
-
-  /// No description provided for @language.
-  ///
-  /// In en, this message translates to:
-  /// **'Language'**
-  String get language;
-
-  /// No description provided for @audioGuidance.
-  ///
-  /// In en, this message translates to:
-  /// **'Audio Guidance'**
-  String get audioGuidance;
-
-  /// No description provided for @agreeTerms.
-  ///
-  /// In en, this message translates to:
-  /// **'I agree to the Terms and Conditions and Privacy Policy'**
-  String get agreeTerms;
-
-  /// No description provided for @selectOption.
-  ///
-  /// In en, this message translates to:
-  /// **'Select option'**
-  String get selectOption;
-
-  /// No description provided for @home.
-  ///
-  /// In en, this message translates to:
-  /// **'Home'**
-  String get home;
-
-  /// No description provided for @calendar.
-  ///
-  /// In en, this message translates to:
-  /// **'Calendar'**
-  String get calendar;
-
-  /// No description provided for @learn.
-  ///
-  /// In en, this message translates to:
-  /// **'Learn'**
-  String get learn;
-
-  /// No description provided for @todaysFertilityInsight.
-  ///
-  /// In en, this message translates to:
-  /// **'Today\'s Fertility Insight'**
-  String get todaysFertilityInsight;
-
-  /// No description provided for @nextFertilityWindow.
-  ///
-  /// In en, this message translates to:
-  /// **'Your next fertility window is from Dec 23'**
-  String get nextFertilityWindow;
-
-  /// No description provided for @trackingBenefits.
-  ///
-  /// In en, this message translates to:
-  /// **'By tracking your fertility you gain a better understanding of your cycle.'**
-  String get trackingBenefits;
+  /// **'Daily Affirmation'**
+  String get dailyAffirmation;
 
   /// No description provided for @stayPositive.
   ///
   /// In en, this message translates to:
-  /// **'You\'re doing great! Stay positive and be focused!'**
+  /// **'Stay positive and believe in yourself'**
   String get stayPositive;
 
-  /// No description provided for @learnHub.
+  /// No description provided for @exploreCommunityGroups.
   ///
   /// In en, this message translates to:
-  /// **'Learn Hub'**
-  String get learnHub;
+  /// **'Explore Community Groups'**
+  String get exploreCommunityGroups;
 
-  /// No description provided for @logSymptoms.
+  /// No description provided for @chooseSupportMode.
   ///
   /// In en, this message translates to:
-  /// **'Log Symptoms'**
-  String get logSymptoms;
-
-  /// No description provided for @bleeding.
-  ///
-  /// In en, this message translates to:
-  /// **'Bleeding'**
-  String get bleeding;
-
-  /// No description provided for @mood.
-  ///
-  /// In en, this message translates to:
-  /// **'Mood'**
-  String get mood;
-
-  /// No description provided for @cervicalMucus.
-  ///
-  /// In en, this message translates to:
-  /// **'Cervical Mucus'**
-  String get cervicalMucus;
-
-  /// No description provided for @pain.
-  ///
-  /// In en, this message translates to:
-  /// **'Pain'**
-  String get pain;
-
-  /// No description provided for @notes.
-  ///
-  /// In en, this message translates to:
-  /// **'Notes'**
-  String get notes;
-
-  /// No description provided for @loggedSymptoms.
-  ///
-  /// In en, this message translates to:
-  /// **'Logged Symptoms'**
-  String get loggedSymptoms;
-
-  /// No description provided for @educationalContentComingSoon.
-  ///
-  /// In en, this message translates to:
-  /// **'Educational content coming soon'**
-  String get educationalContentComingSoon;
-
-  /// No description provided for @authInvalidEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid email format'**
-  String get authInvalidEmail;
-
-  /// No description provided for @authInvalidPhone.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid phone number format'**
-  String get authInvalidPhone;
-
-  /// No description provided for @authPasswordTooShort.
-  ///
-  /// In en, this message translates to:
-  /// **'Password must be at least 8 characters'**
-  String get authPasswordTooShort;
-
-  /// No description provided for @authEmailAlreadyRegistered.
-  ///
-  /// In en, this message translates to:
-  /// **'Email already registered'**
-  String get authEmailAlreadyRegistered;
-
-  /// No description provided for @authPhoneAlreadyRegistered.
-  ///
-  /// In en, this message translates to:
-  /// **'Phone number already registered'**
-  String get authPhoneAlreadyRegistered;
-
-  /// No description provided for @authInvalidOtpFormat.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid OTP format'**
-  String get authInvalidOtpFormat;
-
-  /// No description provided for @authUserNotFound.
-  ///
-  /// In en, this message translates to:
-  /// **'User not found'**
-  String get authUserNotFound;
-
-  /// No description provided for @authNoUserLoggedIn.
-  ///
-  /// In en, this message translates to:
-  /// **'No user logged in'**
-  String get authNoUserLoggedIn;
-
-  /// No description provided for @welcomeBack.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome Back'**
-  String get welcomeBack;
-
-  /// No description provided for @logInToAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Log in to your account'**
-  String get logInToAccount;
-
-  /// No description provided for @emailAddress.
-  ///
-  /// In en, this message translates to:
-  /// **'Email Address'**
-  String get emailAddress;
-
-  /// No description provided for @emailHintLogin.
-  ///
-  /// In en, this message translates to:
-  /// **'you@example.com'**
-  String get emailHintLogin;
-
-  /// No description provided for @passwordLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Password'**
-  String get passwordLabel;
-
-  /// No description provided for @enterPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter password'**
-  String get enterPassword;
-
-  /// No description provided for @forgotPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Forgot Password?'**
-  String get forgotPassword;
-
-  /// No description provided for @logIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Log In'**
-  String get logIn;
+  /// **'Choose Your Support Mode'**
+  String get chooseSupportMode;
 }
 
 class _AppLocalizationsDelegate
@@ -960,8 +432,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

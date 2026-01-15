@@ -12,16 +12,19 @@ class AppLocalizationsYo extends AppLocalizations {
   String get appTitle => 'Nexus Fertility';
 
   @override
-  String get welcomeTitle => 'Ẹ káàbọ̀ sí Nexus Fertility';
+  String get welcome => 'Kaabọ';
 
   @override
-  String get welcomeSubtitle => 'Alágbátà ìmú-ọmọ ara ẹni';
+  String get home => 'Ile';
 
   @override
-  String get selectLanguage => 'Yan Ede';
+  String get settings => 'Ọn ìseto';
 
   @override
-  String get english => 'English';
+  String get language => 'Ede';
+
+  @override
+  String get english => 'Ede Gẹẹsi';
 
   @override
   String get yoruba => 'Yoruba';
@@ -36,407 +39,123 @@ class AppLocalizationsYo extends AppLocalizations {
   String get pidgin => 'Pidgin';
 
   @override
-  String get german => 'Deutsch';
+  String get selectLanguage => 'Yan ede rẹ';
 
   @override
-  String get next => 'Tẹ̀síwájú';
+  String get next => 'Atẹle';
 
   @override
-  String get back => 'Padà Síwájú';
+  String get back => 'Pada sile';
 
   @override
-  String get skip => 'Kọjá';
+  String get skip => 'Fọwọsi';
 
   @override
-  String get done => 'Tán';
+  String get done => 'Ti pari';
 
   @override
-  String get createAccount => 'Ṣẹ̀dá Àkàǹtì';
+  String get createAccount => 'Ṣẹda Akọọlẹ';
 
   @override
-  String get signIn => 'Wọlé';
+  String get signIn => 'Wọdle';
 
   @override
-  String get email => 'Email';
+  String get email => 'Imel';
 
   @override
-  String get phoneNumber => 'Nọ́ńbà Fóònù';
+  String get phoneNumber => 'Nomba Foonu';
 
   @override
-  String get password => 'Ọ̀rọ̀ ìgbaniwọ́le';
+  String get password => 'Ọrọ Siri';
 
   @override
-  String get confirmPassword => 'Jẹ́rìsí Ọ̀rọ̀ ìgbaniwọ́le';
+  String get confirmPassword => 'Tẹnumọ Ọrọ Siri';
 
   @override
-  String get firstName => 'Orúkọ Ìbẹ̀rẹ̀';
+  String get firstName => 'Oruko Akọkọ';
 
   @override
-  String get lastName => 'Orúkọ Ìdílé';
+  String get lastName => 'Oruko Ekejii';
 
   @override
-  String get dateOfBirth => 'Ọjọ́ Ìbí';
+  String get profile => 'Bayanin Ara';
 
   @override
-  String get selectDate => 'Yan ọjọ́';
+  String get logout => 'Jade';
 
   @override
-  String get profilePicture => 'Àwòrán Profáìlì';
+  String get save => 'Tọju';
 
   @override
-  String get uploadPhoto => 'Gbé Àwòrán Sókè';
+  String get cancel => 'Fagile';
 
   @override
-  String get takePhoto => 'Yà Àwòrán';
+  String get ok => 'O';
 
   @override
-  String get chooseFromGallery => 'Yan Látinú Gálárì';
+  String get error => 'Asiṣe';
 
   @override
-  String get verifyEmail => 'Jẹ́rìsí Email';
+  String get success => 'Aṣeyọri';
 
   @override
-  String get verifyPhone => 'Jẹ́rìsí Nọ́ńbà Fóònù';
+  String get loading => 'Nlo...';
 
   @override
-  String get enterOTP => 'Tẹ OTP';
+  String get tryAgain => 'Gbiyanju Eyi Paapaa';
 
   @override
-  String otpSentTo(String email) {
-    return 'OTP ránṣẹ́ sí $email';
-  }
+  String get selectOption => 'Jọ̀wọ́ yan ọkan';
 
   @override
-  String get resendCode => 'Tún Kóòdù Ránṣẹ́';
-
-  @override
-  String codeExpires(String minutes, String seconds) {
-    return 'Kóòdù yóò parẹ̀ ní $minutes:$seconds';
-  }
-
-  @override
-  String get invalidEmail => 'Jọ̀wọ́ tẹ àdírẹ́sì ẹ̀mèèlì tó tọ́';
-
-  @override
-  String get invalidPhone => 'Jọ̀wọ́ tẹ nọ́ńbà fóònù tó tọ́';
-
-  @override
-  String get passwordMismatch => 'Àwọn Ọ̀rọ̀ ìgbaniwọ́le kò báramu';
-
-  @override
-  String get passwordTooShort => 'Ọ̀rọ̀ ìgbaniwọ́le gbọdọ jẹ́ ó kéré jù látà 8';
-
-  @override
-  String get accountCreatedSuccessfully => 'A ṣẹ̀dá àkàǹtì pẹ̀lú ẹ̀ṣẹ́!';
-
-  @override
-  String get profileSetupComplete => 'Ipari profáìlì ti pari!';
-
-  @override
-  String get termsAndConditions => 'Mo gba àwọn Òfin àti Ìpò';
-
-  @override
-  String get privacyPolicy => 'Mo gba Ìlànà Àṣírí';
-
-  @override
-  String get acceptTerms => 'Jọ̀wọ́ gba àwọn òfin àti ìpò';
-
-  @override
-  String get emailAlreadyExists => 'A ti forúkọsílẹ̀ ẹ̀mèèlì náà tẹ́lẹ̀';
-
-  @override
-  String get phoneAlreadyExists => 'A ti forúkọsílẹ̀ nọ́ńbà fóònù náà tẹ́lẹ̀';
-
-  @override
-  String get verificationFailed =>
-      'Ìjẹ́rìsí kùnà. Jọ̀wọ́ gbìyànjú lẹ́ẹ̀kan sí i';
-
-  @override
-  String get tryAgain => 'Gbìyànjú Lẹ́ẹ̀kan Sí i';
-
-  @override
-  String get loading => 'Ǹ ṣiṣẹ́...';
-
-  @override
-  String get error => 'Àṣìṣe';
-
-  @override
-  String get success => 'Àṣeyọrí';
-
-  @override
-  String get cancel => 'Fagilé';
-
-  @override
-  String get save => 'Fipamọ́';
-
-  @override
-  String get logout => 'Jáde';
-
-  @override
-  String get genderMale => 'Ọkùnrin';
-
-  @override
-  String get genderFemale => 'Obìnrin';
-
-  @override
-  String get genderOther => 'Ọmọ ẹgbẹ́';
-
-  @override
-  String get selectGender => 'Yan Akọ tàbí Abo';
-
-  @override
-  String get welcomeToJourney => 'Ẹ káàbọ̀ sí ìrìnàjò rẹ';
-
-  @override
-  String get choosePreferredLanguage => 'Yan èdè tí o fẹ́ jù';
-
-  @override
-  String get choosePreferredMethod => 'Yan ọna tí o fẹ́ jù';
-
-  @override
-  String get createAccountWithEmail => 'Ṣẹ̀dá Àkàǹtì Nípa Ẹ̀mèèlì';
-
-  @override
-  String get createAccountWithPhone => 'Ṣẹ̀dá Àkàǹtì Nípa Fóònù';
-
-  @override
-  String get emailSignupTitle => 'Ṣẹ̀dá Àkàǹtì Nípa Ẹ̀mèèlì';
-
-  @override
-  String get emailSignupSubtitle => 'Tẹ ẹ̀mèèlì àti ọ̀rọ̀ ìgbaniwọ́le rẹ';
-
-  @override
-  String get emailAddressLabel => 'Àdírẹ́sì Ẹ̀mèèlì';
-
-  @override
-  String get emailHint => 'wọ@àpẹrẹ.com';
-
-  @override
-  String get emailRequired => 'Ẹ̀mèèlì ni dandan';
-
-  @override
-  String get invalidEmailFormat => 'Àdírẹ́sì ẹ̀mèèlì kò tọ́';
-
-  @override
-  String get passwordHint => 'Tẹ ọ̀rọ̀ ìgbaniwọ́le';
-
-  @override
-  String get passwordRequired => 'Ọ̀rọ̀ ìgbaniwọ́le ni dandan';
-
-  @override
-  String get confirmPasswordHint => 'Jẹ́rìsí ọ̀rọ̀ ìgbaniwọ́le';
-
-  @override
-  String get confirmPasswordRequired => 'Jọ̀wọ́ jẹ́rìsí ọ̀rọ̀ ìgbaniwọ́le';
-
-  @override
-  String get phoneSignupTitle => 'Ṣẹ̀dá Àkàǹtì Nípa Fóònù';
-
-  @override
-  String get phoneSignupSubtitle => 'A óò fi OTP kóòdù ránṣẹ́ sí ọ';
-
-  @override
-  String get phoneNumberLabel => 'Nọ́ńbà Fóònù';
-
-  @override
-  String get phoneNumberHint => 'Nọ́ńbà fóònù';
-
-  @override
-  String get phoneRequired => 'Fóònù ni dandan';
-
-  @override
-  String get invalidPhoneForCountry => 'Nọ́ńbà fóònù kò tọ́ fún orílẹ̀-èdè yìí';
-
-  @override
-  String get otpInfoMessage =>
-      'A óò fi OTP kóòdù ránṣẹ́ látí jẹ́rìsí nọ́ńbà fóònù rẹ';
-
-  @override
-  String get continueText => 'Tẹ̀síwájú';
-
-  @override
-  String get verifyEmailTitle => 'Jẹ́rìsí Ẹ̀mèèlì';
-
-  @override
-  String get verifyPhoneTitle => 'Jẹ́rìsí Nọ́ńbà Fóònù';
-
-  @override
-  String codeSentToEmail(String email) {
-    return 'Tẹ kóòdù tí a fi ránṣẹ́ sí $email';
-  }
+  String get verifyPhoneTitle => 'Ṣe Àyẹ̀wò Nomba Foonu';
 
   @override
   String codeSentToPhone(String phone) {
-    return 'Tẹ kóòdù tí a fi ránṣẹ́ sí $phone';
+    return 'A ti firanṣẹ koodu ṣayẹ̀wò si $phone';
   }
 
   @override
-  String codeExpiresIn(String time) {
-    return 'Kóòdù yóò parẹ̀ ní $time';
+  String codeExpiresIn(int minutes) {
+    return 'Koodu yoo pari ni $minutes akoko';
   }
 
   @override
-  String get verify => 'Jẹ́rìsí';
+  String get verify => 'Ṣe Àyẹ̀wò';
 
   @override
-  String get didntReceiveCode => 'Kò gbà kóòdù? Tún ránṣẹ́';
+  String get didntReceiveCode => 'Ṣe o ko ba ri koodu naa?';
 
   @override
-  String get enterAll6Digits => 'Jọ̀wọ́ tẹ gbogbo nọ́ńbà 6';
+  String get choosePreferredMethod => 'Yan ọna yoo fi fe lati kọ akawo nyin';
 
   @override
-  String get profile => 'Profáìlì';
+  String get createAccountWithEmail => 'Ṣe akawo pẹlu Imel';
 
   @override
-  String get profileTitle => 'Profile';
+  String get createAccountWithPhone => 'Ṣe akawo pẹlu Foonu';
 
   @override
-  String get editProfile => 'Edit profile';
+  String get selectDate => 'Yan Ọjọ́';
 
   @override
-  String get completeProfile => 'Jẹ́ kí a pari profáìlì rẹ';
+  String get continueText => 'Tẹ̀siwaju';
 
   @override
-  String get personalizeGuide =>
-      'Eyi yoo ran wa lọ́wọ́ láti ṣe ìtọ́sọ́na ayipo rẹ ni ara ẹni';
+  String get profileSetupComplete => 'Ṣiṣẹ bayanin ara gba ipari!';
 
   @override
-  String get age => 'Ọjọ ori';
+  String get supportHub => 'Ile Iranlowu';
 
   @override
-  String get cycleLength => 'Gígùn ayipo';
+  String get dailyAffirmation => 'Ifẹ Ojoojumo';
 
   @override
-  String days(Object count) {
-    return 'Ọjọ́ $count';
-  }
+  String get stayPositive => 'Dúró ninu ero rere ati igboya fun ara e';
 
   @override
-  String get averageDaysBetweenPeriods =>
-      'Nọ́ńbà àròpín ti àwọn ọjọ́ laarin àwọn akoko oṣù rẹ';
+  String get exploreCommunityGroups => 'Ṣe Ayeye Awujo Ibilẹ';
 
   @override
-  String get lastPeriodDate => 'Ọjọ́ akoko oṣù tó kẹ́hìn';
-
-  @override
-  String get whenLastBleeding => 'Nígbàtí ẹjẹ oṣù rẹ tó kẹ́hìn bẹ̀rẹ̀';
-
-  @override
-  String get ttcHistory => 'Ìtàn TTC';
-
-  @override
-  String get faithPreference => 'Yíyàn ìgbàgbọ́';
-
-  @override
-  String get language => 'Ede';
-
-  @override
-  String get audioGuidance => 'Ìtọ́sọ́na ohùn';
-
-  @override
-  String get agreeTerms => 'Mo gba àwọn ofin ati Ilana Asiri';
-
-  @override
-  String get selectOption => 'Yan aṣayan';
-
-  @override
-  String get home => 'Ilé';
-
-  @override
-  String get calendar => 'Kalẹ́ndà';
-
-  @override
-  String get learn => 'Kọ́ ẹkọ́';
-
-  @override
-  String get todaysFertilityInsight => 'Ìmọ̀ran ọmúbìnrin ti oni';
-
-  @override
-  String get nextFertilityWindow => 'Fẹ́rèsè ọmúbìnrin rẹ tí n bọ̀ láti Dec 23';
-
-  @override
-  String get trackingBenefits =>
-      'Nípa títọpa ọmúbìnrin rẹ o ní oye tí o dara jùlọ nípa ayipo rẹ.';
-
-  @override
-  String get stayPositive =>
-      'O n ṣe daradara! Dúró ní ìdáyàtọ̀ kí o sì dojúkọ̀!';
-
-  @override
-  String get learnHub => 'Ilé-ìkàwé';
-
-  @override
-  String get logSymptoms => 'Forúkọsílẹ̀ àwọn àmì àìsàn';
-
-  @override
-  String get bleeding => 'Ẹjẹ';
-
-  @override
-  String get mood => 'Ìhùwàsí ọkàn';
-
-  @override
-  String get cervicalMucus => 'Omi ọrun';
-
-  @override
-  String get pain => 'Ìrora';
-
-  @override
-  String get notes => 'Àwọn akọsílẹ̀';
-
-  @override
-  String get loggedSymptoms => 'Àwọn àmì àìsàn tí a forúkọsílẹ̀';
-
-  @override
-  String get educationalContentComingSoon => 'Akoonu ẹkọ n bọ̀ láipẹ́';
-
-  @override
-  String get authInvalidEmail => 'Ọna email kò tọ́';
-
-  @override
-  String get authInvalidPhone => 'Nọ́ńbà fóònù kò tọ́';
-
-  @override
-  String get authPasswordTooShort =>
-      'Ọ̀rọ̀ ìgbaniwọ́le gbọdọ jẹ́ o kéré jù àwọn látà 8';
-
-  @override
-  String get authEmailAlreadyRegistered =>
-      'A ti forúkọsílẹ̀ ẹ̀mèèlì yìí tẹ́lẹ̀';
-
-  @override
-  String get authPhoneAlreadyRegistered =>
-      'A ti forúkọsílẹ̀ nọ́ńbà fóònù yìí tẹ́lẹ̀';
-
-  @override
-  String get authInvalidOtpFormat => 'Ọna OTP kò tọ́';
-
-  @override
-  String get authUserNotFound => 'A kò ríi olùmúlò';
-
-  @override
-  String get authNoUserLoggedIn => 'Kò sí olùmúlò tí o wọlé';
-
-  @override
-  String get welcomeBack => 'Káàbọ̀ padà';
-
-  @override
-  String get logInToAccount => 'Wọlé sí àkàǹtì rẹ';
-
-  @override
-  String get emailAddress => 'Adirẹsi email';
-
-  @override
-  String get emailHintLogin => 'ìwọ@àpẹrẹ.com';
-
-  @override
-  String get passwordLabel => 'Ọ̀rọ̀ ìgbaniwọ́le';
-
-  @override
-  String get enterPassword => 'Tẹ ọ̀rọ̀ ìgbaniwọ́le sí i';
-
-  @override
-  String get forgotPassword => 'Ṣé o gbàgbé ọ̀rọ̀ ìgbaniwọ́le?';
-
-  @override
-  String get logIn => 'Wọlé';
+  String get chooseSupportMode => 'Yan Ọna Iranlowu';
 }
