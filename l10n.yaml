@@ -5,3 +5,9 @@ output-class: AppLocalizations
 output-dir: lib/l10n
 untranslated-messages-file: untranslated_messages.json
 suppress-warnings: true
+supported-locales:
+  - en
+  - ha
+  - ig
+  - pcm
+  - yo
