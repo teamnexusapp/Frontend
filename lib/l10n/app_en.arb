@@ -1,0 +1,71 @@
+﻿{
+  "@@locale": "en",
+  "appTitle": "Nexus Fertility",
+  "welcome": "Welcome",
+  "home": "Home",
+  "settings": "Settings",
+  "language": "Language",
+  "english": "English",
+  "yoruba": "Yoruba",
+  "igbo": "Igbo",
+  "hausa": "Hausa",
+  "pidgin": "Pidgin",
+  "selectLanguage": "Select Language",
+  "next": "Next",
+  "back": "Back",
+  "skip": "Skip",
+  "done": "Done",
+  "createAccount": "Create Account",
+  "signIn": "Sign In",
+  "email": "Email",
+  "phoneNumber": "Phone Number",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "profile": "Profile",
+  "logout": "Logout",
+  "save": "Save",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "error": "Error",
+  "success": "Success",
+  "loading": "Loading...",
+  "tryAgain": "Try Again",
+  "selectOption": "Please select an option",
+  "verifyPhoneTitle": "Verify Phone Number",
+  "codeSentToPhone": "A verification code has been sent to {phone}",
+  "@codeSentToPhone": {
+    "description": "Message indicating a code was sent",
+    "placeholders": {
+      "phone": {
+        "type": "String",
+        "example": "+234803..."
+      }
+    }
+  },
+  "codeExpiresIn": "Code expires in {minutes} minutes",
+  "@codeExpiresIn": {
+    "description": "Message showing code expiration time",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "verify": "Verify",
+  "didntReceiveCode": "Didn't receive the code?",
+  "choosePreferredMethod": "Choose your preferred signup method",
+  "createAccountWithEmail": "Create account with Email",
+  "createAccountWithPhone": "Create account with Phone",
+  "selectDate": "Select Date",
+  "continueText": "Continue",
+  "profileSetupComplete": "Profile setup complete!",
+  "supportHub": "Support Hub",
+  "dailyAffirmation": "Daily Affirmation",
+  "stayPositive": "Stay positive and believe in yourself",
+  "exploreCommunityGroups": "Explore Community Groups",
+  "chooseSupportMode": "Choose Your Support Mode"
+}
+
