@@ -16,6 +16,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    # CACHE BUSTING: Delete Android build cache
+    - name: Clear Android build cache
+      run: |
+        echo "=== Clearing Android build cache ==="
+        rm -rf android/app/build
+        rm -rf android/build
+        rm -rf .dart_tool
+        echo "Cache cleared"
     
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -25,8 +36,16 @@ jobs:
         cache: true
         cache-key: flutter-${{ env.FLUTTER_VERSION }}
     
-    - name: Show Flutter version
-      run: flutter --version
+    - name: Verify Android fixes
+      run: |
+        echo "=== Verifying Android fixes ==="
+        echo "AndroidManifest.xml:"
+        grep -n "android:name=" android/app/src/main/AndroidManifest.xml | grep applicationName
+        echo ""
+        echo "MainActivity.kt:"
+        cat android/app/src/main/kotlin/com/fertpath/fertilityapp/MainActivity.kt
+        echo ""
+        echo "✅ Android V2 embedding should be fixed"
     
     - name: Get packages
       run: flutter pub get
@@ -36,7 +55,7 @@ jobs:
     
     - name: Verify localization files
       run: |
-        echo "Checking generated files..."
+        echo "=== Verifying Generated Files ==="
         if [ -f "lib/l10n/app_localizations.dart" ]; then
           echo "✅ Localization files generated successfully"
           ls -la lib/l10n/
