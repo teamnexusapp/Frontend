@@ -31,17 +31,17 @@ class _SupportScreenState extends State<SupportScreen> {
                 children: [
                   Text(
                     'Need help?',
-                    style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   SizedBox(height: 16),
                   Text(
                     'Contact us at support@nexusfertility.com',
-                    style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   SizedBox(height: 16),
                   Text(
                     'Or call us at +1 (555) 123-4567',
-                    style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ],
               ),

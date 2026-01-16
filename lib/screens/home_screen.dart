@@ -511,7 +511,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(width: 16),
                 _buildFeatureCard(
-                  icon: Icons.pregnancy,
+                  icon: Icons.child_care,
                   label: 'Predictions',
                   onTap: () {
                     // Navigate to prediction screen
