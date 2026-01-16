@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'audio_article_player_screen.dart';
 
 class ArticleReadingScreen extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String articleText;
+  final String? audioUrl; // Optional audio URL
 
   const ArticleReadingScreen({
     Key? key,
     required this.imageUrl,
     required this.title,
     required this.articleText,
+    this.audioUrl,
   }) : super(key: key);
 
   @override
@@ -41,7 +44,17 @@ class ArticleReadingScreen extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.volume_up, color: Colors.white),
                   onPressed: () {
-                    // TODO: Implement TTS/audio play
+                    // Navigate to audio player screen
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => AudioArticlePlayerScreen(
+                          imageUrl: imageUrl,
+                          title: title,
+                          articleText: articleText,
+                          audioUrl: audioUrl,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],

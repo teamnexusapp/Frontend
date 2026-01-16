@@ -4,6 +4,7 @@ import 'phone_signup_screen.dart';
 import 'forget_password_flow.dart';
 import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
+import '../../services/health_check_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -360,6 +361,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
+      // Wake up the backend if it's sleeping (Render free tier)
+      await HealthCheckService.wakeUpBackend();
+      
       final authService = Provider.of<AuthService>(context, listen: false);
       
       // Users enter their email address for login

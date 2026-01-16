@@ -7,11 +7,13 @@ class SwipeableGreenCalendar extends StatefulWidget {
     super.key,
     required this.initialMonth,
     required this.selectedDates,
+    required this.nextPeriodDays,
     this.onDateToggle,
   });
 
   final DateTime initialMonth;
   final Set<DateTime> selectedDates;
+  final Set<DateTime> nextPeriodDays;
   final ValueChanged<DateTime>? onDateToggle;
 
   @override
@@ -96,6 +98,7 @@ class _SwipeableGreenCalendarState extends State<SwipeableGreenCalendar> {
               return _MonthGrid(
                 month: month,
                 selectedDates: _localSelection,
+                nextPeriodDays: widget.nextPeriodDays,
                 onToggle: _handleDateToggle,
               );
             },
@@ -172,14 +175,18 @@ class _MonthGrid extends StatelessWidget {
   const _MonthGrid({
     required this.month,
     required this.selectedDates,
+    required this.nextPeriodDays,
     required this.onToggle,
   });
 
   final DateTime month;
   final Set<DateTime> selectedDates;
+  final Set<DateTime> nextPeriodDays;
   final ValueChanged<DateTime> onToggle;
 
   static const Color _accent = Color(0xFFA8D497);
+
+  // Removed local period prediction logic. Use period/cycle data from backend only.
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +197,8 @@ class _MonthGrid extends StatelessWidget {
     final daysInPrevMonth = DateUtils.getDaysInMonth(prevMonth.year, prevMonth.month);
 
     final totalCells = (firstWeekday + daysInMonth) <= 35 ? 35 : 42;
+
+    // Use backend-driven period days only. Removed getNextPeriodDays().
 
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
@@ -214,10 +223,13 @@ class _MonthGrid extends StatelessWidget {
           );
 
           final isSelected = selectedDates.any((d) => _isSameDay(d, dayInfo.date));
+          final isNextPeriodDay = nextPeriodDays.any((d) => _isSameDay(d, dayInfo.date));
           final textColor = dayInfo.isOutside
               ? _accent.withOpacity(0.4)
-              : isSelected
-                  ? const Color(0xFF2E683D)
+              : isNextPeriodDay
+                ? Colors.red
+                : isSelected
+                  ? const Color(0xFFD32F2F)
                   : Colors.white;
 
           return Center(
@@ -229,7 +241,14 @@ class _MonthGrid extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isSelected ? _accent : Colors.transparent,
+                  color: isNextPeriodDay
+                    ? Colors.transparent
+                    : isSelected
+                      ? const Color(0xFFFFE5E5)
+                      : Colors.transparent,
+                  border: isNextPeriodDay
+                    ? Border.all(color: Colors.red, width: 2, style: BorderStyle.solid)
+                    : null,
                 ),
                 alignment: Alignment.center,
                 child: Text(

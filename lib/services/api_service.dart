@@ -173,11 +173,12 @@ class ApiService {
     required String email,
     required String otp,
     required String verificationId,
+    int retryCount = 0,
   }) async {
     try {
       final headers = await getHeaders();
       final url = Uri.parse('$baseUrl/auth/verify-otp');
-      debugPrint('Verifying OTP request to: $url');
+      debugPrint('Verifying OTP request to: $url (attempt ${retryCount + 1})');
       
       final requestBody = {
         'verification_id': verificationId,
@@ -202,6 +203,15 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
+      } else if (response.statusCode >= 500 && retryCount < 2) {
+        debugPrint('Server error, retrying in 5 seconds...');
+        await Future.delayed(const Duration(seconds: 5));
+        return verifyOtp(
+          email: email,
+          otp: otp,
+          verificationId: verificationId,
+          retryCount: retryCount + 1,
+        );
       } else {
         throw ApiException(
           statusCode: response.statusCode,
@@ -209,6 +219,16 @@ class ApiService {
         );
       }
     } on TimeoutException catch (e) {
+      if (retryCount < 2) {
+        debugPrint('Verify OTP timeout, retrying in 5 seconds...');
+        await Future.delayed(const Duration(seconds: 5));
+        return verifyOtp(
+          email: email,
+          otp: otp,
+          verificationId: verificationId,
+          retryCount: retryCount + 1,
+        );
+      }
       debugPrint('Verify OTP timeout error: $e');
       rethrow;
     } catch (e) {
@@ -307,6 +327,12 @@ class ApiService {
             message: _extractErrorMessage(response),
           );
         }
+      } else if (response.statusCode == 404) {
+        // Endpoint not found
+        throw ApiException(
+          statusCode: response.statusCode,
+          message: 'Login endpoint not found. Backend may not be properly configured.',
+        );
       } else if (response.statusCode >= 500 && retryCount < 2) {
         // Backend might be waking up (Render free tier), retry after delay
         debugPrint('Server error during login, retrying in 5 seconds...');
@@ -583,9 +609,20 @@ class ApiService {
       if (data is Map && data['message'] != null) {
         return data['message'].toString();
       }
-      return 'Request failed with status ${response.statusCode}';
     } catch (e) {
-      return 'Request failed with status ${response.statusCode}';
+      // Ignore parsing errors
+    }
+    
+    // Handle specific status codes
+    switch (response.statusCode) {
+      case 404:
+        return 'The requested resource was not found. Please check the backend configuration.';
+      case 500:
+        return 'The backend server encountered an error. It may be starting up - please try again.';
+      case 503:
+        return 'The backend server is temporarily unavailable. This may be because the server is starting up. Please wait a moment and try again.';
+      default:
+        return 'Request failed with status ${response.statusCode}';
     }
   }
 }

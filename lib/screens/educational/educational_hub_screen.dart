@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme.dart';
 import 'article_reading_screen.dart';
+import 'audio_article_player_screen.dart';
 
 class EducationalHubScreen extends StatefulWidget {
   const EducationalHubScreen({super.key});
@@ -19,6 +20,7 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
       'excerpt':
           'Conception happens when sperm fertilizes an egg and the embryo implants. Learn when the fertile window opens and how health, timing, and patience support TTC.',
       'image': 'https://picsum.photos/800/300?random=101',
+      'audioUrl': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Placeholder
       'content': '''Getting pregnant happens when a sperm fertilizes an egg and the fertilized egg successfully implants in the uterus. Understanding this helps improve your chances.
 
 Understanding the fertile window
@@ -46,6 +48,7 @@ Even with perfect timing, it can take months to conceive. That is normal and doe
       'excerpt':
           'Ovulation is brief (12-24 hours), but sperm can live up to five days. Knowing this window helps plan or prevent pregnancy.',
       'image': 'https://picsum.photos/800/300?random=102',
+      'audioUrl': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', // Placeholder
       'content': '''Ovulation is when an ovary releases a mature egg. The egg lives about 12 to 24 hours, and can be fertilized only in that short time.
 
 The fertile window
@@ -66,6 +69,7 @@ Knowing how long ovulation lasts and how long sperm survive can guide timing for
       'excerpt':
           'In many Nigerian and African communities, pressure to conceive is heavy. Infertility is a medical challenge, not a curse or a failure.',
       'image': 'https://picsum.photos/800/300?random=103',
+      'audioUrl': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', // Placeholder
       'content': '''If you are trying to conceive and it has not happened yet, remember this: infertility is not a curse or a punishment.
 
 In many Nigerian and African societies, motherhood is tightly linked to identity, and delays can bring painful pressure. Terms like "barren" or "waiting on God" can leave emotional wounds, but difficulty conceiving is a medical and biological challenge, not a spiritual verdict.
@@ -94,6 +98,7 @@ Be kind to yourself. Protect your mental and emotional health. Surround yourself
                 imageUrl: article['image'] ?? '',
                 title: article['title'] ?? '',
                 articleText: article['content'] ?? article['excerpt'] ?? '',
+                audioUrl: article['audioUrl'], // Pass audio URL
               ),
             ),
           );
@@ -178,25 +183,40 @@ Be kind to yourself. Protect your mental and emotional health. Surround yourself
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        Container(
-                          height: 32,
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF2E683D),
-                          ),
-                          child: Row(
-                            children: const [
-                              Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                              SizedBox(width: 4),
-                              Text(
-                                'Listen',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                        GestureDetector(
+                          onTap: () {
+                            // Navigate directly to audio player
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => AudioArticlePlayerScreen(
+                                  imageUrl: article['image'] ?? '',
+                                  title: article['title'] ?? '',
+                                  articleText: article['content'] ?? article['excerpt'] ?? '',
+                                  audioUrl: article['audioUrl'],
                                 ),
                               ),
-                            ],
+                            );
+                          },
+                          child: Container(
+                            height: 32,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF2E683D),
+                            ),
+                            child: Row(
+                              children: const [
+                                Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Listen',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
