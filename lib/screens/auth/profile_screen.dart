@@ -64,11 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onPressed: () async {
                             setState(() => _loading = true);
                             try {
-                              final updated = await auth.updateUserProfile(
-                                userId: user.id ?? '',
-                                firstName: _firstName.text.trim().isEmpty ? null : _firstName.text.trim(),
-                                lastName: _lastName.text.trim().isEmpty ? null : _lastName.text.trim(),
-                              );
+                              final updated = await auth.updateUserProfile();
                               if (updated != null) {
                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile updated')));
                               }

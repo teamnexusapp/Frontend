@@ -189,23 +189,23 @@ class AuthService with ChangeNotifier {
 
   // Update user profile
   Future<User?> updateUserProfile({
-    String? firstName,
-    String? lastName,
-    String? dateOfBirth,
-    String? gender,
-    String? profileImagePath,
-    String? preferredLanguage,
+    int? age,
+    int? cycleLength,
+    String? lastPeriodDate,
+    String? ttcHistory,
+    String? faithPreference,
+    bool? audioPreference,
   }) async {
     try {
       if (_currentUser == null) throw Exception('No user logged in');
       
       final response = await _apiService.updateProfile(
-        firstName: firstName,
-        lastName: lastName,
-        dateOfBirth: dateOfBirth,
-        gender: gender,
-        profileImageUrl: profileImagePath,
-        languagePreference: preferredLanguage,
+        age: age,
+        cycleLength: cycleLength,
+        lastPeriodDate: lastPeriodDate,
+        ttcHistory: ttcHistory,
+        faithPreference: faithPreference,
+        audioPreference: audioPreference,
       );
       
       _currentUser = User.fromJson(response);
