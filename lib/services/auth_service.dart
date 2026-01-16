@@ -236,15 +236,26 @@ class AuthService with ChangeNotifier {
         await _apiService.saveToken(response['access_token']);
       }
       
-      // Extract user data
-      final userData = response['user'] ?? response;
-      _currentUser = User.fromJson(userData);
+      // Get user profile after login
+      final userResponse = await _apiService.getProfile();
+      
+      if (userResponse == null) {
+        throw Exception('Failed to fetch user profile');
+      }
+      
+      _currentUser = User.fromJson(userResponse);
+      
+      if (_currentUser == null || (_currentUser!.email.isEmpty)) {
+        throw Exception('Invalid user data: Email is required');
+      }
+      
       await _saveUserToPrefs(_currentUser!);
       _authStateController.add(_currentUser);
       notifyListeners();
       
       return _currentUser!;
     } catch (e) {
+      if (kDebugMode) print('Login error: $e');
       rethrow;
     }
   }

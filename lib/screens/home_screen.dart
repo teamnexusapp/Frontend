@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
+import '../services/api_service.dart';
 import '../models/user.dart';
 import 'profile/profile_screen.dart';
 import 'support/support_screen.dart';
@@ -9,6 +12,7 @@ import 'tracking/log_symptom_screen.dart';
 import 'onboarding/welcome_screen.dart';
 import 'educational/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
+import 'gender_prediction_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -19,8 +23,99 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Map<String, dynamic>? _insightData;
+  String? _insightText;
+  
+  // Default fallback data
+  static const Map<String, dynamic> _defaultCycleSummary = {
+    'fertile_period_start': 'N/A',
+    'fertile_period_end': 'N/A',
+    'ovulation_day': 'N/A',
+  };
+  static const String _defaultInsightText =
+      'Track your cycle and get personalized insights here. Once you log your symptoms and cycle data, helpful tips and predictions will appear!';
+  
   int _selectedIndex = 0;
   bool _showSideMenu = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _sendInsightsPost();
+  }
+
+  Future<void> _sendInsightsPost() async {
+    try {
+      final api = ApiService();
+      final headers = await api.getHeaders(includeAuth: true);
+      
+      // Fetch user profile to get period_length, cycle_length, last_period_date
+      Map<String, dynamic>? profile;
+      try {
+        profile = await api.getProfile();
+      } catch (e) {
+        // If fetching profile fails, show fallback data
+        setState(() {
+          _insightData = Map<String, dynamic>.from(_defaultCycleSummary);
+          _insightText = _defaultInsightText;
+        });
+        return;
+      }
+      
+      int? cycleLength;
+      int? periodLength;
+      String? lastPeriodDate;
+      
+      if (profile != null) {
+        cycleLength = profile['cycle_length'] is int 
+            ? profile['cycle_length'] 
+            : int.tryParse(profile['cycle_length']?.toString() ?? '');
+        periodLength = profile['period_length'] is int 
+            ? profile['period_length'] 
+            : int.tryParse(profile['period_length']?.toString() ?? '');
+        lastPeriodDate = profile['last_period_date']?.toString();
+      }
+      
+      final url = Uri.parse('${ApiService.baseUrl}/insights/insights');
+      final body = {
+        'cycle_length': cycleLength ?? 0,
+        'last_period_date': lastPeriodDate ?? '',
+        'period_length': periodLength ?? 0,
+        'symptoms': ['none'],
+      };
+      
+      await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(body),
+      );
+      
+      // Now GET insights/insights
+      final getResponse = await http.get(url, headers: headers);
+      if (getResponse.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(getResponse.body);
+        if (data.isNotEmpty && data[0] is Map<String, dynamic>) {
+          setState(() {
+            _insightData = data[0];
+            _insightText = data[0]['insight_text']?.toString() ?? _defaultInsightText;
+          });
+          return;
+        }
+      }
+      
+      // If no data or bad response, show fallback
+      setState(() {
+        _insightData = Map<String, dynamic>.from(_defaultCycleSummary);
+        _insightText = _defaultInsightText;
+      });
+    } catch (e) {
+      debugPrint('Failed to send/get insights: $e');
+      setState(() {
+        _insightData = Map<String, dynamic>.from(_defaultCycleSummary);
+        _insightText = _defaultInsightText;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final user = auth.currentUser;
     
     return Scaffold(
-      appBar: _selectedIndex == 0 ? _buildHomeAppBar() : null,
+      appBar: null,
       body: Stack(
         children: [
           IndexedStack(
@@ -53,14 +148,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: GestureDetector(
                 onTap: () {},
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: MediaQuery.of(context).size.width * 0.6,
                   height: MediaQuery.of(context).size.height,
                   decoration: const BoxDecoration(
                     color: Color(0xFFA8D497),
                   ),
                   child: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 30, right: 20),
+                      padding: const EdgeInsets.only(left: 15, top: 30, right: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -82,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _buildProfileCard(user),
                           const SizedBox(height: 20),
                           _buildMenuItem(
-                            label: 'Profile & Settings',
+                            label: 'Profile',
                             icon: Icons.person_outline,
                             onTap: () {
                               _toggleSideMenu();
@@ -138,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               }
                             },
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 12),
                         ],
                       ),
                     ),
@@ -155,51 +250,26 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         selectedItemColor: const Color(0xFF2E683D),
         unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
+        showUnselectedLabels: false,
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home_outlined),
-            activeIcon: const Icon(Icons.home),
-            label: AppLocalizations.of(context)!.home,
+            icon: const Icon(Icons.home),
+            label: _selectedIndex == 0 ? AppLocalizations.of(context)!.home : '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.school_outlined),
-            activeIcon: const Icon(Icons.school),
-            label: AppLocalizations.of(context)!.learn,
+            icon: const Icon(Icons.school),
+            label: _selectedIndex == 1 ? AppLocalizations.of(context)!.learn : '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.timeline_outlined),
-            activeIcon: const Icon(Icons.timeline),
-            label: 'Track',
+            icon: const Icon(Icons.timeline),
+            label: _selectedIndex == 2 ? 'Track' : '',
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.support_agent_outlined),
-            activeIcon: const Icon(Icons.support_agent),
-            label: 'Support',
+            icon: const Icon(Icons.support_agent),
+            label: _selectedIndex == 3 ? 'Support' : '',
           ),
         ],
       ),
-    );
-  }
-
-  AppBar? _buildHomeAppBar() {
-    return AppBar(
-      backgroundColor: const Color(0xFF2E683D),
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.menu, color: Color(0xFFA8D497)),
-        onPressed: _toggleSideMenu,
-      ),
-      title: const Text(
-        'Home',
-        style: TextStyle(
-          color: Color(0xFFA8D497),
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      centerTitle: true,
     );
   }
 
@@ -224,22 +294,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          _buildAvatar(user, radius: 28),
-          const SizedBox(width: 12),
+          _buildAvatar(user, radius: 22),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,21 +310,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   displayName,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF2E683D),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   email,
                   style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey,
+                    fontSize: 12,
+                    color: Colors.black54,
                   ),
-                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -279,33 +339,25 @@ class _HomeScreenState extends State<HomeScreen> {
     Color? iconColor,
     Color? textColor,
   }) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: iconColor ?? const Color(0xFF2E683D),
-              size: 24,
-            ),
-            const SizedBox(width: 16),
+            Icon(icon, color: iconColor ?? const Color(0xFF2E683D), size: 22),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
+                  fontFamily: 'Poppins',
                   color: textColor ?? const Color(0xFF2E683D),
                 ),
               ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: iconColor ?? const Color(0xFF2E683D),
-              size: 20,
             ),
           ],
         ),
@@ -350,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildHomeTab() {
     final size = MediaQuery.of(context).size;
-    final heroHeight = size.height * 0.45;
+    final heroHeight = size.height * 0.5;
     const buttonHeight = 64.0;
     
     return SingleChildScrollView(
@@ -375,6 +427,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Stack(
                       children: [
+                        // Hamburger menu icon
+                        Positioned(
+                          top: 30,
+                          left: 0,
+                          child: GestureDetector(
+                            onTap: _toggleSideMenu,
+                            child: const Icon(
+                              Icons.menu,
+                              color: Color(0xFFA8D497),
+                              size: 28,
+                            ),
+                          ),
+                        ),
+                        // Decorative semicolon
                         Positioned(
                           bottom: 50,
                           right: -40,
@@ -395,39 +461,40 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 80, left: 24),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Today's fertility insight",
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xFFA8D497),
+                        // Insight text
+                        if (_insightText != null && _insightText!.isNotEmpty)
+                          Positioned(
+                            bottom: 80,
+                            left: 0,
+                            right: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Today's Fertility Insight",
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      color: Color(0xFFA8D497),
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                const SizedBox(height: 12),
-                                const Text(
-                                  'Your next fertility window is from\nDec 23-27',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    _insightText!,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                    ),
+                                    textAlign: TextAlign.left,
                                   ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -438,15 +505,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   right: 0,
                   child: Center(
                     child: SizedBox(
-                      width: 320,
+                      width: 280,
                       height: buttonHeight,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const CalendarTabScreen(),
-                            ),
-                          );
+                          setState(() {
+                            _selectedIndex = 2; // Navigate to Calendar tab
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFA8D497),
@@ -464,14 +529,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(
                               'Log symptoms',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'Poppins',
                                 color: Color(0xFF2E683D),
                               ),
                             ),
-                            SizedBox(width: 12),
-                            Icon(Icons.arrow_forward, color: Color(0xFF2E683D)),
                           ],
                         ),
                       ),
@@ -481,20 +544,46 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              "You're doing great! Stay positive and focused!",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF2E683D).withOpacity(0.9),
+          // Cycle summary table (below hero section)
+          if (_insightData != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF2E683D).withOpacity(0.2)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Cycle Summary',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF2E683D),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildSummaryRow(
+                      'Fertile Window',
+                      _insightData!['fertile_period_start'] != null && 
+                          _insightData!['fertile_period_end'] != null
+                          ? '${_insightData!['fertile_period_start']} - ${_insightData!['fertile_period_end']}'
+                          : 'N/A',
+                    ),
+                    const Divider(),
+                    _buildSummaryRow(
+                      'Ovulation Day',
+                      _insightData!['ovulation_day']?.toString() ?? 'N/A',
+                    ),
+                  ],
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
@@ -509,52 +598,47 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
                   },
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 _buildFeatureCard(
                   icon: Icons.child_care,
-                  label: 'Predictions',
+                  label: 'Gender\nPredictions',
                   onTap: () {
-                    // Navigate to prediction screen
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const GenderPredictionScreen()),
+                    );
                   },
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Quick Stats',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildStatItem('Cycle Day', '15'),
-                      _buildStatItem('Next Period', 'in 13 days'),
-                      _buildStatItem('Fertile', 'Tomorrow'),
-                    ],
-                  ),
-                ],
-              ),
+          const SizedBox(height: 40),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 40),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF2E683D),
+            ),
+          ),
         ],
       ),
     );
@@ -565,67 +649,44 @@ class _HomeScreenState extends State<HomeScreen> {
     required String label,
     required VoidCallback onTap,
   }) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 140,
-          decoration: BoxDecoration(
-            color: const Color(0xFF2E683D),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 141,
+        height: 120,
+        decoration: BoxDecoration(
+          color: const Color(0xFF2E683D),
+          borderRadius: BorderRadius.zero,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: const Color(0xFFA8D497),
+              size: 24,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Poppins',
+                color: Color(0xFFA8D497),
               ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: const Color(0xFFA8D497),
-                size: 36,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFFA8D497),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStatItem(String label, String value) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF2E683D),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
-        ),
-      ],
     );
   }
 }
