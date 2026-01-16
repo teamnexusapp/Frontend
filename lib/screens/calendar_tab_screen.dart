@@ -282,21 +282,18 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-                        // Back button
-                        Positioned(
-                          top: 10,
-                          left: 10,
-                          child: IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            tooltip: 'Back to Home',
-                          ),
-                        ),
+            Positioned(
+              top: 10,
+              left: 10,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                onPressed: () => Navigator.of(context).pop(),
+                tooltip: 'Back to Home',
+              ),
+            ),
             Column(
-                              const SizedBox(height: 40),
               children: [
+                const SizedBox(height: 12),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
@@ -313,17 +310,12 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                             SwipeableGreenCalendar(
                               initialMonth: DateTime.now(),
                               selectedDates: _selectedCalendarDays,
-                                                            nextPeriodDays: _nextPeriodDays,
                               onDateToggle: _toggleCalendarDate,
                             ),
                           ] else ...[
                             const SizedBox(height: 8),
                             GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isCalendarCollapsed = false;
-                                });
-                              },
+                              onTap: () => setState(() => _isCalendarCollapsed = false),
                               child: Row(
                                 children: [
                                   Text(
@@ -335,11 +327,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  const Icon(
-                                    Icons.expand_more,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
+                                  const Icon(Icons.expand_more, color: Colors.white, size: 20),
                                 ],
                               ),
                             ),
@@ -368,45 +356,49 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                     child: RefreshIndicator(
                       onRefresh: _fetchLoggedSymptoms,
                       child: SingleChildScrollView(
-                      controller: _calendarScrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Logged Symptoms Section
-                          const Text(
-                            'Logged Symptoms',
-                            style: TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontFamily: 'Poppins',
+                        controller: _calendarScrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Logged Symptoms',
+                              style: TextStyle(
+                                fontSize: 19,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontFamily: 'Poppins',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 18),
-                                                    if (_isSymptomsLoading)
-                                                      const Center(
-                                                        child: Padding(
-                                                          padding: EdgeInsets.all(24),
-                                                          child: CircularProgressIndicator(),
-                                                        ),
-                                                      )
-                                                    else ...[
-                          if (_loggedSymptoms.isEmpty)
-                            const Text('No symptoms logged yet.', style: TextStyle(color: Colors.grey)),
-                          if (_loggedSymptoms.isNotEmpty)
-                            ..._loggedSymptoms.map((symptom) => _buildLoggedSymptomItem(symptom, Icons.check_circle, const Color(0xFF2E683D))),
+                            const SizedBox(height: 18),
+                            if (_isSymptomsLoading)
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(24),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            else ...[
+                              if (_loggedSymptoms.isEmpty)
+                                const Text('No symptoms logged yet.', style: TextStyle(color: Colors.grey)),
+                              if (_loggedSymptoms.isNotEmpty)
+                                ..._loggedSymptoms.map(
+                                  (symptom) => _buildLoggedSymptomItem(
+                                    symptom,
+                                    Icons.check_circle,
+                                    const Color(0xFF2E683D),
+                                  ),
+                                ),
+                            ],
+                            const SizedBox(height: 80),
                           ],
-                          const SizedBox(height: 80),
-                                              ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            // Floating Action Button
             Positioned(
               bottom: 32,
               right: 32,
@@ -439,56 +431,52 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     );
   }
 
-
   Widget _buildLoggedSymptomItem(String symptom, IconData icon, Color iconColor) {
-        // Always display as '<section> - <symptom>'
-        String displaySymptom = symptom;
-        String sendSymptom = symptom;
-        if (symptom.contains(':')) {
-          final parts = symptom.split(':');
-          if (parts.length == 2) {
-            displaySymptom = parts[0].trim() + ' - ' + parts[1].trim();
-            sendSymptom = displaySymptom;
-          }
-        } else if (symptom.contains('-')) {
-          final parts = symptom.split('-');
-          if (parts.length == 2) {
-            displaySymptom = parts[0].trim() + ' - ' + parts[1].trim();
-            sendSymptom = displaySymptom;
-          }
-        }
+    String displaySymptom = symptom;
+    String sendSymptom = symptom;
+    if (symptom.contains(':')) {
+      final parts = symptom.split(':');
+      if (parts.length == 2) {
+        displaySymptom = parts[0].trim() + ' - ' + parts[1].trim();
+        sendSymptom = displaySymptom;
+      }
+    } else if (symptom.contains('-')) {
+      final parts = symptom.split('-');
+      if (parts.length == 2) {
+        displaySymptom = parts[0].trim() + ' - ' + parts[1].trim();
+        sendSymptom = displaySymptom;
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: GestureDetector(
-        onTap: () {
-          // Send the full displaySymptom string when tapped
-          debugPrint('Symptom sent: ' + sendSymptom);
-        },
+        onTap: () => debugPrint('Symptom sent: ' + sendSymptom),
         child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.12),
-              shape: BoxShape.circle,
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: iconColor, size: 22),
             ),
-            child: Icon(icon, color: iconColor, size: 22),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              displaySymptom,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                displaySymptom,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Poppins',
                 ),
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins',
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

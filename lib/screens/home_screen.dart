@@ -354,7 +354,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Poppins',
-                  fontFamily: 'Poppins',
                   color: textColor ?? const Color(0xFF2E683D),
                 ),
               ),
