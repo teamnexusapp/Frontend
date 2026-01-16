@@ -6,7 +6,6 @@ import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
 import '../onboarding/welcome_screen.dart';
-import 'package:nexus_fertility_app/screens/home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -464,15 +463,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             setState(() {
               selectedLanguage = languageOptions[newCode]!;
             });
-            try {
-              await ApiService().updateLanguage(newCode);
-              // Only refetch data, do not rebuild localization
-              if (HomeScreen.refreshInsights != null) {
-                HomeScreen.refreshInsights!();
-              }
-            } catch (e) {
-              debugPrint('Failed to update language: $e');
-            }
+            // Language preference updated - can be persisted via API if needed
+            debugPrint('Language changed to: $newCode');
           },
         ),
       ],

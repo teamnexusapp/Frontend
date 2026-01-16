@@ -309,6 +309,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                             SwipeableGreenCalendar(
                               initialMonth: DateTime.now(),
                               selectedDates: _selectedCalendarDays,
+                              nextPeriodDays: const {},
                               onDateToggle: _toggleCalendarDate,
                             ),
                           ] else ...[
