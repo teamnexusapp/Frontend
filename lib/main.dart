@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +11,32 @@ import 'services/localization_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme.dart';
 
+Future<void> _initializeFirebase() async {
+  try {
+    if (kIsWeb) {
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: "AIzaSyC1VNI1fON-XfBvFszUTt0oZwHtsgaqcYs",
+          authDomain: "fertility-app-backend-5578a.firebaseapp.com",
+          projectId: "fertility-app-backend-5578a",
+          storageBucket: "fertility-app-backend-5578a.firebasestorage.app",
+          messagingSenderId: "293422244200",
+          appId: "1:293422244200:web:your-web-app-id",
+        ),
+      );
+    } else {
+      await Firebase.initializeApp();
+    }
+    debugPrint('Firebase initialized successfully');
+  } catch (e) {
+    debugPrint('Firebase initialization error: $e');
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  
+  await _initializeFirebase();
 
   final prefs = await SharedPreferences.getInstance();
   final saved = prefs.getString('theme_mode') ?? 'system';

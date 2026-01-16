@@ -12,7 +12,7 @@ services:
       export PATH="$PATH:$(pwd)/flutter/bin" &&
       flutter config --enable-web &&
       flutter pub get &&
-      flutter build web --release
+      flutter build web --release --web-renderer html
     staticPublishPath: build/web
     envVars:
       - key: API_URL
