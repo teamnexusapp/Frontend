@@ -27,21 +27,36 @@ jobs:
         cache: true
         cache-key: flutter-${{ env.FLUTTER_VERSION }}
     
-    - name: Clear Android build cache
+    - name: Clear Flutter and Android build cache
       run: |
-        echo "=== Clearing Android build cache ==="
+        echo "=== Clearing Flutter and Android build cache ==="
         rm -rf android/app/build
         rm -rf android/build
         rm -rf .dart_tool
+        rm -rf build
+        rm -rf pubspec.lock
         echo "Cache cleared"
     
-    - name: Verify Android fixes
+    - name: Verify Android V2 embedding
       run: |
         echo "=== Verifying Android V2 embedding ==="
         if grep -q 'android:name="\${applicationName}"' android/app/src/main/AndroidManifest.xml; then
-          echo "✅ Android V2 embedding fixed"
+          echo "✅ Android V2 embedding configured"
         else
-          echo "❌ Android V2 embedding not fixed"
+          echo "❌ Android V2 embedding not configured"
+          exit 1
+        fi
+        
+        if grep -q 'flutterEmbedding.*value="2"' android/app/src/main/AndroidManifest.xml; then
+          echo "✅ Flutter embedding v2 metadata found"
+        else
+          echo "⚠️  Flutter embedding v2 metadata not found"
+        fi
+        
+        if [ -f "android/app/src/main/kotlin/com/fertpath/fertilityapp/MainActivity.kt" ]; then
+          echo "✅ MainActivity configured correctly"
+        else
+          echo "❌ MainActivity not found"
           exit 1
         fi
     
@@ -63,7 +78,10 @@ jobs:
         fi
     
     - name: Get packages
-      run: flutter pub get
+      run: |
+        echo "=== Running flutter pub get ==="
+        flutter pub get
+        echo "✅ Dependencies resolved successfully"
     
     - name: Generate localizations
       run: flutter gen-l10n
