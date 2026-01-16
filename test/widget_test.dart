@@ -1,30 +1,53 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// Widget tests for the Nexus Fertility App
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:nexus_fertility_app/main.dart';
+import 'package:nexus_fertility_app/screens/home_screen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build the counter page directly and trigger a frame.
-    await tester.pumpWidget(const MaterialApp(home: MyHomePage(title: 'Test')));
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('App loads and shows HomeScreen', (WidgetTester tester) async {
+    // Build the app
+    await tester.pumpWidget(const MyApp(initialTheme: 'system'));
+    
+    // Wait for async operations to complete
+    await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Verify that HomeScreen is present (check for bottom navigation or key widgets)
+    expect(find.byType(HomeScreen), findsOneWidget);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('App initializes with correct theme', (WidgetTester tester) async {
+    // Build app with light theme
+    await tester.pumpWidget(const MyApp(initialTheme: 'light'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    // Get the MaterialApp widget
+    final MaterialApp materialApp = tester.widget(find.byType(MaterialApp).first);
+    
+    // Verify theme mode is set correctly
+    expect(materialApp.themeMode, equals(ThemeMode.light));
+  });
+
+  testWidgets('App initializes with dark theme', (WidgetTester tester) async {
+    // Build app with dark theme
+    await tester.pumpWidget(const MyApp(initialTheme: 'dark'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    // Get the MaterialApp widget
+    final MaterialApp materialApp = tester.widget(find.byType(MaterialApp).first);
+    
+    // Verify theme mode is set correctly
+    expect(materialApp.themeMode, equals(ThemeMode.dark));
+  });
+
+  testWidgets('HomeScreen has bottom navigation', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp(initialTheme: 'system'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    // Check if bottom navigation bar exists
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
   });
 }
