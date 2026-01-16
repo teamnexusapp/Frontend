@@ -260,7 +260,6 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           await api.updateProfile(
             age: age,
             cycleLength: cycleLength,
-            periodLength: periodLength,
             lastPeriodDate: _lastPeriodDate,
             ttcHistory: ttcHistory,
             faithPreference: faithPreference,
