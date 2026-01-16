@@ -6,15 +6,17 @@ void main() {
   group('AuthService Tests', () {
     late AuthService authService;
 
-    setUp(() {
+    setUp(() async {
       authService = AuthService();
+      // Wait for async initialization
+      await Future.delayed(const Duration(milliseconds: 100));
     });
 
-    test('getCurrentUser returns null when no user is logged in', () {
+    test('getCurrentUser returns null when no user is logged in', () async {
       expect(authService.getCurrentUser(), isNull);
     });
 
-    test('currentUser getter returns null initially', () {
+    test('currentUser getter returns null initially', () async {
       expect(authService.currentUser, isNull);
     });
 
@@ -23,7 +25,7 @@ void main() {
       expect(authService.currentUser, isNull);
     });
 
-    test('authStateChanges stream is available', () {
+    test('authStateChanges stream is available', () async {
       expect(authService.authStateChanges, isNotNull);
       expect(authService.authStateChanges, isA<Stream<User?>>());
     });
