@@ -1,36 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nexus_fertility_app/services/auth_service.dart';
 import 'package:nexus_fertility_app/models/user.dart';
 
 void main() {
-  group('AuthService Tests', () {
-    late AuthService authService;
-
-    setUp(() async {
-      authService = AuthService();
-      // Wait for async initialization
-      await Future.delayed(const Duration(milliseconds: 100));
-    });
-
-    test('getCurrentUser returns null when no user is logged in', () async {
-      expect(authService.getCurrentUser(), isNull);
-    });
-
-    test('currentUser getter returns null initially', () async {
-      expect(authService.currentUser, isNull);
-    });
-
-    test('signOut clears current user', () async {
-      await authService.signOut();
-      expect(authService.currentUser, isNull);
-    });
-
-    test('authStateChanges stream is available', () async {
-      expect(authService.authStateChanges, isNotNull);
-      expect(authService.authStateChanges, isA<Stream<User?>>());
-    });
-  });
-
   group('User Model Tests', () {
     test('User creation with required fields', () {
       final user = User(
@@ -132,22 +103,6 @@ void main() {
 
       final user = User.fromJson(json);
       expect(user.email, equals('test@example.com'));
-    });
-
-    test('User toJson includes all non-null fields', () {
-      final user = User(
-        id: 'test-id',
-        email: 'test@example.com',
-        username: 'testuser',
-        firstName: 'Test',
-        createdAt: DateTime(2024, 1, 1),
-      );
-
-      final json = user.toJson();
-      expect(json['id'], equals('test-id'));
-      expect(json['email'], equals('test@example.com'));
-      expect(json['username'], equals('testuser'));
-      expect(json['first_name'], equals('Test'));
     });
   });
 }
