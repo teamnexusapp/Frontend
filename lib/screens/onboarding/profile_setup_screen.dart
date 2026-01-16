@@ -1,13 +1,104 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
-import '../../services/auth_service.dart';
+﻿import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';\nimport 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import '../constants/app_colors.dart';\n
+class ProfileSetupScreen extends StatefulWidget {
+  const ProfileSetupScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
+}
+
+class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
+  final _formKey = GlobalKey<FormState>();
+  int _age = 27;
+  int _cycleLength = 28;
+  DateTime? _lastPeriodDate;
+  bool _audioGuidance = false;
+  bool _acceptTerms = false;
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.profile)),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(l10n.profile, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            _buildFieldLabel('Age'),
+            _buildNumberDropdown(value: _age, items: List.generate(73, (i) => i + 18), onChanged: (v) => setState(() => _age = v)),
+            const SizedBox(height: 16),
+            _buildFieldLabel('Cycle Length'),
+            _buildNumberDropdown(value: _cycleLength, items: List.generate(30, (i) => i + 20), onChanged: (v) => setState(() => _cycleLength = v)),
+            const SizedBox(height: 16),
+            _buildFieldLabel('Last Period Date'),
+            GestureDetector(
+              onTap: _selectDate,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(8)),
+                child: Row(children: [Icon(Icons.calendar_today, color: Colors.grey.shade600), const SizedBox(width: 12), Expanded(child: Text(_lastPeriodDate == null ? l10n.selectDate : MaterialLocalizations.of(context).formatMediumDate(_lastPeriodDate!)))]),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildFieldLabel('Audio Guidance'),
+            Switch(value: _audioGuidance, onChanged: (v) => setState(() => _audioGuidance = v)),
+            const SizedBox(height: 16),
+            Row(children: [
+              Checkbox(value: _acceptTerms, onChanged: (v) => setState(() => _acceptTerms = v ?? false)),
+              Expanded(child: Text('I agree to the Terms and Conditions and Privacy Policy')),
+            ]),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: (_isLoading || !_acceptTerms) ? null : _handleContinue,
+                child: _isLoading ? const CircularProgressIndicator() : Text(l10n.continueText),
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFieldLabel(String label) => Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600));
+
+  Widget _buildNumberDropdown({required int value, required List<int> items, required Function(int) onChanged}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(8)),
+      child: DropdownButton<int>(value: value, isExpanded: true, underline: const SizedBox(), items: items.map((d) => DropdownMenuItem(value: d, child: Text('$d'))).toList(), onChanged: (v) => onChanged(v ?? value)),
+    );
+  }
+
+  Future<void> _selectDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(context: context, initialDate: now, firstDate: DateTime(now.year - 5), lastDate: now);
+    if (picked != null) setState(() => _lastPeriodDate = picked);
+  }
+
+  void _handleContinue() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(milliseconds: 400));
+    setState(() => _isLoading = false);
+    Navigator.of(context).pop();
+  }
+}
+import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';\nimport 'package:provider/provider.dart';
+import '../constants/app_colors.dart';\nimport 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import '../constants/app_colors.dart';\nimport '../../services/auth_service.dart';
+import '../constants/app_colors.dart';\n
 
 import '../../services/auth_error_helper.dart';
-import '../../services/localization_provider.dart';
-import '../../services/api_service.dart';
-
+import '../constants/app_colors.dart';\nimport '../../services/localization_provider.dart';
+import '../constants/app_colors.dart';\nimport '../../services/api_service.dart';
+import '../constants/app_colors.dart';\n
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
 
@@ -24,13 +115,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   // Removed first and last name controllers
   String? _ttcHistory;
   String? _faithPreference;
-<<<<<<< HEAD
-  // Removed language code
-  bool _audioGuidance = false;
-=======
+
   String _language = 'English';
   final bool _audioGuidance = false;
->>>>>>> origin/main
   bool _isLoading = false;
   bool _acceptTerms = false;
 
@@ -52,9 +139,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     'None'
   ];
 
-<<<<<<< HEAD
-  // Removed language options
-=======
+
 
   final List<String> _languages = [
     'English',
@@ -62,7 +147,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     'Igbo',
     'Hausa',
   ];
->>>>>>> origin/main
 
   @override
   Widget build(BuildContext context) {
@@ -190,13 +274,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           Expanded(
                             child: Text(
                               _lastPeriodDate == null
-<<<<<<< HEAD
-                                  ? AppLocalizations.of(context)!.selectDate
-                                  : MaterialLocalizations.of(context).formatMediumDate(_lastPeriodDate!),
-=======
+
                                   ? 'Select date'
                                   : '${_lastPeriodDate!.day}, Dec ${_lastPeriodDate!.year}',
->>>>>>> origin/main
                               style: TextStyle(
                                 fontSize: 16,
                                 color: _lastPeriodDate == null
@@ -237,9 +317,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   ),
                   const SizedBox(height: 20),
 
-<<<<<<< HEAD
-                  // Removed language field
-=======
+
                   // Language
                   _buildFieldLabel('Language'),
                   Container(
@@ -269,7 +347,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     }),
                   ),
                   const SizedBox(height: 20),
->>>>>>> origin/main
 
                   // Audio Guidance
                   _buildFieldLabel('Audio Guidance'),
@@ -282,15 +359,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-<<<<<<< HEAD
-                        const SizedBox.shrink(),
-                        Switch(
-                          value: _audioGuidance,
-                          onChanged: (value) =>
-                              setState(() => _audioGuidance = value),
-                          activeColor: Color(0xFF2D5A3A), // dark green
-                          activeTrackColor: Color(0xFFD4E9D7), // light green track
-=======
+
                         const Text('Amaka', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 4),
                         const Text('amaka.john@email.com', style: TextStyle(color: Colors.grey)),
@@ -302,7 +371,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryLight, foregroundColor: Colors.black),
                             child: const Text('Edit Profile'),
                           ),
->>>>>>> origin/main
                         ),
                       ],
                     ),
@@ -524,5 +592,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     super.dispose();
   }
 }
+
+
 
 

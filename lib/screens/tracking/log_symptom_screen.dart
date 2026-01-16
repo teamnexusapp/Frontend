@@ -1,9 +1,22 @@
-MetaMask
-strong face build patrol crunch powder certain ability much sun rate couple
-0x2ae5de02038cA14ebb93DE6BAe2817F373fb5b1E
-DA8rQRzKyAHFWRddg6PMHqtpX5CrXq9wcDeGvVrjGujE
-bc1qkggla2xcv9lq9xxn82w60dpktf0gaenl2srnk3
-Phantom
-planet hour pledge fiction parrot symbol fox echo trumpet guess hurry digital
-0xa79d02A8E413fDc502751D00f7c92Fba4C1f8743
-6yqG9MKECLHiC78K3fMATZtcbrzVZccNyk6CnweD9Ejv
+﻿import 'package:flutter/material.dart';
+
+class LogSymptomScreen extends StatefulWidget {
+  const LogSymptomScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LogSymptomScreen> createState() => _LogSymptomScreenState();
+}
+
+class _LogSymptomScreenState extends State<LogSymptomScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Log Symptom'),
+      ),
+      body: const Center(
+        child: Text('Symptom logging screen - Basic version'),
+      ),
+    );
+  }
+}
