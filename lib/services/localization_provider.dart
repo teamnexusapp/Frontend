@@ -24,7 +24,8 @@ class LocalizationProvider extends ChangeNotifier {
   final Map<String, Map<String, String>> _translations = {};
 
   LocalizationProvider() {
-    _loadFromPrefs();
+    // Defer loading to avoid null reference errors on web
+    Future.microtask(() => _loadFromPrefs());
     _loadArbTranslations();
   }
 

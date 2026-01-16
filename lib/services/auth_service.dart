@@ -14,7 +14,8 @@ class AuthService with ChangeNotifier {
   String? _lastVerificationId;
 
   AuthService() {
-    _loadUserFromPrefs();
+    // Defer loading to avoid null reference errors on web
+    Future.microtask(() => _loadUserFromPrefs());
   }
 
   Future<void> _loadUserFromPrefs() async {
