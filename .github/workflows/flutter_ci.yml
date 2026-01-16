@@ -35,9 +35,10 @@ jobs:
               run: flutter pub get
 
             - name: Run Flutter test 
-              run: flutter test --coverage || true
+              run: flutter test --coverage
 
             - name: Upload coverage artifact
+              if: always()
               uses: actions/upload-artifact@v4
               with:
                   name: coverage-android
