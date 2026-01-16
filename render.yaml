@@ -5,14 +5,17 @@ services:
     rootDir: .
     autoDeploy: true
     branch: main
-    # WORKING FLUTTER INSTALL + BUILD
+    # Flutter web build with error handling
     buildCommand: |
-      curl -L https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.35.0-stable.tar.xz -o flutter.tar.xz &&
+      curl -L https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.38.0-stable.tar.xz -o flutter.tar.xz &&
       tar xf flutter.tar.xz &&
       export PATH="$PATH:$(pwd)/flutter/bin" &&
+      flutter --version &&
       flutter config --enable-web &&
       flutter pub get &&
-      flutter build web --release --web-renderer html --dart-define=FLUTTER_WEB_USE_SKIA=false
+      flutter pub upgrade &&
+      flutter build web --release --web-renderer html --dart-define=API_URL=https://fertipath-backend.onrender.com 2>&1 | tee build.log &&
+      echo "Web build completed successfully"
     staticPublishPath: build/web
     envVars:
       - key: API_URL
@@ -26,10 +29,7 @@ services:
         value: "public, max-age=60"
       - path: "/*"
         name: "Access-Control-Allow-Origin"
-        value: "*" 
-
-
-# Flutter Mobile Service (Android) - iOS coming soon
+        value: "*"
 #  - type: web
 #    name: fertility-android-frontend
 #    runtime: static
