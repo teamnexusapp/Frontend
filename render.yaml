@@ -12,11 +12,21 @@ services:
       export PATH="$PATH:$(pwd)/flutter/bin" &&
       flutter config --enable-web &&
       flutter pub get &&
-      flutter build web --release --web-renderer html
+      flutter build web --release --web-renderer html --dart-define=FLUTTER_WEB_USE_SKIA=false
     staticPublishPath: build/web
     envVars:
       - key: API_URL
-        value: "https://fertipath-backend.onrender.com" 
+        value: "https://fertipath-backend.onrender.com"
+    headers:
+      - path: "/*"
+        name: "Cache-Control"
+        value: "public, max-age=3600"
+      - path: "/index.html"
+        name: "Cache-Control"
+        value: "public, max-age=60"
+      - path: "/*"
+        name: "Access-Control-Allow-Origin"
+        value: "*" 
 
 
 # Flutter Mobile Service (Android) - iOS coming soon

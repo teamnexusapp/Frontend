@@ -22,11 +22,17 @@ class LocalizationProvider extends ChangeNotifier {
   String? get selectedLanguageCode => _locale.languageCode;
 
   final Map<String, Map<String, String>> _translations = {};
+  bool _isInitialized = false;
 
   LocalizationProvider() {
-    // Defer loading to avoid null reference errors on web
-    Future.microtask(() => _loadFromPrefs());
-    _loadArbTranslations();
+    _initializeAsync();
+  }
+
+  Future<void> _initializeAsync() async {
+    if (_isInitialized) return;
+    _isInitialized = true;
+    await _loadFromPrefs();
+    await _loadArbTranslations();
   }
 
   Future<void> _loadFromPrefs() async {

@@ -12,10 +12,16 @@ class AuthService with ChangeNotifier {
   
   // Store OTP verification IDs temporarily
   String? _lastVerificationId;
+  bool _isInitialized = false;
 
   AuthService() {
-    // Defer loading to avoid null reference errors on web
-    Future.microtask(() => _loadUserFromPrefs());
+    _initializeAsync();
+  }
+
+  Future<void> _initializeAsync() async {
+    if (_isInitialized) return;
+    _isInitialized = true;
+    await _loadUserFromPrefs();
   }
 
   Future<void> _loadUserFromPrefs() async {

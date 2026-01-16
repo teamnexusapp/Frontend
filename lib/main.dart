@@ -23,6 +23,12 @@ Future<void> _initializeFirebase() async {
           messagingSenderId: "293422244200",
           appId: "1:293422244200:web:your-web-app-id",
         ),
+      ).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('Firebase initialization timeout on web');
+          throw Exception('Firebase initialization timeout');
+        },
       );
     } else {
       await Firebase.initializeApp();
@@ -30,6 +36,7 @@ Future<void> _initializeFirebase() async {
     debugPrint('Firebase initialized successfully');
   } catch (e) {
     debugPrint('Firebase initialization error: $e');
+    debugPrint('App will continue without Firebase - using fallback authentication');
   }
 }
 
@@ -38,8 +45,14 @@ void main() async {
   
   await _initializeFirebase();
 
-  final prefs = await SharedPreferences.getInstance();
-  final saved = prefs.getString('theme_mode') ?? 'system';
+  String saved = 'system';
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    saved = prefs.getString('theme_mode') ?? 'system';
+  } catch (e) {
+    debugPrint('SharedPreferences initialization error: $e');
+    debugPrint('Using default theme: system');
+  }
 
   runApp(MyApp(initialTheme: saved));
 }
@@ -73,10 +86,14 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _setThemeMode(ThemeMode tm) async {
-    final prefs = await SharedPreferences.getInstance();
     setState(() => _themeMode = tm);
-    final key = tm == ThemeMode.system ? 'system' : (tm == ThemeMode.light ? 'light' : 'dark');
-    await prefs.setString('theme_mode', key);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = tm == ThemeMode.system ? 'system' : (tm == ThemeMode.light ? 'light' : 'dark');
+      await prefs.setString('theme_mode', key);
+    } catch (e) {
+      debugPrint('Error saving theme mode: $e');
+    }
   }
 
   @override
