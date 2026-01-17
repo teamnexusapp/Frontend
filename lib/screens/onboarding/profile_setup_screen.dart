@@ -19,12 +19,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   int _age = 27;
   int _cycleLength = 28;
+  int _periodLength = 5;
   DateTime? _lastPeriodDate;
   String? _ttcHistory;
   String? _faithPreference;
 
   String _language = 'English';
-  final bool _audioGuidance = false;
+  bool _audioGuidance = false;
   bool _isLoading = false;
   bool _acceptTerms = false;
 
@@ -156,6 +157,39 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               ),
               const SizedBox(height: 20),
 
+              // Period Length
+              _buildFieldLabel('Period Length'),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButton<int>(
+                  value: _periodLength,
+                  isExpanded: true,
+                  underline: const SizedBox(),
+                  items: List.generate(14, (i) => i + 1).map((days) {
+                    return DropdownMenuItem(
+                      value: days,
+                      child: Text('$days Days'),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() => _periodLength = value ?? _periodLength);
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Typical number of days your period lasts',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              const SizedBox(height: 20),
+
               // Last Period Date
               _buildFieldLabel('Last Period Date'),
               GestureDetector(
@@ -252,35 +286,30 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               // Audio Guidance
               _buildFieldLabel('Audio Guidance'),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Amaka', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          SizedBox(height: 4),
-                          Text('amaka.john@email.com', style: TextStyle(color: Colors.grey)),
-                        ],
+                    Expanded(
+                      child: Text(
+                        'Enable audio guidance',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      width: 140,
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.of(context).pushNamed('/settings_profile_setup'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryLight,
-                          foregroundColor: Colors.black,
-                        ),
-                        child: const Text('Edit Profile'),
-                      ),
+                    Switch.adaptive(
+                      value: _audioGuidance,
+                      activeColor: const Color(0xFF2D5A3A),
+                      onChanged: (value) {
+                        setState(() {
+                          _audioGuidance = value;
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -460,6 +489,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       await apiService.updateProfile(
         age: _age,
         cycleLength: _cycleLength,
+        periodLength: _periodLength,
         lastPeriodDate: _lastPeriodDate != null
             ? _lastPeriodDate!.toIso8601String().split('T')[0]
             : null,
