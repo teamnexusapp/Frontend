@@ -5,7 +5,7 @@ import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
-import '../constants/app_colors.dart';
+import '../../theme
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
