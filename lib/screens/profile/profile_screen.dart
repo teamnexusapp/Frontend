@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './_next_period_prediction_widget.dart';
+import './profile_setup_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
@@ -11,7 +12,6 @@ import '../home_screen.dart';
 import '../onboarding/welcome_screen.dart';
 import '../privacy/privacy_screen.dart';
 import '../privacy_and_security/privacy_and_security_screen.dart';
-import '../settings/settings_profile_setup_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -272,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const SettingsProfileSetupScreen(),
+                    builder: (context) => const ProfileSetupScreen(),
                   ),
                 );
                 // After returning from profile setup, reload profile to fetch new goal values
