@@ -86,26 +86,42 @@ class _HomeScreenState extends State<HomeScreen> {
         'symptoms': ['none'],
       };
       
-      await http.post(
+      debugPrint('Sending POST to /insights/insights with body: $body');
+      final postResponse = await http.post(
         url,
         headers: headers,
         body: jsonEncode(body),
       );
+      debugPrint('POST response status: ${postResponse.statusCode}');
       
       // Now GET insights/insights
       final getResponse = await http.get(url, headers: headers);
+      debugPrint('GET /insights/insights status: ${getResponse.statusCode}');
+      debugPrint('GET /insights/insights response: ${getResponse.body}');
+      
       if (getResponse.statusCode == 200) {
         final List<dynamic> data = jsonDecode(getResponse.body);
+        debugPrint('Parsed insights data: $data');
+        
         if (data.isNotEmpty && data[0] is Map<String, dynamic>) {
+          final insights = data[0] as Map<String, dynamic>;
+          debugPrint('First insight object keys: ${insights.keys.toList()}');
+          
           setState(() {
-            _insightData = data[0];
-            _insightText = data[0]['insight_text']?.toString() ?? _defaultInsightText;
+            _insightData = insights;
+            // Try to get insight_text, or generate one from available data
+            _insightText = insights['insight_text']?.toString() ?? 
+                           insights['prediction']?.toString() ??
+                           insights['recommendation']?.toString() ??
+                           _defaultInsightText;
+            debugPrint('Set _insightText to: $_insightText');
           });
           return;
         }
       }
       
       // If no data or bad response, show fallback
+      debugPrint('No valid insights data, using fallback');
       setState(() {
         _insightData = Map<String, dynamic>.from(_defaultCycleSummary);
         _insightText = _defaultInsightText;
@@ -123,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     final user = auth.currentUser;
+    final loc = AppLocalizations.of(context)!;
     
     return Scaffold(
       appBar: null,
@@ -466,9 +483,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    "Today's Fertility Insight",
-                                    style: TextStyle(
+                                  Text(
+                                    loc.todaysFertilityInsight,
+                                    style: const TextStyle(
                                       fontSize: 28,
                                       color: Color(0xFFA8D497),
                                       fontFamily: 'Poppins',
@@ -484,6 +501,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontFamily: 'Poppins',
                                     ),
                                     textAlign: TextAlign.left,
+                                    maxLines: 4,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),

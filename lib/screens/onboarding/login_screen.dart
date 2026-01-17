@@ -339,8 +339,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      // Wake up the backend if it's sleeping (Render free tier)
-      await HealthCheckService.wakeUpBackend();
+      // Health check disabled - using fertipath-fastapi directly
+      // await HealthCheckService.wakeUpBackend();
       
       final authService = Provider.of<AuthService>(context, listen: false);
       
