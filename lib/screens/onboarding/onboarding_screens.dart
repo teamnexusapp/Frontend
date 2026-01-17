@@ -33,7 +33,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
   }
 
   void _navigateToRegister() {
-    Navigator.of(context).pushReplacementNamed('/login');
+    Navigator.of(context).pushReplacementNamed('/register');
   }
 
   String _getSelectedLanguageName(BuildContext context) {

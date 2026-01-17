@@ -144,7 +144,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      // Registration via phone is no longer supported; link removed.
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushReplacementNamed('/register');
+                        },
+                        child: const Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Poppins',
+                            color: Color(0xFF2E683D),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 16),

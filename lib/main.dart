@@ -16,6 +16,8 @@ import 'screens/onboarding/welcome_screen.dart';
 import 'screens/onboarding/login_screen.dart' as OnboardingLogin;
 import 'screens/onboarding/language_selection_screen.dart';
 import 'screens/onboarding/forget_password_flow.dart';
+import 'screens/onboarding/registration_screen.dart';
+import 'screens/onboarding/password_updated_screen.dart';
 
 Future<void> _initializeFirebase() async {
   try {
@@ -114,6 +116,8 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(builder: (_) => const WelcomeScreen());
                 case '/login':
                   return MaterialPageRoute(builder: (_) => const OnboardingLogin.LoginScreen());
+                case '/register':
+                  return MaterialPageRoute(builder: (_) => const RegistrationScreen());
                 case '/reset_password':
                   return MaterialPageRoute(builder: (_) => ResetPasswordScreen(prefilledToken: uri.queryParameters['token']));
                 case '/password-updated':
