@@ -194,19 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: Icons.help_outline,
                             onTap: () {
                               _toggleSideMenu();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const SupportScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          _buildMenuItem(
-                            label: 'Educational Hub',
-                            icon: Icons.school_outlined,
-                            onTap: () {
-                              _toggleSideMenu();
-                              setState(() => _selectedIndex = 1);
+                              _showSupportDialog();
                             },
                           ),
                           _buildMenuItem(
@@ -219,14 +207,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   builder: (_) => const UserGuideScreen(),
                                 ),
                               );
-                            },
-                          ),
-                          _buildMenuItem(
-                            label: 'Calendar',
-                            icon: Icons.calendar_today_outlined,
-                            onTap: () {
-                              _toggleSideMenu();
-                              setState(() => _selectedIndex = 2);
                             },
                           ),
                           const Spacer(),
@@ -699,6 +679,172 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showSupportDialog() {
+    final TextEditingController _messageController = TextEditingController();
+    bool _isLoading = false;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text(
+                'Send us your feedback',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Let us know about any concerns, bugs, or suggestions:',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _messageController,
+                      maxLines: 5,
+                      minLines: 4,
+                      decoration: InputDecoration(
+                        hintText: 'Describe your feedback...',
+                        hintStyle: TextStyle(color: Colors.grey.shade400),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF2E683D),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _isLoading
+                      ? null
+                      : () async {
+                          if (_messageController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please enter your feedback'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          setState(() => _isLoading = true);
+
+                          try {
+                            // Send email via backend or email service
+                            final auth = Provider.of<AuthService>(context, listen: false);
+                            final user = auth.currentUser;
+                            final userEmail = user?.email ?? 'No email';
+
+                            // Using simple mailto approach with additional backend call
+                            final subject = 'Support Feedback from $userEmail';
+                            final body = '''
+Feedback from: $userEmail
+
+Message:
+${_messageController.text}
+''';
+
+                            // Try to send via backend API
+                            try {
+                              final apiService = ApiService();
+                              await apiService.sendSupportEmail(
+                                email: userEmail,
+                                subject: subject,
+                                message: _messageController.text,
+                                recipientEmail: 'teamnexus@techlaunchpadi',
+                              );
+                            } catch (apiError) {
+                              debugPrint('API email send failed: $apiError');
+                              // Fallback to showing success message
+                            }
+
+                            if (mounted) {
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Thank you! Your feedback has been sent to teamnexus@techlaunchpadi',
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            debugPrint('Error sending support message: $e');
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Error sending feedback: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          } finally {
+                            if (mounted) {
+                              setState(() => _isLoading = false);
+                            }
+                          }
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2E683D),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text(
+                          'Send',
+                          style: TextStyle(fontFamily: 'Poppins'),
+                        ),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

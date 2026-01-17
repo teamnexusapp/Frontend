@@ -10,6 +10,7 @@ import '../home_screen.dart';
 import '../onboarding/welcome_screen.dart';
 import '../privacy/privacy_screen.dart';
 import '../privacy_and_security/privacy_and_security_screen.dart';
+import '../settings/settings_profile_setup_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -268,7 +269,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                await Navigator.of(context).pushNamed('/onboarding/profile');
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsProfileSetupScreen(),
+                  ),
+                );
                 // After returning from profile setup, reload profile to fetch new goal values
                 await _loadUserProfile();
               },
@@ -483,8 +488,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               selectedLanguage = languageOptions[newCode]!;
             });
             try {
-              // Language change no longer needs API call or insight refresh
-              // Just update the locale in the app
+              // Update the app's locale through LocalizationProvider
+              final locProvider = Provider.of<LocalizationProvider>(context, listen: false);
+              await locProvider.setLocale(Locale(newCode));
               debugPrint('Language changed to: $newCode');
             } catch (e) {
               debugPrint('Failed to update language: $e');

@@ -361,14 +361,31 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Logged Symptoms',
-                              style: TextStyle(
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontFamily: 'Poppins',
-                              ),
+                            Row(
+                              children: [
+                                const Text(
+                                  'Logged Symptoms',
+                                  style: TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                                const Spacer(),
+                                TextButton.icon(
+                                  onPressed: _clearCalendarDays,
+                                  icon: const Icon(Icons.delete_outline, color: Color(0xFF2E683D)),
+                                  label: const Text(
+                                    'Clear',
+                                    style: TextStyle(
+                                      color: Color(0xFF2E683D),
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins',
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 18),
                             if (_isSymptomsLoading)
@@ -479,5 +496,36 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _clearCalendarDays() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('tapped_days');
+      setState(() {
+        _selectedCalendarDays.clear();
+        _selectedCalendarDaysFormatted.clear();
+        _nextPeriodDays.clear();
+        _lastPeriodDate = null;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Calendar and next period days cleared.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error clearing calendar days: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to clear calendar days: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }
