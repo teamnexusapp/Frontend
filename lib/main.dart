@@ -13,8 +13,6 @@ import 'theme.dart';
 import 'services/theme_provider.dart';
 import 'screens/onboarding/welcome_screen.dart';
 import 'screens/onboarding/login_screen.dart' as OnboardingLogin;
-import 'screens/onboarding/reset_password_screen.dart';
-import 'screens/onboarding/password_updated_screen.dart';
 import 'screens/onboarding/language_selection_screen.dart';
 import 'screens/onboarding/forget_password_flow.dart';
 
