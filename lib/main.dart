@@ -114,7 +114,7 @@ class MyApp extends StatelessWidget {
                 case '/login':
                   return MaterialPageRoute(builder: (_) => const OnboardingLogin.LoginScreen());
                 case '/reset_password':
-                  return MaterialPageRoute(builder: (_) => ResetPasswordScreen(token: uri.queryParameters['token']));
+                  return MaterialPageRoute(builder: (_) => ResetPasswordScreen(prefilledToken: uri.queryParameters['token']));
                 case '/password-updated':
                   return MaterialPageRoute(builder: (_) => const PasswordUpdatedScreen());
                 case '/language':
