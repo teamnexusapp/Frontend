@@ -2,7 +2,10 @@ class User {
     final String? ttcHistory;
     final String? faithPreference;
     final int? cycleLength;
+    final int? periodLength;
+    final int? age;
     final String? lastPeriodDate;
+    final bool? audioPreference;
   final String? id;
   final String email;
   final String? username;
@@ -38,7 +41,10 @@ class User {
     this.ttcHistory,
     this.faithPreference,
     this.cycleLength,
+    this.periodLength,
+    this.age,
     this.lastPeriodDate,
+    this.audioPreference,
   });
 
   User copyWith({
@@ -60,7 +66,10 @@ class User {
     String? ttcHistory,
     String? faithPreference,
     int? cycleLength,
+    int? periodLength,
+    int? age,
     String? lastPeriodDate,
+    bool? audioPreference,
   }) {
     return User(
       id: id ?? this.id,
@@ -81,7 +90,10 @@ class User {
       ttcHistory: ttcHistory ?? this.ttcHistory,
       faithPreference: faithPreference ?? this.faithPreference,
       cycleLength: cycleLength ?? this.cycleLength,
+      periodLength: periodLength ?? this.periodLength,
+      age: age ?? this.age,
       lastPeriodDate: lastPeriodDate ?? this.lastPeriodDate,
+      audioPreference: audioPreference ?? this.audioPreference,
     );
   }
 
@@ -105,7 +117,10 @@ class User {
       'ttcHistory': ttcHistory,
       'faithPreference': faithPreference,
       'cycleLength': cycleLength,
+      'periodLength': periodLength,
+      'age': age,
       'lastPeriodDate': lastPeriodDate,
+      'audioPreference': audioPreference,
     };
   }
 
@@ -129,6 +144,9 @@ class User {
     final ttcHistory = data['ttc_history'] ?? data['ttcHistory'];
     final faithPreference = data['faith_preference'] ?? data['faithPreference'];
     final cycleLength = data['cycle_length'] ?? data['cycleLength'];
+    final periodLength = data['period_length'] ?? data['periodLength'];
+    final age = data['age'];
+    final audioPreference = data['audio_preference'] ?? data['audioPreference'];
     final lastPeriodDate = data['last_period_date'] ?? data['lastPeriodDate'];
 
     // Normalize fields with fallbacks
@@ -200,7 +218,10 @@ class User {
       ttcHistory: ttcHistory,
       faithPreference: faithPreference,
       cycleLength: cycleLength is int ? cycleLength : int.tryParse(cycleLength?.toString() ?? ''),
+      periodLength: periodLength is int ? periodLength : int.tryParse(periodLength?.toString() ?? ''),
+      age: age is int ? age : int.tryParse(age?.toString() ?? ''),
       lastPeriodDate: lastPeriodDate,
+      audioPreference: audioPreference is bool ? audioPreference : (audioPreference?.toString() == 'true'),
     );
   }
 }

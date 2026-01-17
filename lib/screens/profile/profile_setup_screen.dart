@@ -62,22 +62,17 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   Future<void> _loadUserProfile() async {
     try {
-      final apiService = ApiService();
-      final profileJson = await apiService.getProfile();
       final auth = Provider.of<AuthService>(context, listen: false);
       final user = auth.currentUser;
 
       if (user != null) {
         setState(() {
-          _age = user.age ?? 27;
           _cycleLength = user.cycleLength ?? 28;
-          _periodLength = user.periodLength ?? 5;
-          if (user.lastPeriodDate != null) {
-            _lastPeriodDate = user.lastPeriodDate;
+          if (user.lastPeriodDate != null && user.lastPeriodDate!.isNotEmpty) {
+            _lastPeriodDate = DateTime.tryParse(user.lastPeriodDate!);
           }
           _ttcHistory = user.ttcHistory;
           _faithPreference = user.faithPreference;
-          _audioGuidance = user.audioPreference ?? false;
           _language = _getLanguageDisplayName(user.preferredLanguage ?? 'en');
         });
       }
