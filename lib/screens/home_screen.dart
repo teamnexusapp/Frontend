@@ -139,7 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     final user = auth.currentUser;
-    final loc = AppLocalizations.of(context)!;
     
     return Scaffold(
       appBar: null,
@@ -148,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IndexedStack(
             index: _selectedIndex,
             children: [
-              _buildHomeTab(),
+               _buildHomeTab(AppLocalizations.of(context)!),
               const EducationalHubScreen(),
               const CalendarTabScreen(),
               const SupportScreen(),
@@ -411,6 +410,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHomeTab() {
+      Widget _buildHomeTab(AppLocalizations loc) {
     final size = MediaQuery.of(context).size;
     final heroHeight = size.height * 0.5;
     const buttonHeight = 64.0;
