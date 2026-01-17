@@ -23,7 +23,7 @@
   "firstName": "First Name",
   "lastName": "Last Name",
   "dateOfBirth": "Date of Birth",
-  "selectDate": "Select Date",
+  "selectDate": "Select date",
   "profilePicture": "Profile Picture",
   "uploadPhoto": "Upload Photo",
   "takePhoto": "Take Photo",
@@ -58,7 +58,7 @@
   "passwordMismatch": "Passwords do not match",
   "passwordTooShort": "Password must be at least 8 characters",
   "accountCreatedSuccessfully": "Account created successfully!",
-  "profileSetupComplete": "Your profile setup is complete",
+  "profileSetupComplete": "Profile setup complete!",
   "termsAndConditions": "I agree to the Terms and Conditions",
   "privacyPolicy": "I agree to the Privacy Policy",
   "acceptTerms": "Please accept the terms and conditions",
@@ -75,72 +75,6 @@
   "genderMale": "Male",
   "genderFemale": "Female",
   "genderOther": "Other",
-  "@@locale": "en",
-  "appTitle": "Nexus Fertility",
-  "welcomeTitle": "Welcome to Nexus Fertility",
-  "welcomeSubtitle": "Your personal fertility companion",
-  "selectLanguage": "Select Language",
-  "english": "English",
-  "yoruba": "Yoruba",
-  "igbo": "Igbo",
-  "hausa": "Hausa",
-  "pidgin": "Pidgin",
-  "german": "Deutsch",
-  "next": "Next",
-  "back": "Back",
-  "skip": "Skip",
-  "done": "Done",
-  "createAccount": "Create Account",
-  "signIn": "Sign In",
-  "email": "Email",
-  "phoneNumber": "Phone Number",
-  "password": "Password",
-  "confirmPassword": "Confirm Password",
-  "firstName": "First Name",
-  "lastName": "Last Name",
-  "dateOfBirth": "Date of Birth",
-  "selectDate": "Select Date",
-  "profilePicture": "Profile Picture",
-  "uploadPhoto": "Upload Photo",
-  "takePhoto": "Take Photo",
-  "chooseFromGallery": "Choose from Gallery",
-  "verifyEmail": "Verify Email",
-  "verifyPhone": "Verify Phone",
-  "enterOTP": "Enter OTP",
-  "otpSentTo": "OTP sent to {email}",
-  "@otpSentTo": {
-    "description": "Message shown after OTP is sent",
-    "placeholders": { "email": { "type": "String" } }
-  },
-  "resendCode": "Resend Code",
-  "codeExpires": "Code expires in {minutes}:{seconds}",
-  "@codeExpires": {
-    "description": "Timer for OTP expiration",
-    "placeholders": { "minutes": { "type": "String" }, "seconds": { "type": "String" } }
-  },
-  "invalidEmail": "Please enter a valid email address",
-  "invalidPhone": "Please enter a valid phone number",
-  "passwordMismatch": "Passwords do not match",
-  "passwordTooShort": "Password must be at least 8 characters",
-  "accountCreatedSuccessfully": "Account created successfully!",
-  "profileSetupComplete": "Your profile setup is complete",
-  "termsAndConditions": "I agree to the Terms and Conditions",
-  "privacyPolicy": "I agree to the Privacy Policy",
-  "acceptTerms": "Please accept the terms and conditions",
-  "emailAlreadyExists": "Email already registered",
-  "phoneAlreadyExists": "Phone number already registered",
-  "verificationFailed": "Verification failed. Please try again",
-  "tryAgain": "Try Again",
-  "loading": "Loading...",
-  "error": "Error",
-  "success": "Success",
-  "cancel": "Cancel",
-  "save": "Save",
-  "logout": "Logout",
-  "genderMale": "Male",
-  "genderFemale": "Female",
-  "genderOther": "Other",
-
   "selectGender": "Select Gender",
   "welcomeToJourney": "Welcome to your journey",
   "choosePreferredLanguage": "Choose your preferred language",
@@ -168,11 +102,32 @@
   "verifyEmailTitle": "Verify Email",
   "verifyPhoneTitle": "Verify Phone Number",
   "codeSentToEmail": "Enter the code we sent to {email}",
-  "@codeSentToEmail": { "description": "Message showing where OTP was sent", "placeholders": { "email": { "type": "String" } } },
+  "@codeSentToEmail": {
+    "description": "Message showing where OTP was sent",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "codeSentToPhone": "Enter the code we sent to {phone}",
-  "@codeSentToPhone": { "description": "Message showing where OTP was sent", "placeholders": { "phone": { "type": "String" } } },
+  "@codeSentToPhone": {
+    "description": "Message showing where OTP was sent",
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
   "codeExpiresIn": "Code expires in {time}",
-  "@codeExpiresIn": { "description": "Timer showing code expiration", "placeholders": { "time": { "type": "String" } } },
+  "@codeExpiresIn": {
+    "description": "Timer showing code expiration",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "verify": "Verify",
   "didntReceiveCode": "Didn't receive code? Resend",
   "enterAll6Digits": "Please enter all 6 digits",
@@ -186,14 +141,12 @@
   "days": "{count} Days",
   "averageDaysBetweenPeriods": "Average number of days between your periods",
   "lastPeriodDate": "Last Period Date",
-  "selectDate": "Select date",
   "whenLastBleeding": "When your last menstrual bleeding started",
   "ttcHistory": "TTC History",
   "faithPreference": "Faith Preference",
   "language": "Language",
   "audioGuidance": "Audio Guidance",
   "agreeTerms": "I agree to the Terms and Conditions and Privacy Policy",
-  "profileSetupComplete": "Profile setup complete!",
   "selectOption": "Select option",
   "home": "Home",
   "calendar": "Calendar",

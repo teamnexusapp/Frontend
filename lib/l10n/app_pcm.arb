@@ -1,11 +1,11 @@
-﻿{
+{
   "@@locale": "pcm",
   "appTitle": "Nexus Fertility",
   "welcomeTitle": "Welcome to Nexus Fertility",
   "welcomeSubtitle": "Your personal fertility companion",
   "selectLanguage": "Select Language",
   "english": "English",
-  "yoruba": "Yorùbá",
+  "yoruba": "Yoruba",
   "igbo": "Igbo",
   "hausa": "Hausa",
   "pidgin": "Pidgin",
@@ -16,39 +16,49 @@
   "done": "Done",
   "createAccount": "Create Account",
   "signIn": "Sign In",
-  "emailAddress": "Email Address",
-  "emailHint": "you@example.com",
-  "emailRequired": "Email is required",
-  "invalidEmailFormat": "Invalid email format",
-  "passwordLabel": "Password",
-  "passwordHint": "Enter password",
-  "passwordRequired": "Password is required",
-  "confirmPasswordHint": "Confirm password",
-  "confirmPasswordRequired": "Please confirm password",
+  "email": "Email",
   "phoneNumber": "Phone Number",
-  "phoneHint": "Phone number",
-  "phoneRequired": "Phone is required",
-  "invalidPhone": "Please enter a valid phone number",
-  "invalidPhoneForCountry": "Invalid phone number for this country",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "dateOfBirth": "Date of Birth",
+  "selectDate": "Select date",
+  "profilePicture": "Profile Picture",
+  "uploadPhoto": "Upload Photo",
+  "takePhoto": "Take Photo",
+  "chooseFromGallery": "Choose from Gallery",
+  "verifyEmail": "Verify Email",
+  "verifyPhone": "Verify Phone",
+  "enterOTP": "Enter OTP",
   "otpSentTo": "OTP sent to {email}",
   "@otpSentTo": {
     "description": "Message shown after OTP is sent",
-    "placeholders": {"email": {"type": "String"}}
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
   },
   "resendCode": "Resend Code",
   "codeExpires": "Code expires in {minutes}:{seconds}",
   "@codeExpires": {
     "description": "Timer for OTP expiration",
     "placeholders": {
-      "minutes": {"type": "String"},
-      "seconds": {"type": "String"}
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
     }
   },
   "invalidEmail": "Please enter a valid email address",
+  "invalidPhone": "Please enter a valid phone number",
   "passwordMismatch": "Passwords do not match",
   "passwordTooShort": "Password must be at least 8 characters",
   "accountCreatedSuccessfully": "Account created successfully!",
-  "profileSetupComplete": "Your profile setup is complete",
+  "profileSetupComplete": "Profile setup complete!",
   "termsAndConditions": "I agree to the Terms and Conditions",
   "privacyPolicy": "I agree to the Privacy Policy",
   "acceptTerms": "Please accept the terms and conditions",
@@ -74,75 +84,100 @@
   "emailSignupTitle": "Create Account with Email",
   "emailSignupSubtitle": "Enter your email and password",
   "emailAddressLabel": "Email Address",
+  "emailHint": "you@example.com",
+  "emailRequired": "Email is required",
+  "invalidEmailFormat": "Invalid email format",
+  "passwordHint": "Enter password",
+  "passwordRequired": "Password is required",
+  "confirmPasswordHint": "Confirm password",
+  "confirmPasswordRequired": "Please confirm password",
   "phoneSignupTitle": "Create Account with Phone",
-  "phoneSignupSubtitle": "We'll send you an OTP code",
+  "phoneSignupSubtitle": "We will send you an OTP code",
   "phoneNumberLabel": "Phone Number",
-  "otpInfoMessage": "We'll send you an OTP code to verify your phone number",
+  "phoneNumberHint": "Phone number",
+  "phoneRequired": "Phone is required",
+  "invalidPhoneForCountry": "Invalid phone number for this country",
+  "otpInfoMessage": "We'll send an OTP code to verify your phone number",
   "continueText": "Continue",
   "verifyEmailTitle": "Verify Email",
   "verifyPhoneTitle": "Verify Phone Number",
   "codeSentToEmail": "Enter the code we sent to {email}",
   "@codeSentToEmail": {
     "description": "Message showing where OTP was sent",
-    "placeholders": {"email": {"type": "String"}}
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
   },
   "codeSentToPhone": "Enter the code we sent to {phone}",
   "@codeSentToPhone": {
     "description": "Message showing where OTP was sent",
-    "placeholders": {"phone": {"type": "String"}}
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
   },
   "codeExpiresIn": "Code expires in {time}",
   "@codeExpiresIn": {
     "description": "Timer showing code expiration",
-    "placeholders": {"time": {"type": "String"}}
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "verify": "Verify",
-  "didntReceiveCode": "Didn't receive the code? Resend",
+  "didntReceiveCode": "Didn't receive code? Resend",
   "enterAll6Digits": "Please enter all 6 digits",
   "profile": "Profile",
-  "completeProfile": "Complete your profile",
-  "personalizeGuide": "This helps us personalize your experience",
+  "profileTitle": "Profile",
+  "editProfile": "Edit profile",
+  "completeProfile": "Let's complete your profile",
+  "personalizeGuide": "This will help us personalize your cycle guide",
   "age": "Age",
   "cycleLength": "Cycle Length",
-  "days": "{count} days",
-  "averageDaysBetweenPeriods": "Average days between your periods",
+  "days": "{count} Days",
+  "averageDaysBetweenPeriods": "Average number of days between your periods",
   "lastPeriodDate": "Last Period Date",
-  "selectDate": "Select Date",
-  "whenLastBleeding": "When did your period last start",
+  "whenLastBleeding": "When your last menstrual bleeding started",
   "ttcHistory": "TTC History",
   "faithPreference": "Faith Preference",
   "language": "Language",
   "audioGuidance": "Audio Guidance",
-  "agreeTerms": "I agree to the Terms and Privacy Policy",
-  "selectOption": "Select an option",
+  "agreeTerms": "I agree to the Terms and Conditions and Privacy Policy",
+  "selectOption": "Select option",
   "home": "Home",
   "calendar": "Calendar",
   "learn": "Learn",
-  "todaysFertilityInsight": "Today's fertility insight",
-  "nextFertilityWindow": "Your next fertility window starts Dec 23",
-  "trackingBenefits": "By tracking your periods, you get better insights about your cycle",
-  "stayPositive": "You're doing great! Stay positive and keep going!",
+  "todaysFertilityInsight": "Today's Fertility Insight",
+  "nextFertilityWindow": "Your next fertility window is from Dec 23",
+  "trackingBenefits": "By tracking your fertility you gain a better understanding of your cycle.",
+  "stayPositive": "You're doing great! Stay positive and be focused!",
   "learnHub": "Learn Hub",
-  "logSymptoms": "Log symptoms",
+  "logSymptoms": "Log Symptoms",
   "bleeding": "Bleeding",
   "mood": "Mood",
   "cervicalMucus": "Cervical Mucus",
   "pain": "Pain",
   "notes": "Notes",
-  "loggedSymptoms": "Logged symptoms",
+  "loggedSymptoms": "Logged Symptoms",
   "educationalContentComingSoon": "Educational content coming soon",
   "authInvalidEmail": "Invalid email format",
-  "authInvalidPhone": "Invalid phone format",
+  "authInvalidPhone": "Invalid phone number format",
   "authPasswordTooShort": "Password must be at least 8 characters",
   "authEmailAlreadyRegistered": "Email already registered",
   "authPhoneAlreadyRegistered": "Phone number already registered",
   "authInvalidOtpFormat": "Invalid OTP format",
   "authUserNotFound": "User not found",
   "authNoUserLoggedIn": "No user logged in",
-  "welcomeBack": "Welcome back",
+  "welcomeBack": "Welcome Back",
   "logInToAccount": "Log in to your account",
+  "emailAddress": "Email Address",
   "emailHintLogin": "you@example.com",
-  "enterPassword": "Enter your password",
-  "forgotPassword": "Forgot password?",
+  "passwordLabel": "Password",
+  "enterPassword": "Enter password",
+  "forgotPassword": "Forgot Password?",
   "logIn": "Log In"
 }
