@@ -71,7 +71,9 @@ class _AudioArticlePlayerScreenState extends State<AudioArticlePlayerScreen> {
     try {
       // Use provided audio URL
       final audioUrl = widget.audioUrl;
-      await _audioPlayer.setSourceUrl(audioUrl);
+      if (audioUrl != null && audioUrl.isNotEmpty) {
+        await _audioPlayer.setSourceUrl(audioUrl);
+      }
     } catch (e) {
       debugPrint('Error loading audio: $e');
       if (mounted) {

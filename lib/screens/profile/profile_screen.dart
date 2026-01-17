@@ -326,13 +326,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Color _colorFromString(String input) {
-    if (input.isEmpty) return const Color(0xFF2E683D);
-    final hash = input.codeUnits.fold<int>(0, (prev, code) => prev + code);
-    final hue = (hash % 360).toDouble();
-    return HSVColor.fromAHSV(1, hue, 0.45, 0.85).toColor();
-  }
-
   Widget _buildGoalsSection() {
     // Dynamically display user profile data fetched from API
     if (_isLoading) {
@@ -490,11 +483,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               selectedLanguage = languageOptions[newCode]!;
             });
             try {
-              await ApiService().updateLanguage(newCode);
-              // Only refetch data, do not rebuild localization
-              if (HomeScreen.refreshInsights != null) {
-                HomeScreen.refreshInsights!();
-              }
+              // Language change no longer needs API call or insight refresh
+              // Just update the locale in the app
+              debugPrint('Language changed to: $newCode');
             } catch (e) {
               debugPrint('Failed to update language: $e');
             }
