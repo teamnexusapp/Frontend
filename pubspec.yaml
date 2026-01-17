@@ -55,6 +55,7 @@ flutter:
     - assets/images/
     - lib/screens/audio/
     - lib/screens/educational/
+    - lib/l10n/
 
 
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme.dart';
 import 'verification_modal.dart';
+import 'profile_setup_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -31,6 +32,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       builder: (_) => Dialog(child: VerificationModal(onVerify: (code) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Verified: $code')));
+        // Navigate to ProfileSetupScreen after OTP verification
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          if (mounted) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const ProfileSetupScreen()),
+            );
+          }
+        });
       })),
     );
   }

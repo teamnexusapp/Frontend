@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme.dart';
-import 'profile_collection_screen.dart';
+import 'registration_screen.dart';
 
 class Onboarding6 extends StatelessWidget {
   const Onboarding6({super.key});
@@ -38,7 +38,7 @@ class Onboarding6 extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, minimumSize: const Size.fromHeight(48)),
-                  onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const ProfileCollectionScreen())),
+                  onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const RegistrationScreen())),
                   child: const Text('Get Started'),
                 ),
               ),

@@ -135,8 +135,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final List<String> _faithPreferences = [
     'Christian',
     'Muslim',
-    'Jewish',
-    'None'
+    'Traditionalist',
+    'Neutral'
   ];
 
 
