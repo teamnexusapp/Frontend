@@ -17,7 +17,6 @@ import 'screens/onboarding/login_screen.dart' as OnboardingLogin;
 import 'screens/onboarding/language_selection_screen.dart';
 import 'screens/onboarding/forget_password_flow.dart';
 import 'screens/onboarding/registration_screen.dart';
-import 'screens/onboarding/password_updated_screen.dart';
 
 Future<void> _initializeFirebase() async {
   try {

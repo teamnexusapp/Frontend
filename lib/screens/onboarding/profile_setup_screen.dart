@@ -1,104 +1,12 @@
 ﻿import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';\nimport 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
-import '../constants/app_colors.dart';\n
-class ProfileSetupScreen extends StatefulWidget {
-  const ProfileSetupScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
-}
-
-class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
-  final _formKey = GlobalKey<FormState>();
-  int _age = 27;
-  int _cycleLength = 28;
-  DateTime? _lastPeriodDate;
-  bool _audioGuidance = false;
-  bool _acceptTerms = false;
-  bool _isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.profile)),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(l10n.profile, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            _buildFieldLabel('Age'),
-            _buildNumberDropdown(value: _age, items: List.generate(73, (i) => i + 18), onChanged: (v) => setState(() => _age = v)),
-            const SizedBox(height: 16),
-            _buildFieldLabel('Cycle Length'),
-            _buildNumberDropdown(value: _cycleLength, items: List.generate(30, (i) => i + 20), onChanged: (v) => setState(() => _cycleLength = v)),
-            const SizedBox(height: 16),
-            _buildFieldLabel('Last Period Date'),
-            GestureDetector(
-              onTap: _selectDate,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(8)),
-                child: Row(children: [Icon(Icons.calendar_today, color: Colors.grey.shade600), const SizedBox(width: 12), Expanded(child: Text(_lastPeriodDate == null ? l10n.selectDate : MaterialLocalizations.of(context).formatMediumDate(_lastPeriodDate!)))]),
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildFieldLabel('Audio Guidance'),
-            Switch(value: _audioGuidance, onChanged: (v) => setState(() => _audioGuidance = v)),
-            const SizedBox(height: 16),
-            Row(children: [
-              Checkbox(value: _acceptTerms, onChanged: (v) => setState(() => _acceptTerms = v ?? false)),
-              Expanded(child: Text('I agree to the Terms and Conditions and Privacy Policy')),
-            ]),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: (_isLoading || !_acceptTerms) ? null : _handleContinue,
-                child: _isLoading ? const CircularProgressIndicator() : Text(l10n.continueText),
-              ),
-            ),
-          ]),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFieldLabel(String label) => Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600));
-
-  Widget _buildNumberDropdown({required int value, required List<int> items, required Function(int) onChanged}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(8)),
-      child: DropdownButton<int>(value: value, isExpanded: true, underline: const SizedBox(), items: items.map((d) => DropdownMenuItem(value: d, child: Text('$d'))).toList(), onChanged: (v) => onChanged(v ?? value)),
-    );
-  }
-
-  Future<void> _selectDate() async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(context: context, initialDate: now, firstDate: DateTime(now.year - 5), lastDate: now);
-    if (picked != null) setState(() => _lastPeriodDate = picked);
-  }
-
-  void _handleContinue() async {
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 400));
-    setState(() => _isLoading = false);
-    Navigator.of(context).pop();
-  }
-}
-import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';\nimport 'package:provider/provider.dart';
-import '../constants/app_colors.dart';\nimport 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
-import '../constants/app_colors.dart';\nimport '../../services/auth_service.dart';
-import '../constants/app_colors.dart';\n
-
+import 'package:provider/provider.dart';
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
-import '../constants/app_colors.dart';\nimport '../../services/localization_provider.dart';
-import '../constants/app_colors.dart';\nimport '../../services/api_service.dart';
-import '../constants/app_colors.dart';\n
+import '../../services/localization_provider.dart';
+import '../../services/api_service.dart';
+import '../constants/app_colors.dart';
+
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
 
@@ -112,7 +20,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   int _age = 27;
   int _cycleLength = 28;
   DateTime? _lastPeriodDate;
-  // Removed first and last name controllers
   String? _ttcHistory;
   String? _faithPreference;
 
@@ -138,8 +45,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     'Traditionalist',
     'Neutral'
   ];
-
-
 
   final List<String> _languages = [
     'English',
@@ -183,7 +88,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   value: 0.9,
                   minHeight: 4,
                   backgroundColor: Colors.grey.shade300,
-                  valueColor: AlwaysStoppedAnimation<Color>(
+                  valueColor: const AlwaysStoppedAnimation<Color>(
                     Color(0xFF2D5A3A), // dark green
                   ),
                 ),
@@ -209,237 +114,242 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               ),
               const SizedBox(height: 32),
 
-                  // Removed first and last name fields
+              // Age
+              _buildFieldLabel('Age'),
+              _buildNumberDropdown(
+                value: _age,
+                items: List.generate(73, (i) => i + 18),
+                onChanged: (value) => setState(() => _age = value),
+              ),
+              const SizedBox(height: 20),
 
-                  // Age
-                  _buildFieldLabel('Age'),
-                  _buildNumberDropdown(
-                    value: _age,
-                    items: List.generate(73, (i) => i + 18),
-                    onChanged: (value) => setState(() => _age = value),
+              // Cycle Length
+              _buildFieldLabel('Cycle Length'),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButton<int>(
+                  value: _cycleLength,
+                  isExpanded: true,
+                  underline: const SizedBox(),
+                  items: List.generate(30, (i) => i + 1).map((days) {
+                    return DropdownMenuItem(
+                      value: days,
+                      child: Text('$days Days'),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() => _cycleLength = value ?? 28);
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Average number of days between your periods',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Last Period Date
+              _buildFieldLabel('Last Period Date'),
+              GestureDetector(
+                onTap: _selectDate,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 16,
                   ),
-                  const SizedBox(height: 20),
-
-                  // Cycle Length
-                  _buildFieldLabel('Cycle Length'),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: DropdownButton<int>(
-                      value: _cycleLength,
-                      isExpanded: true,
-                      underline: const SizedBox(),
-                      items: List.generate(30, (i) => i + 1).map((days) {
-                        return DropdownMenuItem(
-                          value: days,
-                          child: Text('$days Days'),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() => _cycleLength = value ?? 28);
-                      },
-                    ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Average number of days between your periods',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Last Period Date
-                  _buildFieldLabel('Last Period Date'),
-                  GestureDetector(
-                    onTap: _selectDate,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.calendar_today,
-                              color: Colors.grey.shade600, size: 20),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              _lastPeriodDate == null
-
-                                  ? 'Select date'
-                                  : '${_lastPeriodDate!.day}, Dec ${_lastPeriodDate!.year}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: _lastPeriodDate == null
-                                    ? Colors.grey.shade600
-                                    : Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'When your last menstrual bleeding started',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // TTC History
-                  _buildFieldLabel('TTC History'),
-                  _buildDropdown(
-                    value: _ttcHistory,
-                    items: _ttcHistories,
-                    onChanged: (value) => setState(() => _ttcHistory = value),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Faith Preference
-                  _buildFieldLabel('Faith Preference'),
-                  _buildDropdown(
-                    value: _faithPreference,
-                    items: _faithPreferences,
-                    onChanged: (value) => setState(() => _faithPreference = value),
-                  ),
-                  const SizedBox(height: 20),
-
-
-                  // Language
-                  _buildFieldLabel('Language'),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Builder(builder: (ctx) {
-                      final provider = Provider.of<LocalizationProvider>(context, listen: false);
-                      return DropdownButton<String>(
-                        value: _language,
-                        isExpanded: true,
-                        underline: const SizedBox(),
-                        items: _languages.map((lang) {
-                          return DropdownMenuItem(
-                            value: lang['label'],
-                            child: Text(lang['label']!),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() => _language = value ?? 'English');
-                          final selected = _languages.firstWhere((l) => l['label'] == value, orElse: () => {'code': 'en'});
-                          provider.setLocaleByLanguageCode(selected['code']!);
-                        },
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Audio Guidance
-                  _buildFieldLabel('Audio Guidance'),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-
-                        const Text('Amaka', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 4),
-                        const Text('amaka.john@email.com', style: TextStyle(color: Colors.grey)),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: 140,
-                          child: ElevatedButton(
-                            onPressed: () => Navigator.of(context).pushNamed('/settings_profile_setup'),
-                            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryLight, foregroundColor: Colors.black),
-                            child: const Text('Edit Profile'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Terms & Conditions
-                  Row(
+                  child: Row(
                     children: [
-                      Checkbox(
-                        value: _acceptTerms,
-                        onChanged: (value) {
-                          setState(() {
-                            _acceptTerms = value ?? false;
-                          });
-                        },
-                        activeColor: Color(0xFF2D5A3A), // dark green
-                        checkColor: Colors.white,
-                      ),
+                      Icon(Icons.calendar_today,
+                          color: Colors.grey.shade600, size: 20),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'I agree to the Terms and Conditions and Privacy Policy',
+                          _lastPeriodDate == null
+                              ? 'Select date'
+                              : '${_lastPeriodDate!.day}, Dec ${_lastPeriodDate!.year}',
                           style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade600,
+                            fontSize: 16,
+                            color: _lastPeriodDate == null
+                                ? Colors.grey.shade600
+                                : Colors.black,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: (_isLoading || !_acceptTerms) ? null : _handleContinue,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF2D5A3A), // dark green
-                        disabledBackgroundColor: Colors.grey.shade300,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'When your last menstrual bleeding started',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // TTC History
+              _buildFieldLabel('TTC History'),
+              _buildDropdown(
+                value: _ttcHistory,
+                items: _ttcHistories,
+                onChanged: (value) => setState(() => _ttcHistory = value),
+              ),
+              const SizedBox(height: 20),
+
+              // Faith Preference
+              _buildFieldLabel('Faith Preference'),
+              _buildDropdown(
+                value: _faithPreference,
+                items: _faithPreferences,
+                onChanged: (value) => setState(() => _faithPreference = value),
+              ),
+              const SizedBox(height: 20),
+
+              // Language
+              _buildFieldLabel('Language'),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButton<String>(
+                  value: _language,
+                  isExpanded: true,
+                  underline: const SizedBox(),
+                  items: _languages.map((lang) {
+                    return DropdownMenuItem(
+                      value: lang,
+                      child: Text(lang),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _language = value);
+                      final provider = Provider.of<LocalizationProvider>(context, listen: false);
+                      final languageCode = _getLanguageCode(value);
+                      provider.setLocaleByLanguageCode(languageCode);
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Audio Guidance
+              _buildFieldLabel('Audio Guidance'),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Amaka', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 4),
+                          Text('amaka.john@email.com', style: TextStyle(color: Colors.grey)),
+                        ],
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
-                                ),
-                              ),
-                            )
-                          : Text(
-                              AppLocalizations.of(context)!.continueText,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 140,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.of(context).pushNamed('/settings_profile_setup'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryLight,
+                          foregroundColor: Colors.black,
+                        ),
+                        child: const Text('Edit Profile'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Terms & Conditions
+              Row(
+                children: [
+                  Checkbox(
+                    value: _acceptTerms,
+                    onChanged: (value) {
+                      setState(() {
+                        _acceptTerms = value ?? false;
+                      });
+                    },
+                    activeColor: const Color(0xFF2D5A3A),
+                    checkColor: Colors.white,
+                  ),
+                  Expanded(
+                    child: Text(
+                      'I agree to the Terms and Conditions and Privacy Policy',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 24),
                 ],
               ),
-            ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: (_isLoading || !_acceptTerms) ? null : _handleContinue,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2D5A3A),
+                    disabledBackgroundColor: Colors.grey.shade300,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      : Text(
+                          AppLocalizations.of(context)!.continueText,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
           ),
-          );
+        ),
+      ),
+    );
   }
 
   Widget _buildFieldLabel(String label) {
@@ -521,6 +431,21 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     }
   }
 
+  String _getLanguageCode(String language) {
+    switch (language) {
+      case 'English':
+        return 'en';
+      case 'Yoruba':
+        return 'yo';
+      case 'Igbo':
+        return 'ig';
+      case 'Hausa':
+        return 'ha';
+      default:
+        return 'en';
+    }
+  }
+
   Future<void> _handleContinue() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -531,21 +456,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     });
 
     try {
-      // Prepare the request body according to the schema
-      final Map<String, dynamic> body = {
-        "age": _age,
-        "cycle_length": _cycleLength,
-        "last_period_date": _lastPeriodDate != null
-            ? _lastPeriodDate!.toIso8601String().split('T')[0]
-            : null,
-        "ttc_history": _ttcHistory ?? '',
-        "faith_preference": _faithPreference ?? '',
-        "audio_preference": _audioGuidance,
-      };
-
-      // Send PUT request to user/profile
       final apiService = ApiService();
-      final response = await apiService.updateProfile(
+      await apiService.updateProfile(
         age: _age,
         cycleLength: _cycleLength,
         lastPeriodDate: _lastPeriodDate != null
@@ -588,7 +500,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   @override
   void dispose() {
-    // Removed firstNameController and lastNameController dispose
     super.dispose();
   }
 }
