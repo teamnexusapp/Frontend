@@ -65,7 +65,7 @@ class ArticleReadingScreen extends StatelessWidget {
               padding: const EdgeInsets.all(0),
               children: [
                 // Article image
-                Image.network(
+                Image.asset(
                   imageUrl,
                   fit: BoxFit.cover,
                   width: double.infinity,

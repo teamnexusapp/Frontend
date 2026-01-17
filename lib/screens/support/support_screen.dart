@@ -28,6 +28,13 @@ class _SupportScreenState extends State<SupportScreen> {
       '"And He found you lost and guided [you]."\n- Quran 93:7',
       '"Indeed, Allah is with the patient."\n- Quran 2:153',
     ],
+    'traditionalist': [
+      'Your ancestors walked through storms and found their way. You carry their strength within you.',
+      'The earth provides in its own time. Trust the natural rhythm of life and your body.',
+      'Community and family are your pillars. Draw strength from those who love you and walk beside you.',
+      'Like the baobab tree that bends but does not break, you are resilient through every season.',
+      'The river flows around obstacles, not through them. Allow yourself grace and patience on this journey.',
+    ],
     'neutral': [
       'You are resilient and capable of overcoming any challenge.',
       'Every day is a new beginning. Embrace it with hope and courage.',
@@ -55,6 +62,7 @@ class _SupportScreenState extends State<SupportScreen> {
         final f = faithPref.toLowerCase();
         if (f.contains('christian')) faith = 'christian';
         else if (f.contains('muslim')) faith = 'muslim';
+        else if (f.contains('traditionalist')) faith = 'traditionalist';
       }
       setState(() {
         _faith = faith;
@@ -121,8 +129,11 @@ class _SupportScreenState extends State<SupportScreen> {
                 children: [
                   // Daily affirmation card
                   Container(
-                    width: 361,
-                    height: 130,
+                    width: double.infinity,
+                    constraints: const BoxConstraints(
+                      minHeight: 130,
+                      maxHeight: 200,
+                    ),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: const Color(0xFFA8D497).withOpacity(0.2),
@@ -183,17 +194,19 @@ class _SupportScreenState extends State<SupportScreen> {
                                 ],
                               ),
                               const SizedBox(height: 12),
-                              // Affirmation text (2 lines)
-                              Text(
-                                _currentAffirmation,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF2E683D),
-                                  fontFamily: 'Poppins',
-                                  height: 1.4,
+                              // Affirmation text (expandable)
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                    _currentAffirmation,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF2E683D),
+                                      fontFamily: 'Poppins',
+                                      height: 1.4,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],

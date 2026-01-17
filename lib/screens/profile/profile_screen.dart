@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import './_next_period_prediction_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
+import 'package:Fertipath/screens/home_screen.dart';
 import '../onboarding/welcome_screen.dart';
+import '../privacy/privacy_screen.dart';
+import '../privacy_and_security/privacy_and_security_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -84,12 +88,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Color _colorFromString(String input) {
+    if (input.isEmpty) return const Color(0xFF2E683D);
+    final hash = input.codeUnits.fold<int>(0, (prev, code) => prev + code);
+    final hue = (hash % 360).toDouble();
+    return HSVColor.fromAHSV(1, hue, 0.45, 0.85).toColor();
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     final loc = Provider.of<LocalizationProvider>(context);
     final user = _user ?? auth.currentUser;
     final userCard = _userCard ?? auth.currentUser;
+
+    // Get calendar days from CalendarTabScreen (for demo, use SharedPreferences directly)
+    // In production, refactor to pass calendar data via provider or callback
+    final Set<DateTime> calendarDays = {};
+    // Load tapped days from SharedPreferences synchronously (for demo only)
+    // In production, this should be async and handled in state
+    // This is a workaround for demonstration
+    SharedPreferences.getInstance().then((prefs) {
+      final savedDays = prefs.getStringList('tapped_days');
+      if (savedDays != null && savedDays.isNotEmpty) {
+        calendarDays.addAll(savedDays.map((s) => DateTime.parse(s)));
+      }
+    });
+    // Removed local prediction. Use backend-provided next period dates only.
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F0),
@@ -129,6 +154,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // User Profile Card (always use get_user)
+                    _buildProfileCard(userCard, context),
+                    const SizedBox(height: 16),
+                    // Removed nextPeriodDates display. Use backend-driven widgets only.
+                    // Goals Section
+                    _buildGoalsSection(),
+                    const SizedBox(height: 16),
+                    // Preferences Section
+                    _buildPreferencesSection(),
+                    const SizedBox(height: 16),
+                    // Privacy & Security Section
+                    _buildPrivacySection(),
+                    const SizedBox(height: 16),
+                    // Delete Account Section
+                    _buildDeleteAccountSection(context),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
                   children: [
                     // User Profile Card (always use get_user)
                     _buildProfileCard(userCard, context),
@@ -463,8 +511,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             setState(() {
               selectedLanguage = languageOptions[newCode]!;
             });
-            // Language preference updated - can be persisted via API if needed
-            debugPrint('Language changed to: $newCode');
+            try {
+              await ApiService().updateLanguage(newCode);
+              // Only refetch data, do not rebuild localization
+              if (HomeScreen.refreshInsights != null) {
+                HomeScreen.refreshInsights!();
+              }
+            } catch (e) {
+              debugPrint('Failed to update language: $e');
+            }
           },
         ),
       ],
@@ -574,7 +629,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: const Text('Data Privacy Policy'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                // Navigate to privacy policy
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const PrivacyScreen()),
+                );
               },
             ),
             ListTile(
@@ -583,7 +640,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: const Text('Manage Data & Permissions'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                // Navigate to data management
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const PrivacyAndSecurityScreen()),
+                );
               },
             ),
             ListTile(
@@ -592,7 +651,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: const Text('Explore my Data'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                // Navigate to data exploration
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const PrivacyAndSecurityScreen()),
+                );
               },
             ),
           ],

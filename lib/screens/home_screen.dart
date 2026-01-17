@@ -13,6 +13,7 @@ import 'onboarding/welcome_screen.dart';
 import 'educational/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
 import 'gender_prediction_screen.dart';
+import 'user_guide_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -206,6 +207,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               _toggleSideMenu();
                               setState(() => _selectedIndex = 1);
+                            },
+                          ),
+                          _buildMenuItem(
+                            label: 'How to Use',
+                            icon: Icons.menu_book_outlined,
+                            onTap: () {
+                              _toggleSideMenu();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const UserGuideScreen(),
+                                ),
+                              );
                             },
                           ),
                           _buildMenuItem(

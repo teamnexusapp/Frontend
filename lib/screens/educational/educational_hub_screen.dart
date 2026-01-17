@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../theme.dart';
 import 'article_reading_screen.dart';
-import 'audio_article_player_screen.dart';
 
 class EducationalHubScreen extends StatefulWidget {
   const EducationalHubScreen({super.key});
@@ -12,6 +12,33 @@ class EducationalHubScreen extends StatefulWidget {
 
 class _EducationalHubScreenState extends State<EducationalHubScreen> {
   String selectedCategory = 'Fertility Basics';
+  late AudioPlayer _audioPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer = AudioPlayer();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void _showAudioModal(BuildContext context, Map<String, String> article) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => AudioPlayerModal(
+        audioPlayer: _audioPlayer,
+        article: article,
+      ),
+    );
+  }
 
   final List<Map<String, String>> allArticles = [
     {
@@ -19,8 +46,8 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
       'title': 'How Pregnancy Happens: A Simple Guide to Conception',
       'excerpt':
           'Conception happens when sperm fertilizes an egg and the embryo implants. Learn when the fertile window opens and how health, timing, and patience support TTC.',
-      'image': 'https://picsum.photos/800/300?random=101',
-      'audioUrl': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Placeholder
+      'image': 'lib/screens/educational/article 1.jpeg',
+      'audioUrl': 'lib/screens/audio/article 1.mpeg',
       'content': '''Getting pregnant happens when a sperm fertilizes an egg and the fertilized egg successfully implants in the uterus. Understanding this helps improve your chances.
 
 Understanding the fertile window
@@ -47,8 +74,8 @@ Even with perfect timing, it can take months to conceive. That is normal and doe
       'title': 'How Long Does Ovulation Last?',
       'excerpt':
           'Ovulation is brief (12-24 hours), but sperm can live up to five days. Knowing this window helps plan or prevent pregnancy.',
-      'image': 'https://picsum.photos/800/300?random=102',
-      'audioUrl': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', // Placeholder
+      'image': 'lib/screens/educational/article 2.jpeg',
+      'audioUrl': 'lib/screens/audio/article 2.mpeg',
       'content': '''Ovulation is when an ovary releases a mature egg. The egg lives about 12 to 24 hours, and can be fertilized only in that short time.
 
 The fertile window
@@ -68,8 +95,8 @@ Knowing how long ovulation lasts and how long sperm survive can guide timing for
       'title': 'Infertility Is Not a Curse',
       'excerpt':
           'In many Nigerian and African communities, pressure to conceive is heavy. Infertility is a medical challenge, not a curse or a failure.',
-      'image': 'https://picsum.photos/800/300?random=103',
-      'audioUrl': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', // Placeholder
+      'image': 'lib/screens/educational/article 3.jpeg',
+      'audioUrl': 'lib/screens/audio/article 3.mpeg',
       'content': '''If you are trying to conceive and it has not happened yet, remember this: infertility is not a curse or a punishment.
 
 In many Nigerian and African societies, motherhood is tightly linked to identity, and delays can bring painful pressure. Terms like "barren" or "waiting on God" can leave emotional wounds, but difficulty conceiving is a medical and biological challenge, not a spiritual verdict.
@@ -114,7 +141,7 @@ Be kind to yourself. Protect your mental and emotional health. Surround yourself
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                child: Image.network(
+                child: Image.asset(
                   article['image']!,
                   fit: BoxFit.cover,
                   width: double.infinity,
@@ -184,19 +211,7 @@ Be kind to yourself. Protect your mental and emotional health. Surround yourself
                     Row(
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            // Navigate directly to audio player
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => AudioArticlePlayerScreen(
-                                  imageUrl: article['image'] ?? '',
-                                  title: article['title'] ?? '',
-                                  articleText: article['content'] ?? article['excerpt'] ?? '',
-                                  audioUrl: article['audioUrl'],
-                                ),
-                              ),
-                            );
-                          },
+                          onTap: () => _showAudioModal(context, article),
                           child: Container(
                             height: 32,
                             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -312,6 +327,255 @@ Be kind to yourself. Protect your mental and emotional health. Surround yourself
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class AudioPlayerModal extends StatefulWidget {
+  final AudioPlayer audioPlayer;
+  final Map<String, String> article;
+
+  const AudioPlayerModal({
+    Key? key,
+    required this.audioPlayer,
+    required this.article,
+  }) : super(key: key);
+
+  @override
+  State<AudioPlayerModal> createState() => _AudioPlayerModalState();
+}
+
+class _AudioPlayerModalState extends State<AudioPlayerModal> {
+  bool _isPlaying = false;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+  double _playbackSpeed = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupAudioPlayer();
+    _loadAudio();
+  }
+
+  void _setupAudioPlayer() {
+    widget.audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() => _isPlaying = state == PlayerState.playing);
+      }
+    });
+
+    widget.audioPlayer.onDurationChanged.listen((duration) {
+      if (mounted) {
+        setState(() => _duration = duration);
+      }
+    });
+
+    widget.audioPlayer.onPositionChanged.listen((position) {
+      if (mounted) {
+        setState(() => _position = position);
+      }
+    });
+  }
+
+  Future<void> _loadAudio() async {
+    if (widget.article['audioUrl']!.isNotEmpty) {
+      await widget.audioPlayer.setSourceAsset(widget.article['audioUrl']!);
+      await widget.audioPlayer.setPlaybackRate(_playbackSpeed);
+    }
+  }
+
+  Future<void> _togglePlayPause() async {
+    if (_isPlaying) {
+      await widget.audioPlayer.pause();
+    } else {
+      await widget.audioPlayer.resume();
+    }
+  }
+
+  Future<void> _setSpeed(double speed) async {
+    await widget.audioPlayer.setPlaybackRate(speed);
+    setState(() => _playbackSpeed = speed);
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+    return '${twoDigits(minutes)}:${twoDigits(seconds)}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.article['title'] ?? '',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF2E683D),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Progress bar
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SliderTheme(
+                        data: SliderThemeData(
+                          trackHeight: 4,
+                          thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                          overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+                        ),
+                        child: Slider(
+                          activeColor: const Color(0xFF2E683D),
+                          inactiveColor: Colors.grey.shade300,
+                          min: 0,
+                          max: _duration.inSeconds.toDouble(),
+                          value: _position.inSeconds.toDouble().clamp(0, _duration.inSeconds.toDouble()),
+                          onChanged: (value) async {
+                            await widget.audioPlayer.seek(Duration(seconds: value.toInt()));
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _formatDuration(_position),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            Text(
+                              _formatDuration(_duration),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  // Playback controls
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.skip_previous),
+                        onPressed: () async {
+                          await widget.audioPlayer.seek(Duration.zero);
+                        },
+                      ),
+                      const SizedBox(width: 16),
+                      Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xFF2E683D),
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            _isPlaying ? Icons.pause : Icons.play_arrow,
+                            color: Colors.white,
+                          ),
+                          iconSize: 32,
+                          onPressed: _togglePlayPause,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        icon: const Icon(Icons.skip_next),
+                        onPressed: () async {
+                          await widget.audioPlayer.seek(_duration);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  // Speed controls
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Playback Speed',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [0.75, 1.0, 1.25, 1.5, 2.0].map((speed) {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _playbackSpeed == speed
+                                    ? const Color(0xFF2E683D)
+                                    : Colors.grey.shade300,
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              onPressed: () => _setSpeed(speed),
+                              child: Text(
+                                speed == 1.0 ? '1x' : '${speed}x',
+                                style: TextStyle(
+                                  color: _playbackSpeed == speed ? Colors.white : Colors.black87,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

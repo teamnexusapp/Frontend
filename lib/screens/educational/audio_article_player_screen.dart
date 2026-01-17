@@ -69,8 +69,8 @@ class _AudioArticlePlayerScreenState extends State<AudioArticlePlayerScreen> {
   Future<void> _loadAudio() async {
     setState(() => _isLoading = true);
     try {
-      // Use placeholder audio URL
-      final audioUrl = widget.audioUrl ?? 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+      // Use provided audio URL
+      final audioUrl = widget.audioUrl;
       await _audioPlayer.setSourceUrl(audioUrl);
     } catch (e) {
       debugPrint('Error loading audio: $e');
@@ -91,8 +91,8 @@ class _AudioArticlePlayerScreenState extends State<AudioArticlePlayerScreen> {
       await _audioPlayer.pause();
     } else {
       if (_position == Duration.zero && (widget.audioUrl == null || widget.audioUrl!.isEmpty)) {
-        // Load placeholder audio first
-        await _loadAudio();
+        // No audio URL provided
+        return;
       }
       await _audioPlayer.resume();
     }
