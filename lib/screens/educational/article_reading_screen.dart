@@ -267,6 +267,9 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
       },
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -282,9 +285,9 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
-                Text(
+                const Text(
                   'Read Article',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -304,7 +307,7 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
               children: [
                 // Article image
                 Image.asset(
-                  imageUrl,
+                  widget.imageUrl,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 220,
@@ -318,7 +321,7 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                   child: Text(
-                    title,
+                    widget.title,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -330,7 +333,7 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    articleText,
+                    widget.articleText,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black87,
