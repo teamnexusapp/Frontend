@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../../services/localization_provider.dart';
@@ -22,25 +23,41 @@ class _AudioHubScreenState extends State<AudioHubScreen> {
   }
 
   Future<void> _setPlaybackSpeed(double speed) async {
-    await _audioPlayer.setPlaybackRate(speed);
-    setState(() => _playbackSpeed = speed);
+    try {
+      await _audioPlayer.setPlaybackRate(speed);
+      setState(() => _playbackSpeed = speed);
+    } catch (e) {
+      // Gracefully handle WebAudio errors on web
+      debugPrint('Playback rate change failed: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              kIsWeb
+                  ? 'Playback speed not supported by current browser/audio backend.'
+                  : 'Failed to change playback speed.',
+            ),
+          ),
+        );
+      }
+    }
   }
 
   final List<Map<String, String>> _lessons = const [
     {
       'title': 'Understanding Your Menstrual Cycle',
       'content': 'Learn the phases of your cycle and how they affect fertility.',
-      'audioUrl': 'lib/screens/audio/article 1.mpeg'
+      'audioUrl': 'lib/screens/audio/article_1.mp3'
     },
     {
       'title': 'What is Ovulation?',
       'content': 'Ovulation is when an egg is released from the ovary.',
-      'audioUrl': 'lib/screens/audio/article 2.mpeg'
+      'audioUrl': 'lib/screens/audio/article_2.mp3'
     },
     {
       'title': 'Fertility in your 20s, 30s and 40s',
       'content': 'Fertility changes with age — learn how to plan and prepare.',
-      'audioUrl': 'lib/screens/audio/article 3.mpeg'
+      'audioUrl': 'lib/screens/audio/article_3.mp3'
     },
   ];
 
@@ -136,9 +153,24 @@ class _AudioHubScreenState extends State<AudioHubScreen> {
                                 if (_playingIndex != index) {
                                   setState(() => _playingIndex = index);
                                 }
-                                await _audioPlayer.play(
-                                  AssetSource(item['audioUrl']!),
-                                );
+                                try {
+                                  await _audioPlayer.play(
+                                    AssetSource(item['audioUrl']!),
+                                  );
+                                } catch (e) {
+                                  debugPrint('Audio play failed: $e');
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          kIsWeb
+                                              ? 'Audio failed to play on web. Ensure assets are MP3 and paths have no spaces.'
+                                              : 'Audio failed to play.',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
                               }
                             },
                           ),

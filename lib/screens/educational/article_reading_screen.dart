@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class ArticleReadingScreen extends StatefulWidget {
@@ -70,10 +71,25 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
     try {
       if (widget.audioUrl != null && widget.audioUrl!.isNotEmpty) {
         final src = widget.audioUrl!;
-        if (src.startsWith('http://') || src.startsWith('https://')) {
-          await _audioPlayer.play(UrlSource(src));
-        } else {
-          await _audioPlayer.play(AssetSource(src));
+        try {
+          if (src.startsWith('http://') || src.startsWith('https://')) {
+            await _audioPlayer.play(UrlSource(src));
+          } else {
+            await _audioPlayer.play(AssetSource(src));
+          }
+        } catch (e) {
+          debugPrint('Error loading audio: $e');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  kIsWeb
+                      ? 'Audio failed to load on web. Use MP3 assets and avoid spaces in filenames.'
+                      : 'Failed to load audio.',
+                ),
+              ),
+            );
+          }
         }
       }
     } catch (e) {
@@ -98,15 +114,45 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
         // Audio hasn't been loaded yet, load and play
         if (widget.audioUrl != null && widget.audioUrl!.isNotEmpty) {
           final src = widget.audioUrl!;
-          if (src.startsWith('http://') || src.startsWith('https://')) {
-            await _audioPlayer.play(UrlSource(src));
-          } else {
-            await _audioPlayer.play(AssetSource(src));
+          try {
+            if (src.startsWith('http://') || src.startsWith('https://')) {
+              await _audioPlayer.play(UrlSource(src));
+            } else {
+              await _audioPlayer.play(AssetSource(src));
+            }
+          } catch (e) {
+            debugPrint('Error starting audio: $e');
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    kIsWeb
+                        ? 'Audio failed to play on web. Ensure assets are MP3 and paths have no spaces.'
+                        : 'Audio failed to play.',
+                  ),
+                ),
+              );
+            }
           }
         }
       } else {
         // Resume from where it was paused
-        await _audioPlayer.resume();
+        try {
+          await _audioPlayer.resume();
+        } catch (e) {
+          debugPrint('Resume failed: $e');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  kIsWeb
+                      ? 'Resume failed on web audio.'
+                      : 'Resume failed.',
+                ),
+              ),
+            );
+          }
+        }
       }
     }
   }

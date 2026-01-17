@@ -11,6 +11,7 @@ import 'services/localization_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme.dart';
 import 'services/theme_provider.dart';
+import 'screens/onboarding/splash_screen.dart';
 import 'screens/onboarding/welcome_screen.dart';
 import 'screens/onboarding/login_screen.dart' as OnboardingLogin;
 import 'screens/onboarding/language_selection_screen.dart';
@@ -125,7 +126,7 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(builder: (_) => const HomeScreen());
               }
             },
-            home: const HomeScreen(),
+            home: const SplashScreen(),
           );
         },
       ),

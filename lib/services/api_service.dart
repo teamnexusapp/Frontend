@@ -237,14 +237,13 @@ class ApiService {
     }
   }
 
-  // Login (with retry logic for server wake-up)
+  // Login - Primary endpoint only
   Future<Map<String, dynamic>> login({
     required String email,
     required String password,
-    int retryCount = 0,
   }) async {
     try {
-      debugPrint('Login attempt ${retryCount + 1} for user: $email');
+      debugPrint('Login attempt for user: $email');
       
       final headers = await getHeaders();
       final body = {
@@ -255,11 +254,11 @@ class ApiService {
       debugPrint('Login headers: $headers');
       debugPrint('Login request body: ${jsonEncode(body)}');
       
-      // First try the token endpoint with JSON (if backend supports JSON)
-      final primaryUrl = Uri.parse('$baseUrl/auth/token');
-      debugPrint('Login primary URL: $primaryUrl');
-      var response = await http.post(
-        primaryUrl,
+      final url = Uri.parse('$baseUrl/auth/token');
+      debugPrint('Login URL: $url');
+      
+      final response = await http.post(
+        url,
         headers: headers,
         body: jsonEncode(body),
       ).timeout(
@@ -275,90 +274,12 @@ class ApiService {
           await saveToken(data['access_token']);
         }
         return data;
-      } else if (retryCount == 0) {
-        // Many FastAPI OAuth2 setups expect x-www-form-urlencoded with 'username' and 'password'
-        final formHeaders = <String, String>{
-          ...headers,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        };
-        final formBody = 'username=' + Uri.encodeQueryComponent(email) +
-            '&password=' + Uri.encodeQueryComponent(password);
-        debugPrint('Primary login failed (${response.statusCode}). Trying form-encoded to /auth/token');
-        response = await http.post(
-          primaryUrl,
-          headers: formHeaders,
-          body: formBody,
-        ).timeout(const Duration(seconds: 45));
-
-        debugPrint('Form Login Response: ${response.statusCode}');
-        debugPrint('Form Login Body: ${response.body}');
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          if (data['access_token'] != null) {
-            await saveToken(data['access_token']);
-          }
-          return data;
-        }
-
-        // Some backends expose a JSON login at /auth/login instead of /auth/token
-        final altUrl = Uri.parse('$baseUrl/auth/login');
-        debugPrint('Form login failed (${response.statusCode}). Trying alternate URL: $altUrl');
-        response = await http.post(
-          altUrl,
-          headers: headers,
-          body: jsonEncode(body),
-        ).timeout(
-          const Duration(seconds: 45),
-        );
-
-        debugPrint('Alt Login Response: ${response.statusCode}');
-        debugPrint('Alt Login Body: ${response.body}');
-
-        if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          if (data['access_token'] != null) {
-            await saveToken(data['access_token']);
-          }
-          return data;
-        } else {
-          throw ApiException(
-            statusCode: response.statusCode,
-            message: _extractErrorMessage(response),
-          );
-        }
-      } else if (response.statusCode == 404) {
-        // Endpoint not found
-        throw ApiException(
-          statusCode: response.statusCode,
-          message: 'Login endpoint not found. Backend may not be properly configured.',
-        );
-      } else if (response.statusCode >= 500 && retryCount < 2) {
-        // Backend might be waking up (Render free tier), retry after delay
-        debugPrint('Server error during login, retrying in 5 seconds...');
-        await Future.delayed(const Duration(seconds: 5));
-        return login(
-          email: email,
-          password: password,
-          retryCount: retryCount + 1,
-        );
       } else {
         throw ApiException(
           statusCode: response.statusCode,
           message: _extractErrorMessage(response),
         );
       }
-    } on TimeoutException {
-      if (retryCount < 2) {
-        debugPrint('Login timeout, retrying in 5 seconds...');
-        await Future.delayed(const Duration(seconds: 5));
-        return login(
-          email: email,
-          password: password,
-          retryCount: retryCount + 1,
-        );
-      }
-      rethrow;
     } catch (e) {
       debugPrint('Login error: $e');
       rethrow;
