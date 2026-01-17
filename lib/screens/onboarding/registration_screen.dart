@@ -651,10 +651,3 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
     );
   }
 }
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
