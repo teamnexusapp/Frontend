@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Fertipath/services/api_service.dart';
+import '../../services/api_service.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String? token;

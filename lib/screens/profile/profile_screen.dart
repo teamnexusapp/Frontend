@@ -6,7 +6,7 @@ import '../../services/auth_service.dart';
 import '../../models/user.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
-import 'package:Fertipath/screens/home_screen.dart';
+import '../home_screen.dart';
 import '../onboarding/welcome_screen.dart';
 import '../privacy/privacy_screen.dart';
 import '../privacy_and_security/privacy_and_security_screen.dart';
@@ -159,28 +159,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildProfileCard(userCard, context),
                     const SizedBox(height: 16),
                     // Removed nextPeriodDates display. Use backend-driven widgets only.
-                    // Goals Section
-                    _buildGoalsSection(),
-                    const SizedBox(height: 16),
-                    // Preferences Section
-                    _buildPreferencesSection(),
-                    const SizedBox(height: 16),
-                    // Privacy & Security Section
-                    _buildPrivacySection(),
-                    const SizedBox(height: 16),
-                    // Delete Account Section
-                    _buildDeleteAccountSection(context),
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ),
-            ),
-    );
-  }
-                  children: [
-                    // User Profile Card (always use get_user)
-                    _buildProfileCard(userCard, context),
-                    const SizedBox(height: 16),
                     // Goals Section
                     _buildGoalsSection(),
                     const SizedBox(height: 16),
