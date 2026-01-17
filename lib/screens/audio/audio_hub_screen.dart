@@ -47,17 +47,17 @@ class _AudioHubScreenState extends State<AudioHubScreen> {
     {
       'title': 'Understanding Your Menstrual Cycle',
       'content': 'Learn the phases of your cycle and how they affect fertility.',
-      'audioUrl': 'article_1.mp3'
+      'audioUrl': 'lib/screens/audio/article_1.mp3'
     },
     {
       'title': 'What is Ovulation?',
       'content': 'Ovulation is when an egg is released from the ovary.',
-      'audioUrl': 'article_2.mp3'
+      'audioUrl': 'lib/screens/audio/article_2.mp3'
     },
     {
       'title': 'Fertility in your 20s, 30s and 40s',
       'content': 'Fertility changes with age — learn how to plan and prepare.',
-      'audioUrl': 'article_3.mp3'
+      'audioUrl': 'lib/screens/audio/article_3.mp3'
     },
   ];
 

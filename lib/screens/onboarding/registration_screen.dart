@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/localization_provider.dart' as loc_provider;
 import 'onboarding_screens.dart';
-import 'profile_setup_screen.dart';
+import 'login_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -565,10 +565,11 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
 
                           if (mounted) {
                             Navigator.of(context).pop();
-                            // Navigate to ProfileSetupScreen after verification
+                            // Navigate to login screen for user to log in
+                            // Profile setup check will happen after login
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (_) => const ProfileSetupScreen(),
+                                builder: (_) => const LoginScreen(),
                               ),
                             );
                           }

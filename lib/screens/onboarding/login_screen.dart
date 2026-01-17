@@ -4,6 +4,7 @@ import 'forget_password_flow.dart';
 import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
 import '../../services/health_check_service.dart';
+import 'profile_setup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -364,7 +365,25 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (mounted) {
-        Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+        // Check if user profile is complete
+        final user = authService.currentUser;
+        final isProfileComplete = user != null && 
+          (user.age != null || 
+           user.cycleLength != null || 
+           user.periodLength != null || 
+           user.audioPreference != null);
+        
+        if (isProfileComplete) {
+          // Profile is already set up, go to home
+          Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+        } else {
+          // Profile not set up, show profile setup screen
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => const ProfileSetupScreen(),
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {

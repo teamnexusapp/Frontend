@@ -48,7 +48,7 @@ class _EducationalHubScreenState extends State<EducationalHubScreen> {
       'excerpt':
           'Conception happens when sperm fertilizes an egg and the embryo implants. Learn when the fertile window opens and how health, timing, and patience support TTC.',
       'image': 'lib/screens/educational/article 1.jpeg',
-      'audioUrl': 'article_1.mp3',
+      'audioUrl': 'lib/screens/audio/article_1.mp3',
       'content': '''Getting pregnant happens when a sperm fertilizes an egg and the fertilized egg successfully implants in the uterus. Understanding this helps improve your chances.
 
 Understanding the fertile window
@@ -76,7 +76,7 @@ Even with perfect timing, it can take months to conceive. That is normal and doe
       'excerpt':
           'Ovulation is brief (12-24 hours), but sperm can live up to five days. Knowing this window helps plan or prevent pregnancy.',
       'image': 'lib/screens/educational/article 2.jpeg',
-      'audioUrl': 'article_2.mp3',
+      'audioUrl': 'lib/screens/audio/article_2.mp3',
       'content': '''Ovulation is when an ovary releases a mature egg. The egg lives about 12 to 24 hours, and can be fertilized only in that short time.
 
 The fertile window
@@ -97,7 +97,7 @@ Knowing how long ovulation lasts and how long sperm survive can guide timing for
       'excerpt':
           'In many Nigerian and African communities, pressure to conceive is heavy. Infertility is a medical challenge, not a curse or a failure.',
       'image': 'lib/screens/educational/article 3.jpeg',
-      'audioUrl': 'article_3.mp3',
+      'audioUrl': 'lib/screens/audio/article_3.mp3',
       'content': '''If you are trying to conceive and it has not happened yet, remember this: infertility is not a curse or a punishment.
 
 In many Nigerian and African societies, motherhood is tightly linked to identity, and delays can bring painful pressure. Terms like "barren" or "waiting on God" can leave emotional wounds, but difficulty conceiving is a medical and biological challenge, not a spiritual verdict.

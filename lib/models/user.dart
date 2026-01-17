@@ -215,13 +215,13 @@ class User {
       phoneVerified: phoneVerified,
       createdAt: createdAt,
       updatedAt: updatedAt,
-      ttcHistory: ttcHistory,
-      faithPreference: faithPreference,
-      cycleLength: cycleLength is int ? cycleLength : int.tryParse(cycleLength?.toString() ?? ''),
-      periodLength: periodLength is int ? periodLength : int.tryParse(periodLength?.toString() ?? ''),
-      age: age is int ? age : int.tryParse(age?.toString() ?? ''),
-      lastPeriodDate: lastPeriodDate,
-      audioPreference: audioPreference is bool ? audioPreference : (audioPreference?.toString() == 'true'),
+      ttcHistory: ttcHistory is String ? ttcHistory : null,
+      faithPreference: faithPreference is String ? faithPreference : null,
+      cycleLength: cycleLength is int ? cycleLength : (cycleLength != null ? int.tryParse(cycleLength.toString()) : null),
+      periodLength: periodLength is int ? periodLength : (periodLength != null ? int.tryParse(periodLength.toString()) : null),
+      age: age is int ? age : (age != null ? int.tryParse(age.toString()) : null),
+      lastPeriodDate: lastPeriodDate is String ? lastPeriodDate : null,
+      audioPreference: audioPreference is bool ? audioPreference : (audioPreference != null ? (audioPreference.toString().toLowerCase() == 'true' || audioPreference == 1) : null),
     );
   }
 }
