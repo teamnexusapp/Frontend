@@ -1,49 +1,15 @@
 {
   "@@locale": "ha",
   "appTitle": "Nexus Fertility",
-<<<<<<< HEAD
-  "welcomeTitle": "Welcome to Nexus Fertility",
-  "welcomeSubtitle": "Your personal fertility companion",
-  "selectLanguage": "Select Language",
-  "english": "English",
-  "yoruba": "Yorùbá",
-=======
-
   "welcomeTitle": "Barka da zuwa Nexus Fertility",
   "welcomeSubtitle": "Mataimaki na haihuwa na sirri",
   "selectLanguage": "Zaɓi Harshe",
   "english": "English",
   "yoruba": "Yoruba",
-
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
   "igbo": "Igbo",
   "hausa": "Hausa",
   "pidgin": "Pidgin",
   "german": "Deutsch",
-<<<<<<< HEAD
-  "next": "Next",
-  "back": "Back",
-  "skip": "Skip",
-  "done": "Done",
-  "createAccount": "Create Account",
-  "signIn": "Sign In",
-  "email": "Email",
-  "phoneNumber": "Phone Number",
-  "password": "Password",
-  "confirmPassword": "Confirm Password",
-  "firstName": "First Name",
-  "lastName": "Last Name",
-  "dateOfBirth": "Date of Birth",
-  "selectDate": "Select Date",
-  "profilePicture": "Profile Picture",
-  "uploadPhoto": "Upload Photo",
-  "takePhoto": "Take Photo",
-  "chooseFromGallery": "Choose from Gallery",
-  "verifyEmail": "Verify Email",
-  "verifyPhone": "Verify Phone",
-  "enterOTP": "Enter OTP",
-  "otpSentTo": "OTP sent to {email}",
-=======
 
   "next": "Na gaba",
   "back": "Koma baya",
@@ -67,66 +33,18 @@
   "verifyPhone": "Tabbatar da Waya",
   "enterOTP": "Shigar da OTP",
   "otpSentTo": "An aika OTP zuwa {email}",
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
   "@otpSentTo": {
     "description": "Message shown after OTP is sent",
-    "placeholders": {"email": {"type": "String"}}
+    "placeholders": { "email": { "type": "String" } }
   },
-<<<<<<< HEAD
-  "resendCode": "Resend Code",
-  "codeExpires": "Code expires in {minutes}:{seconds}",
-  "@codeExpires": {"description": "Timer for OTP expiration","placeholders": {"minutes": {"type": "String"},"seconds": {"type": "String"}}},
-  "invalidEmail": "Please enter a valid email address",
-  "invalidPhone": "Please enter a valid phone number",
-  "passwordMismatch": "Passwords do not match",
-  "passwordTooShort": "Password must be at least 8 characters",
-  "accountCreatedSuccessfully": "Account created successfully!",
-  "profileSetupComplete": "Your profile setup is complete",
-  "termsAndConditions": "I agree to the Terms and Conditions",
-  "privacyPolicy": "I agree to the Privacy Policy",
-  "acceptTerms": "Please accept the terms and conditions",
-  "emailAlreadyExists": "Email already registered",
-  "phoneAlreadyExists": "Phone number already registered",
-  "verificationFailed": "Verification failed. Please try again",
-  "tryAgain": "Try Again",
-  "loading": "Loading...",
-  "error": "Error",
-  "success": "Success",
-  "cancel": "Cancel",
-  "save": "Save",
-  "logout": "Logout",
-  "genderMale": "Male",
-  "genderFemale": "Female",
-  "genderOther": "Other",
-  "selectGender": "Select Gender",
-  "profileTitle": "Profile",
-  "editProfile": "Edit profile",
-  "audioGuidance": "Audio Guidance",
-  "ttcHistory": "TTC History",
-  "faithPreference": "Faith Preference",
-  "cycleLength": "Cycle Length",
-  "lastPeriodDate": "Last Period Date",
-  "continueButton": "Continue",
-  "joined": "Joined",
-  "audioLessons": "Audio Learning",
-  "play": "Play",
-  "stop": "Stop",
-  "supportHub": "Support Hub",
-  "dailyAffirmation": "Daily Affirmations",
-  "chooseSupportMode": "Choose your support mode",
-  "exploreCommunityGroups": "Explore Community Groups"
-=======
+
   "resendCode": "Sake Aika Lambar",
   "codeExpires": "Lambar za ta ƙare a {minutes}:{seconds}",
   "@codeExpires": {
     "description": "Timer for OTP expiration",
     "placeholders": {
-      "minutes": {
-        "type": "String"
-      },
-      "seconds": {
-        "type": "String"
-      }
+      "minutes": { "type": "String" },
+      "seconds": { "type": "String" }
     }
   },
   "invalidEmail": "Don Allah shigar da ingantaccen adireshin imel",
@@ -134,7 +52,7 @@
   "passwordMismatch": "Kalmomin sirri ba su dace ba",
   "passwordTooShort": "Kalmar sirri dole ta kasance aƙalla haruffa 8",
   "accountCreatedSuccessfully": "An ƙirƙiri asusun nasara!",
-  "profileSetupComplete": "An gama saitin bayanan ku",
+  "profileSetupComplete": "An kammala saita bayanan!",
   "termsAndConditions": "Na yarda da Sharuɗɗa da Yanayi",
   "privacyPolicy": "Na yarda da Manufar Sirri",
   "acceptTerms": "Don Allah karɓi sharuɗɗa da yanayi",
@@ -152,6 +70,7 @@
   "genderFemale": "Mace",
   "genderOther": "Wani",
   "selectGender": "Zaɓi Jinsi",
+
   "welcomeToJourney": "Barka da zuwa tafiyarku",
   "choosePreferredLanguage": "Zaɓi harshen da kake so",
   "choosePreferredMethod": "Zaɓi hanyar da kake so",
@@ -175,39 +94,31 @@
   "invalidPhoneForCountry": "Lambar waya bai dace ba ga wannan ƙasa",
   "otpInfoMessage": "Za mu aiko muku da OTP lambar don tabbatar da lambar wayar ku",
   "continueText": "Ci gaba",
+
   "verifyEmailTitle": "Tabbatar da Imel",
   "verifyPhoneTitle": "Tabbatar da Lambar Waya",
   "codeSentToEmail": "Shigar da lambar da muka aiko {email}",
   "@codeSentToEmail": {
     "description": "Message showing where OTP was sent",
-    "placeholders": {
-      "email": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "email": { "type": "String" } }
   },
   "codeSentToPhone": "Shigar da lambar da muka aiko {phone}",
   "@codeSentToPhone": {
     "description": "Message showing where OTP was sent",
-    "placeholders": {
-      "phone": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "phone": { "type": "String" } }
   },
   "codeExpiresIn": "Lambar za ta ƙare a {time}",
   "@codeExpiresIn": {
     "description": "Timer showing code expiration",
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
+    "placeholders": { "time": { "type": "String" } }
   },
   "verify": "Tabbatar",
   "didntReceiveCode": "Ba ka samu lambar ba? Sake aika",
   "enterAll6Digits": "Don Allah shigar da dukkan lambobi 6",
+
   "profile": "Bayani",
+  "profileTitle": "Profile",
+  "editProfile": "Edit profile",
   "completeProfile": "Bari mu kammala bayanan ku",
   "personalizeGuide": "Wannan zai taimaka mana mu keɓanta jagorar zagayowar ku",
   "age": "Shekaru",
@@ -222,8 +133,8 @@
   "language": "Harshe",
   "audioGuidance": "Jagorar sauti",
   "agreeTerms": "Na yarda da Sharuɗɗa da Manufar Sirri",
-  "profileSetupComplete": "An kammala saita bayanan!",
   "selectOption": "Zaɓi zaɓi",
+
   "home": "Gida",
   "calendar": "Kalanda",
   "learn": "Koyi",
@@ -240,6 +151,7 @@
   "notes": "Bayanai",
   "loggedSymptoms": "Alamomin da aka rubuta",
   "educationalContentComingSoon": "Abubuwan ilimi suna zuwa nan ba da jimawa ba",
+
   "authInvalidEmail": "Tsarin email bai dace ba",
   "authInvalidPhone": "Tsarin lambar waya bai dace ba",
   "authPasswordTooShort": "Kalmar sirri dole ta kasance aƙalla haruffa 8",
@@ -256,6 +168,4 @@
   "enterPassword": "Shigar da kalmar sirri",
   "forgotPassword": "Ka manta da kalmar sirri?",
   "logIn": "Shiga"
-
->>>>>>> 5875813aa29915844ad55ca06839c98c1a4de123
 }
