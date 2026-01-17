@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/services.dart';
 import '../services/auth_service.dart';
 import '../services/api_service.dart';
 import '../models/user.dart';
@@ -398,6 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const buttonHeight = 64.0;
     
     return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
       child: Column(
         children: [
           SizedBox(
@@ -692,12 +694,14 @@ class _HomeScreenState extends State<HomeScreen> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
-              title: const Text(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              title: Text(
                 'Send us your feedback',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               content: SingleChildScrollView(
@@ -705,12 +709,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Let us know about any concerns, bugs, or suggestions:',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -720,18 +724,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       minLines: 4,
                       decoration: InputDecoration(
                         hintText: 'Describe your feedback...',
-                        hintStyle: TextStyle(color: Colors.grey.shade400),
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF2E683D),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
                             width: 2,
                           ),
                         ),
@@ -743,11 +751,13 @@ class _HomeScreenState extends State<HomeScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                  ),
                   child: const Text(
                     'Cancel',
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      color: Colors.grey,
                     ),
                   ),
                 ),
@@ -781,18 +791,20 @@ Message:
 ${_messageController.text}
 ''';
 
-                            // Try to send via backend API
+                            // Provide support email and copy it for the user
                             try {
                               final apiService = ApiService();
-                              await apiService.sendSupportEmail(
-                                email: userEmail,
-                                subject: subject,
-                                message: _messageController.text,
-                                recipientEmail: 'teamnexus@techlaunchpadi',
-                              );
+                              final supportEmail = await apiService.getSupportEmail();
+                              await Clipboard.setData(ClipboardData(text: supportEmail));
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Support email copied: $supportEmail'),
+                                  ),
+                                );
+                              }
                             } catch (apiError) {
-                              debugPrint('API email send failed: $apiError');
-                              // Fallback to showing success message
+                              debugPrint('Error getting support email: $apiError');
                             }
 
                             if (mounted) {
@@ -800,7 +812,7 @@ ${_messageController.text}
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
-                                    'Thank you! Your feedback has been sent to teamnexus@techlaunchpadi',
+                                    'Please send your feedback to teamnexus@techlaunchpadi',
                                   ),
                                   backgroundColor: Colors.green,
                                 ),

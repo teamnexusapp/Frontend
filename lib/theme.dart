@@ -21,3 +21,26 @@ final ThemeData appTheme = ThemeData(
   ),
   inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Color(0xFFF6F8F6), border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
 );
+
+final ThemeData appDarkTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: AppColors.primary,
+    brightness: Brightness.dark,
+    background: const Color(0xFF121212),
+    surface: const Color(0xFF1E1E1E),
+  ),
+  scaffoldBackgroundColor: const Color(0xFF121212),
+  appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent, elevation: 0, foregroundColor: Colors.white),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(side: BorderSide(color: Colors.grey.shade700), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+  ),
+  inputDecorationTheme: const InputDecorationTheme(
+    filled: true,
+    fillColor: Color(0xFF1A1A1A),
+    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+  ),
+);

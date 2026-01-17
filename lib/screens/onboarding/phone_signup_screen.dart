@@ -267,11 +267,7 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
                   // Cancel Button
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const OnboardingScreens(),
-                        ),
-                      );
+                      Navigator.of(context).pushReplacementNamed('/welcome');
                     },
                     child: const Text(
                       'Cancel',
@@ -566,11 +562,7 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                           if (mounted) {
                             Navigator.of(context).pop();
                             // Navigate to login screen
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (_) => const LoginScreen(),
-                              ),
-                            );
+                            Navigator.of(context).pushReplacementNamed('/login');
                           }
                         } catch (e) {
                           if (mounted) {

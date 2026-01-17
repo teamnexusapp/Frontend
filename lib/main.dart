@@ -10,6 +10,13 @@ import 'services/auth_service.dart';
 import 'services/localization_provider.dart';
 import 'screens/home_screen.dart';
 import 'theme.dart';
+import 'services/theme_provider.dart';
+import 'screens/onboarding/welcome_screen.dart';
+import 'screens/onboarding/login_screen.dart' as OnboardingLogin;
+import 'screens/onboarding/reset_password_screen.dart';
+import 'screens/onboarding/password_updated_screen.dart';
+import 'screens/onboarding/language_selection_screen.dart';
+import 'screens/onboarding/forget_password_flow.dart';
 
 Future<void> _initializeFirebase() async {
   try {
@@ -57,22 +64,9 @@ void main() async {
   runApp(MyApp(initialTheme: saved));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   final String initialTheme;
   const MyApp({Key? key, required this.initialTheme}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late ThemeMode _themeMode;
-
-  @override
-  void initState() {
-    super.initState();
-    _themeMode = _stringToThemeMode(widget.initialTheme);
-  }
 
   ThemeMode _stringToThemeMode(String s) {
     switch (s) {
@@ -85,41 +79,56 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> _setThemeMode(ThemeMode tm) async {
-    setState(() => _themeMode = tm);
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final key = tm == ThemeMode.system ? 'system' : (tm == ThemeMode.light ? 'light' : 'dark');
-      await prefs.setString('theme_mode', key);
-    } catch (e) {
-      debugPrint('Error saving theme mode: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => LocalizationProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider(initialMode: _stringToThemeMode(initialTheme))),
       ],
-      child: Consumer<LocalizationProvider>(
-        builder: (context, localizationProvider, _) {
-return MaterialApp(
-  title: 'Ferti Path',
-  theme: ThemeData.light(),
-  darkTheme: ThemeData.dark(),
-  themeMode: _themeMode,
-  localizationsDelegates: const [
-    AppLocalizations.delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-  ],
-  supportedLocales: LocalizationProvider.supportedLocales,
-  locale: localizationProvider.currentLocale,
-  home: const HomeScreen(),
-);
+      child: Consumer2<LocalizationProvider, ThemeProvider>(
+        builder: (context, localizationProvider, themeProvider, _) {
+          return MaterialApp(
+            title: 'Ferti Path',
+            theme: appTheme,
+            darkTheme: appDarkTheme,
+            themeMode: themeProvider.mode,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: LocalizationProvider.supportedLocales,
+            locale: localizationProvider.currentLocale,
+            onGenerateRoute: (settings) {
+              final name = settings.name ?? '';
+              Uri uri;
+              try {
+                uri = Uri.parse(name);
+              } catch (_) {
+                uri = Uri(path: name);
+              }
+              switch (uri.path) {
+                case '/welcome':
+                  return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+                case '/login':
+                  return MaterialPageRoute(builder: (_) => const OnboardingLogin.LoginScreen());
+                case '/reset_password':
+                  return MaterialPageRoute(builder: (_) => ResetPasswordScreen(token: uri.queryParameters['token']));
+                case '/password-updated':
+                  return MaterialPageRoute(builder: (_) => const PasswordUpdatedScreen());
+                case '/language':
+                  return MaterialPageRoute(builder: (_) => const LanguageSelectionScreen());
+                case '/forgot-password':
+                  return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
+                default:
+                  return MaterialPageRoute(builder: (_) => const HomeScreen());
+              }
+            },
+            home: const HomeScreen(),
+          );
         },
       ),
     );

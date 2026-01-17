@@ -41,11 +41,7 @@ class WelcomeScreen extends StatelessWidget {
                   height: 70,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LanguageSelectionScreen(),
-                        ),
-                      );
+                      Navigator.of(context).pushReplacementNamed('/language');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E683D),
@@ -73,11 +69,7 @@ class WelcomeScreen extends StatelessWidget {
                   height: 70,
                   child: OutlinedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
+                      Navigator.of(context).pushReplacementNamed('/login');
                     },
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.transparent,

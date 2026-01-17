@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'phone_signup_screen.dart';
 import 'forget_password_flow.dart';
 import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
@@ -80,11 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Forget Password
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const ForgotPasswordScreen(),
-                        ),
-                      );
+                      Navigator.of(context).pushReplacementNamed('/forgot-password');
                     },
                     child: const Text(
                       'Forget Password.',
@@ -149,24 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (_) => const PhoneSignupScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins',
-                            color: Color(0xFF2E683D),
-                          ),
-                        ),
-                      ),
+                      // Registration via phone is no longer supported; link removed.
                     ],
                   ),
                   const SizedBox(height: 16),

@@ -626,42 +626,11 @@ class ApiService {
     }
   }
 
-  /// Send support email to teamnexus@techlaunchpadi
-  Future<void> sendSupportEmail({
-    required String email,
-    required String subject,
-    required String message,
-    required String recipientEmail,
-  }) async {
-    try {
-      final url = Uri.parse('$baseUrl/send-support-email');
-      
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'sender_email': email,
-          'subject': subject,
-          'message': message,
-          'recipient_email': recipientEmail,
-        }),
-      ).timeout(const Duration(seconds: 30));
-
-      if (response.statusCode != 200) {
-        throw ApiException(
-          statusCode: response.statusCode,
-          message: 'Failed to send support email: ${response.body}',
-        );
-      }
-
-      debugPrint('Support email sent successfully');
-    } catch (e) {
-      debugPrint('Error sending support email: $e');
-      rethrow;
-    }
+  /// Support email information (no backend endpoint available)
+  Future<String> getSupportEmail() async {
+    return 'teamnexus@techlaunchpadi';
   }
+
 }
 
 // Custom API Exception
@@ -676,41 +645,4 @@ class ApiException implements Exception {
 
   @override
   String toString() => 'ApiException: $message (Status: $statusCode)';
-}
-  /// Send support email to teamnexus@techlaunchpadi
-  Future<void> sendSupportEmail({
-    required String email,
-    required String subject,
-    required String message,
-    required String recipientEmail,
-  }) async {
-    try {
-      final url = Uri.parse('$baseUrl/send-support-email');
-      
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'sender_email': email,
-          'subject': subject,
-          'message': message,
-          'recipient_email': recipientEmail,
-        }),
-      ).timeout(const Duration(seconds: 30));
-
-      if (response.statusCode != 200) {
-        throw ApiException(
-          statusCode: response.statusCode,
-          message: 'Failed to send support email: ${response.body}',
-        );
-      }
-
-      debugPrint('Support email sent successfully');
-    } catch (e) {
-      debugPrint('Error sending support email: $e');
-      rethrow;
-    }
-  }
 }

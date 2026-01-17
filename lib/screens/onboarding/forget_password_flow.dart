@@ -125,7 +125,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/reset-password');
+                      Navigator.of(context).pushReplacementNamed('/reset_password');
                     },
                     child: const Text(
                       'I have the token — reset now',

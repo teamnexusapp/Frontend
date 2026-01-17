@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 import '../../models/user.dart';
 import '../../services/localization_provider.dart';
+import '../../services/theme_provider.dart';
 import '../../services/api_service.dart';
 import '../home_screen.dart';
 import '../onboarding/welcome_screen.dart';
@@ -571,6 +572,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               setState(() {
                 selectedTheme = newValue!;
               });
+              final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+              switch (selectedTheme) {
+                case 'Light':
+                  themeProvider.setMode(ThemeMode.light);
+                  break;
+                case 'Dark':
+                  themeProvider.setMode(ThemeMode.dark);
+                  break;
+                default:
+                  themeProvider.setMode(ThemeMode.system);
+              }
             },
           ),
         ),
