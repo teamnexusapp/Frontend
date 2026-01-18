@@ -197,27 +197,28 @@ class User {
       try { updatedAt = DateTime.parse(updatedRaw); } catch (_) {}
     }
 
-    // Ensure email is non-null; if missing, try to derive from contact or throw
-    if (email == null || (email is String && email.trim().isEmpty)) {
-      if (data['contact'] is Map && data['contact']['email'] is String) {
-        email = data['contact']['email'] as String;
-      } else {
-        // Email is required - if still missing, use placeholder that will be caught
-        email = data['email'] ?? '';
-      }
+    // Ensure email is non-null and non-empty; if missing, try to derive from contact or throw
+    String emailValue = '';
+    if (email != null && email is String && email.trim().isNotEmpty) {
+      emailValue = email;
+    } else if (data['contact'] is Map && data['contact']['email'] is String) {
+      emailValue = data['contact']['email'] as String;
+    } else {
+      // Email is required - if still missing, throw
+      emailValue = data['email'] ?? '';
     }
 
-    debugPrint('User.fromJson - Parsed: id=$id, email="$email", firstName=$firstName, lastName=$lastName, age=$age, cycleLength=$cycleLength');
-
     // Validate email is not empty
-    if (email.isEmpty) {
+    if (emailValue.isEmpty) {
       debugPrint('ERROR: User.fromJson - Email is empty after parsing. Available data keys: ${json.keys.toList()}');
       throw Exception('User email is required but was empty. Parsed from: ${json.keys.toList()}');
     }
 
+    debugPrint('User.fromJson - Parsed: id=$id, email="$emailValue", firstName=$firstName, lastName=$lastName, age=$age, cycleLength=$cycleLength');
+
     return User(
       id: id,
-      email: email,
+      email: emailValue,
       username: username,
       phoneNumber: phoneNumber,
       firstName: firstName,
