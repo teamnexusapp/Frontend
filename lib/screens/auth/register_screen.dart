@@ -21,7 +21,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final auth = Provider.of<AuthServiceImpl>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(
+        title: const Text('Register'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -66,7 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(content: Text('Registered — verify OTP')), 
                                   );
-                                  Navigator.pushReplacementNamed(context, '/profile');
+                                  Navigator.pushReplacementNamed(context, '/login');
                                 }
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -96,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Phone registered — verify OTP')),
                       );
-                      Navigator.pushReplacementNamed(context, '/profile');
+                      Navigator.pushReplacementNamed(context, '/login');
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));

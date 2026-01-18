@@ -14,6 +14,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _loading = false;
 
+  bool _isProfileIncomplete(dynamic user) {
+    return user.cycleLength == null ||
+        user.age == null ||
+        user.periodLength == null ||
+        user.lastPeriodDate == null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context, listen: false);
@@ -46,7 +53,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           password: _passwordController.text,
                         );
                         if (user != null) {
-                          Navigator.pushReplacementNamed(context, '/profile');
+                          // Check if profile data is incomplete
+                          if (_isProfileIncomplete(user)) {
+                            Navigator.pushReplacementNamed(context, '/profile-setup');
+                          } else {
+                            Navigator.pushReplacementNamed(context, '/profile');
+                          }
                         }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login error: $e')));
