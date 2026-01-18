@@ -29,7 +29,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Add missing fields for preferences
   String selectedLanguage = 'English';
-  bool faithBasedContent = false;
   String selectedTheme = 'Light';
 
   @override
@@ -453,8 +452,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 16),
             _buildLanguageRow(),
             const Divider(height: 24),
-            _buildFaithBasedRow(),
-            const Divider(height: 24),
             _buildThemeRow(),
           ],
         ),
@@ -548,37 +545,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
             }
           },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFaithBasedRow() {
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFE6F4EA), // light green
-            shape: BoxShape.circle,
-          ),
-          padding: const EdgeInsets.all(8),
-          child: const Icon(Icons.lightbulb_outline, size: 22, color: Color(0xFF2D5A3A)), // dark green
-        ),
-        const SizedBox(width: 12),
-        const Expanded(
-          child: Text(
-            'Faith-based content',
-            style: TextStyle(fontSize: 15),
-          ),
-        ),
-        Switch(
-          value: faithBasedContent,
-          onChanged: (bool value) {
-            setState(() {
-              faithBasedContent = value;
-            });
-          },
-          activeColor: const Color(0xFF2D5A3A),
         ),
       ],
     );

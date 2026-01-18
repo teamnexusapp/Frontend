@@ -4,6 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
 import '../community/community_groups_screen.dart';
+import '../community/create_group_screen.dart';
+import '../community/group_chat_screen.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -441,6 +443,43 @@ class _SupportScreenState extends State<SupportScreen> {
                           fontFamily: 'Poppins',
                         ),
                       ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const CreateGroupScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFA8D497),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.add,
+                                color: Color(0xFF2E683D),
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              const Text(
+                                'Create',
+                                style: TextStyle(
+                                  color: Color(0xFF2E683D),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -519,10 +558,24 @@ class _SupportScreenState extends State<SupportScreen> {
                           ),
                         ),
                         // Right arrow
-                        const Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey,
-                          size: 24,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const GroupChatScreen(
+                                  groupName: 'Fertility Circle',
+                                  groupDescription: 'A supportive space for those navigating fertility journeys and family building.',
+                                  members: ['Sarah', 'Amara', 'Zainab', 'Grace', 'Fatima'],
+                                  memberCount: 24,
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey,
+                            size: 24,
+                          ),
                         ),
                       ],
                     ),
