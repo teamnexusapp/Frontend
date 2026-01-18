@@ -507,17 +507,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               selectedLanguage = languageOptions[newCode]!;
             });
             try {
+              // Save language preference to backend first
+              await apiService.updateLanguagePreference(newCode);
+              
               // Update the app's locale through LocalizationProvider
               final locProvider = Provider.of<LocalizationProvider>(context, listen: false);
               await locProvider.setLocale(Locale(newCode));
-              debugPrint('Language changed to: $newCode');
+              debugPrint('Language changed to: $newCode and saved to backend');
               
-              // TODO: Save language preference to backend
-              // Uncomment when backend endpoint is ready:
-              // final apiService = ApiService();
-              // await apiService.updateLanguagePreference(newCode);
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Language preference updated'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
             } catch (e) {
               debugPrint('Failed to update language: $e');
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to update language: $e'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

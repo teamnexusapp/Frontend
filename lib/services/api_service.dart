@@ -538,6 +538,40 @@ class ApiService {
     return 'teamnexus@techlaunchpadi';
   }
 
+  // Update Language Preference
+  Future<Map<String, dynamic>> updateLanguagePreference(String languageCode) async {
+    try {
+      final headers = await getHeaders(includeAuth: true);
+      final body = {'language_preference': languageCode};
+
+      debugPrint('Updating language preference: $languageCode');
+
+      final response = await http.patch(
+        Uri.parse('$baseUrl/user/update_language_choice'),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      debugPrint('Update Language Response: ${response.statusCode}');
+      debugPrint('Update Language Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        debugPrint('Update Language Success: $responseData');
+        return responseData;
+      } else {
+        debugPrint('Update Language Failed with status ${response.statusCode}: ${response.body}');
+        throw ApiException(
+          statusCode: response.statusCode,
+          message: _extractErrorMessage(response),
+        );
+      }
+    } catch (e) {
+      debugPrint('Update Language error: $e');
+      rethrow;
+    }
+  }
+
 }
 
 // Custom API Exception
