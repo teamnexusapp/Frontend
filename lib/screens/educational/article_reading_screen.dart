@@ -210,107 +210,108 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                  // Audio Player Controls
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFA8D497).withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: const Color(0xFF2E683D),
-                        width: 1,
+                    // Audio Player Controls
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFA8D497).withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: const Color(0xFF2E683D),
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    child: Column(
-                      children: [
-                        // Play/Pause Button
-                        if (_isLoadingAudio)
-                          const CircularProgressIndicator()
-                        else
-                          IconButton(
-                            iconSize: 64,
-                            icon: Icon(
-                              _isPlayingAudio ? Icons.pause_circle_filled : Icons.play_circle_filled,
-                              color: const Color(0xFF2E683D),
+                      child: Column(
+                        children: [
+                          // Play/Pause Button
+                          if (_isLoadingAudio)
+                            const CircularProgressIndicator()
+                          else
+                            IconButton(
+                              iconSize: 64,
+                              icon: Icon(
+                                _isPlayingAudio ? Icons.pause_circle_filled : Icons.play_circle_filled,
+                                color: const Color(0xFF2E683D),
+                              ),
+                              onPressed: () async {
+                                await _togglePlayPause();
+                                setModalState(() {});
+                              },
                             ),
-                            onPressed: () async {
-                              await _togglePlayPause();
-                              setModalState(() {});
-                            },
+                          const SizedBox(height: 16),
+                          // Progress Bar
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                              trackHeight: 4,
+                            ),
+                            child: Slider(
+                              value: _audioPosition.inSeconds.toDouble(),
+                              max: _audioDuration.inSeconds.toDouble().clamp(1.0, double.infinity),
+                              activeColor: const Color(0xFF2E683D),
+                              inactiveColor: Colors.grey.shade300,
+                              onChanged: (value) async {
+                                final position = Duration(seconds: value.toInt());
+                                await _audioPlayer.seek(position);
+                                setModalState(() {});
+                              },
+                            ),
                           ),
-                        const SizedBox(height: 16),
-                        // Progress Bar
-                        SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                            trackHeight: 4,
-                          ),
-                          child: Slider(
-                            value: _audioPosition.inSeconds.toDouble(),
-                            max: _audioDuration.inSeconds.toDouble().clamp(1.0, double.infinity),
-                            activeColor: const Color(0xFF2E683D),
-                            inactiveColor: Colors.grey.shade300,
-                            onChanged: (value) async {
-                              final position = Duration(seconds: value.toInt());
-                              await _audioPlayer.seek(position);
-                              setModalState(() {});
-                            },
-                          ),
-                        ),
-                        // Time Display
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                _formatDuration(_audioPosition),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF2E683D),
-                                  fontFamily: 'Poppins',
+                          // Time Display
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _formatDuration(_audioPosition),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF2E683D),
+                                    fontFamily: 'Poppins',
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                _formatDuration(_audioDuration - _audioPosition),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                  fontFamily: 'Poppins',
+                                Text(
+                                  _formatDuration(_audioDuration - _audioPosition),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                    fontFamily: 'Poppins',
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Close button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _audioPlayer.stop();
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2E683D),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        ],
                       ),
-                      child: const Text(
-                        'Close',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,
+                    ),
+                    const SizedBox(height: 20),
+                    // Close button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _audioPlayer.stop();
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF2E683D),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Close',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             );
