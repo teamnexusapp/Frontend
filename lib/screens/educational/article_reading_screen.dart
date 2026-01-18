@@ -311,7 +311,7 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             );
           },
