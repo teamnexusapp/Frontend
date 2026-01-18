@@ -53,7 +53,9 @@ flutter:
   generate: true
   assets:
     - assets/images/
-    - assets/audio/
+    - assets/audio/article_1.mp3
+    - assets/audio/article_2.mp3
+    - assets/audio/article_3.mp3
     - lib/screens/educational/
     - lib/l10n/
 

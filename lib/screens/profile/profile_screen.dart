@@ -512,9 +512,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Save language preference to backend first
               await apiService.updateLanguagePreference(newCode);
               
-              // Update the app's locale through LocalizationProvider
-              final locProvider = Provider.of<LocalizationProvider>(context, listen: false);
-              await locProvider.setLocale(Locale(newCode));
               debugPrint('Language changed to: $newCode and saved to backend');
               
               if (mounted) {
@@ -524,6 +521,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     duration: Duration(seconds: 2),
                   ),
                 );
+                
+                // Rebuild home page to reflect changes
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  if (mounted) {
+                    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+                  }
+                });
               }
             } catch (e) {
               debugPrint('Failed to update language: $e');
