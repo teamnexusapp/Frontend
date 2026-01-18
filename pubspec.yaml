@@ -56,6 +56,7 @@ flutter:
     - assets/audio/article_1.mp3
     - assets/audio/article_2.mp3
     - assets/audio/article_3.mp3
+    - assets/audio/encouragement.wav
     - lib/screens/educational/
     - lib/l10n/
 

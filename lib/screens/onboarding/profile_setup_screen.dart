@@ -52,6 +52,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     'Yoruba',
     'Igbo',
     'Hausa',
+    'Pidgin',
   ];
 
   @override

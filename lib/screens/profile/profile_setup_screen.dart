@@ -52,6 +52,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     'Yoruba',
     'Igbo',
     'Hausa',
+    'Pidgin',
   ];
 
   @override
@@ -475,6 +476,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         return 'Igbo';
       case 'ha':
         return 'Hausa';
+      case 'pcm':
+        return 'Pidgin';
       default:
         return 'English';
     }

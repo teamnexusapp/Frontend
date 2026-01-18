@@ -120,9 +120,9 @@ class _SupportScreenState extends State<SupportScreen> {
     if (_isPlayingAudio) {
       await _audioPlayer.pause();
     } else {
-      // Load and play audio - using a sample audio from assets
+      // Load and play audio - using encouragement audio from assets
       try {
-        await _audioPlayer.play(AssetSource('audio/encouragement.mp3'));
+        await _audioPlayer.play(AssetSource('audio/encouragement.wav'));
       } catch (e) {
         debugPrint('Audio play failed: $e');
         if (mounted) {
@@ -343,7 +343,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Daily Encouragement',
+                                    'My Sister, Hold your Head High',
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -352,7 +352,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 8),
-                                  // Progress bar
+                                  // Progress bar with actual duration and position
                                   SliderTheme(
                                     data: SliderTheme.of(context).copyWith(
                                       thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
@@ -360,7 +360,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                     ),
                                     child: Slider(
                                       value: _audioPosition.inSeconds.toDouble(),
-                                      max: _audioDuration.inSeconds.toDouble().clamp(1.0, double.infinity),
+                                      max: _audioDuration.inSeconds.toDouble() > 0 ? _audioDuration.inSeconds.toDouble() : 1.0,
                                       activeColor: const Color(0xFF2E683D),
                                       inactiveColor: Colors.grey.shade300,
                                       onChanged: (value) async {
@@ -369,11 +369,24 @@ class _SupportScreenState extends State<SupportScreen> {
                                       },
                                     ),
                                   ),
+                                  // Show progress time
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      '${_formatDuration(_audioPosition)} / ${_formatDuration(_audioDuration)}',
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey.shade600,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                             const SizedBox(width: 12),
-                            // Duration
+                            // Duration display removed (now shown with progress)
                             Text(
                               _formatDuration(_audioDuration),
                               style: TextStyle(
