@@ -155,7 +155,7 @@ class User {
     final lastPeriodDate = data['last_period_date'] ?? data['lastPeriodDate'];
 
     // Normalize fields with fallbacks
-    String? id = data['id'] ?? data['_id'];
+    String? id = data['id'] ?? data['_id'] ?? data['user_id']?.toString();
     String? email = data['email'] ?? data['email_address'];
     String? username = data['username'] ?? data['user_name'];
     String? phoneNumber = data['phoneNumber'] ?? data['phone_number'] ?? data['phone'];

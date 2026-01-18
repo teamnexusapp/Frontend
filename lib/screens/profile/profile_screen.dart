@@ -41,9 +41,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadUserProfile() async {
     try {
       final apiService = ApiService();
+      
+      // Fetch profile data (contains age, cycle_length, etc.)
       final profileJson = await apiService.getProfile();
       debugPrint('Profile JSON received: ' + profileJson.toString());
-      final fetchedUser = User.fromJson(profileJson);
+      
+      // Also fetch basic user info (contains email, name, etc.)
+      final userJson = await apiService.getUser();
+      debugPrint('User JSON received: ' + userJson.toString());
+      
+      // Merge both responses - profile data takes priority, fill in missing basic user info
+      final mergedJson = {...userJson, ...profileJson};
+      debugPrint('Merged User Data: ' + mergedJson.toString());
+      
+      final fetchedUser = User.fromJson(mergedJson);
       debugPrint('Parsed User: id=' + (fetchedUser.id?.toString() ?? 'null') +
           ', email=' + (fetchedUser.email) +
           ', firstName=' + (fetchedUser.firstName?.toString() ?? 'null') +
