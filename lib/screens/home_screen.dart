@@ -197,13 +197,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           _buildMenuItem(
                             label: 'Profile',
                             icon: Icons.person_outline,
-                            onTap: () {
+                            onTap: () async {
                               _toggleSideMenu();
-                              Navigator.of(context).push(
+                              final result = await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => const ProfileScreen(),
                                 ),
                               );
+                              // Refresh home page data if profile was updated
+                              if (result == true) {
+                                _sendInsightsPost();
+                              }
                             },
                           ),
                           _buildMenuItem(

@@ -104,9 +104,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case 'ha': return 'Hausa';
       case 'yo': return 'Yoruba';
       case 'pcm': return 'Pidgin';
-      case 'fr': return 'French';
-      case 'pt': return 'Portuguese';
-      case 'es': return 'Spanish';
       default: return 'English';
     }
   }
@@ -471,6 +468,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'ig': 'Igbo',
       'ha': 'Hausa',
       'yo': 'Yoruba',
+      'pcm': 'Pidgin',
     };
     // Find the code for the current selectedLanguage
     String selectedCode = languageOptions.entries.firstWhere(
