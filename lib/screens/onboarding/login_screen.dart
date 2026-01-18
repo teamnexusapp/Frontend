@@ -5,7 +5,6 @@ import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
 import '../../services/health_check_service.dart';
 import '../../services/api_service.dart';
-import '../../models/user.dart';
 import 'profile_setup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -367,28 +366,18 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (mounted) {
-        // After login, fetch complete user profile (merge user + profile data)
+        // Check if user profile is complete by fetching profile data
         try {
           final apiService = ApiService();
-          
-          // Fetch both user and profile data
-          final userJson = await apiService.getUser();
           final profileJson = await apiService.getProfile();
           
-          // Merge both responses - profile data takes priority
-          final mergedJson = {...userJson, ...profileJson};
-          debugPrint('Login - Merged user data: $mergedJson');
+          // Profile is complete if it has profile-specific fields
+          final isProfileComplete = profileJson.containsKey('age') ||
+            profileJson.containsKey('cycle_length') ||
+            profileJson.containsKey('period_length') ||
+            profileJson.containsKey('audio_preference');
           
-          // Create complete user object
-          final completeUser = User.fromJson(mergedJson);
-          
-          // Check if user profile is complete
-          final isProfileComplete = completeUser.age != null || 
-            completeUser.cycleLength != null || 
-            completeUser.periodLength != null || 
-            completeUser.audioPreference != null;
-          
-          debugPrint('Login - Profile complete: $isProfileComplete');
+          debugPrint('Login - Profile complete: $isProfileComplete, keys: ${profileJson.keys}');
           
           if (isProfileComplete) {
             // Profile is already set up, go to home
@@ -402,8 +391,8 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           }
         } catch (e) {
-          debugPrint('Error fetching profile after login: $e');
-          // If profile fetch fails, still go to home (user is logged in)
+          debugPrint('Error checking profile during login: $e');
+          // If profile check fails, still go to home (user is logged in)
           Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
         }
       }

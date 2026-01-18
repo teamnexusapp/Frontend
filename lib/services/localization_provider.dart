@@ -12,7 +12,6 @@ class LocalizationProvider extends ChangeNotifier {
     Locale('ha'),
     Locale('ig'),
     Locale('yo'),
-    Locale('pcm'),
   ];
 
   Locale _locale = const Locale('en');

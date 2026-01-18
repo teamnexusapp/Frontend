@@ -511,8 +511,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               final locProvider = Provider.of<LocalizationProvider>(context, listen: false);
               await locProvider.setLocale(Locale(newCode));
               debugPrint('Language changed to: $newCode');
+              
+              // TODO: Save language preference to backend
+              // Uncomment when backend endpoint is ready:
+              // final apiService = ApiService();
+              // await apiService.updateLanguagePreference(newCode);
             } catch (e) {
               debugPrint('Failed to update language: $e');
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to change language: ${e.toString()}'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
             }
           },
         ),
