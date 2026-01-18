@@ -44,7 +44,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final profileJson = await apiService.getProfile();
       debugPrint('Profile JSON received: ' + profileJson.toString());
       final fetchedUser = User.fromJson(profileJson);
-      debugPrint('Parsed User: ttcHistory=' + (fetchedUser.ttcHistory?.toString() ?? 'null') +
+      debugPrint('Parsed User: id=' + (fetchedUser.id?.toString() ?? 'null') +
+          ', email=' + (fetchedUser.email) +
+          ', firstName=' + (fetchedUser.firstName?.toString() ?? 'null') +
+          ', lastName=' + (fetchedUser.lastName?.toString() ?? 'null') +
+          ', username=' + (fetchedUser.username?.toString() ?? 'null') +
+          ', phoneNumber=' + (fetchedUser.phoneNumber?.toString() ?? 'null') +
+          ', preferredLanguage=' + (fetchedUser.preferredLanguage?.toString() ?? 'null') +
+          ', ttcHistory=' + (fetchedUser.ttcHistory?.toString() ?? 'null') +
           ', faithPreference=' + (fetchedUser.faithPreference?.toString() ?? 'null') +
           ', cycleLength=' + (fetchedUser.cycleLength?.toString() ?? 'null') +
           ', lastPeriodDate=' + (fetchedUser.lastPeriodDate?.toString() ?? 'null'));

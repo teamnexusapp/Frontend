@@ -388,7 +388,9 @@ class ApiService {
       debugPrint('Get User Response: ${response.statusCode}');
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        final data = jsonDecode(response.body);
+        debugPrint('getUser Raw Response: $data');
+        return data;
       } else {
         throw ApiException(
           statusCode: response.statusCode,
@@ -415,6 +417,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        debugPrint('getProfile Raw Response: $data');
         // If email is missing or empty, fall back to the more complete get_user endpoint
         try {
           final map = (data is Map<String, dynamic>)
@@ -474,6 +477,8 @@ class ApiService {
       if (faithPreference != null) body['faith_preference'] = faithPreference;
       if (audioPreference != null) body['audio_preference'] = audioPreference;
 
+      debugPrint('Updating Profile with body: $body');
+
       final response = await http.patch(
         Uri.parse('$baseUrl/user/profile'),
         headers: headers,
@@ -481,10 +486,14 @@ class ApiService {
       );
 
       debugPrint('Update Profile Response: ${response.statusCode}');
+      debugPrint('Update Profile Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        final responseData = jsonDecode(response.body);
+        debugPrint('Update Profile Success: $responseData');
+        return responseData;
       } else {
+        debugPrint('Update Profile Failed with status ${response.statusCode}: ${response.body}');
         throw ApiException(
           statusCode: response.statusCode,
           message: _extractErrorMessage(response),

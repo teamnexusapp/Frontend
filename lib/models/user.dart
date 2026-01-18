@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class User {
     final String? ttcHistory;
     final String? faithPreference;
@@ -141,6 +143,9 @@ class User {
       data = {...profile, ...data};
     }
 
+    // Debug: Log all received keys
+    debugPrint('User.fromJson - Received keys: ${data.keys.toList()}');
+
     final ttcHistory = data['ttc_history'] ?? data['ttcHistory'];
     final faithPreference = data['faith_preference'] ?? data['faithPreference'];
     final cycleLength = data['cycle_length'] ?? data['cycleLength'];
@@ -198,6 +203,8 @@ class User {
         : (data['contact'] is Map && (data['contact']['email'] is String)
             ? data['contact']['email'] as String
             : '');
+
+    debugPrint('User.fromJson - Parsed: id=$id, email=$email, firstName=$firstName, lastName=$lastName, age=$age, cycleLength=$cycleLength');
 
     return User(
       id: id,
