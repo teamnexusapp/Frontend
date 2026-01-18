@@ -468,7 +468,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'ig': 'Igbo',
       'ha': 'Hausa',
       'yo': 'Yoruba',
-      'pcm': 'Pidgin',
+      'pg': 'Pidgin',
     };
     // Find the code for the current selectedLanguage
     String selectedCode = languageOptions.entries.firstWhere(
