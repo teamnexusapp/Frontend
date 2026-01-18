@@ -179,31 +179,37 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
-            return Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Handle bar
-                  Container(
-                    width: 40,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(2),
+            return WillPopScope(
+              onWillPop: () async {
+                // Stop audio when modal is dismissed
+                await _audioPlayer.stop();
+                return true;
+              },
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Handle bar
+                    Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-                  ),
-                  // Modal title
-                  const Text(
-                    'Listen to Article',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Poppins',
+                    // Modal title
+                    const Text(
+                      'Listen to Article',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   // Audio Player Controls
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -311,7 +317,10 @@ class _ArticleReadingScreenState extends State<ArticleReadingScreen> {
           },
         );
       },
-    );
+    ).then((_) {
+      // Ensure audio is stopped when modal is dismissed
+      _audioPlayer.stop();
+    });
   }
 
   @override

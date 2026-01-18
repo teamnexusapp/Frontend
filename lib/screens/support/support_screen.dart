@@ -1,7 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
+import '../community/community_groups_screen.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -16,6 +18,12 @@ class _SupportScreenState extends State<SupportScreen> {
   List<String> _affirmations = [];
   String _faith = 'neutral';
   bool _loadingAffirmations = true;
+  
+  // Audio player properties
+  late AudioPlayer _audioPlayer;
+  bool _isPlayingAudio = false;
+  Duration _audioDuration = Duration.zero;
+  Duration _audioPosition = Duration.zero;
 
   final Map<String, List<String>> _faithAffirmations = {
     'christian': [
@@ -45,7 +53,35 @@ class _SupportScreenState extends State<SupportScreen> {
   @override
   void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
+    _initializeAudioPlayer();
     _fetchFaithPreference();
+  }
+
+  void _initializeAudioPlayer() {
+    _audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() {
+          _isPlayingAudio = state == PlayerState.playing;
+        });
+      }
+    });
+
+    _audioPlayer.onDurationChanged.listen((duration) {
+      if (mounted) {
+        setState(() {
+          _audioDuration = duration;
+        });
+      }
+    });
+
+    _audioPlayer.onPositionChanged.listen((position) {
+      if (mounted) {
+        setState(() {
+          _audioPosition = position;
+        });
+      }
+    });
   }
 
   Future<void> _fetchFaithPreference() async {
@@ -80,7 +116,39 @@ class _SupportScreenState extends State<SupportScreen> {
     }
   }
 
+  Future<void> _togglePlayPause() async {
+    if (_isPlayingAudio) {
+      await _audioPlayer.pause();
+    } else {
+      // Load and play audio - using a sample audio from assets
+      try {
+        await _audioPlayer.play(AssetSource('audio/encouragement.mp3'));
+      } catch (e) {
+        debugPrint('Audio play failed: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to play audio: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds.remainder(60);
+    return '$minutes:${twoDigits(seconds)}';
+  }
+
   @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
   Widget build(BuildContext context) {
     final loc = Provider.of<LocalizationProvider>(context);
 
@@ -213,6 +281,114 @@ class _SupportScreenState extends State<SupportScreen> {
                           ),
                   ),
                   const SizedBox(height: 24),
+                  // Audio encouragement card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.grey.shade300,
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title row with audio icon
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.music_note,
+                              color: Color(0xFFA8D497),
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Audio encouragement',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        // Play/Pause button, Title and Progress bar, Duration
+                        Row(
+                          children: [
+                            // Play/Pause button
+                            IconButton(
+                              icon: Icon(
+                                _isPlayingAudio ? Icons.pause_circle_filled : Icons.play_circle_filled,
+                                color: const Color(0xFFA8D497),
+                                size: 40,
+                              ),
+                              onPressed: _togglePlayPause,
+                            ),
+                            const SizedBox(width: 12),
+                            // Title and Progress bar
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Daily Encouragement',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      fontFamily: 'Poppins',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // Progress bar
+                                  SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
+                                      trackHeight: 3,
+                                    ),
+                                    child: Slider(
+                                      value: _audioPosition.inSeconds.toDouble(),
+                                      max: _audioDuration.inSeconds.toDouble().clamp(1.0, double.infinity),
+                                      activeColor: const Color(0xFF2E683D),
+                                      inactiveColor: Colors.grey.shade300,
+                                      onChanged: (value) async {
+                                        final position = Duration(seconds: value.toInt());
+                                        await _audioPlayer.seek(position);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            // Duration
+                            Text(
+                              _formatDuration(_audioDuration),
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey.shade600,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   const Text(
                     'Cultural Guidance',
                     style: TextStyle(
@@ -233,11 +409,122 @@ class _SupportScreenState extends State<SupportScreen> {
                       style: TextStyle(color: Colors.grey.shade700),
                     ),
                   ),
+                  const SizedBox(height: 24),
+                  // Community groups section
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.group,
+                        color: Color(0xFF2E683D),
+                        size: 24,
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Community groups',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // Community group card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: Row(
+                      children: [
+                        // Group info
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Group name
+                              const Text(
+                                'Fertility Circle',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              // Category badge
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFA8D497),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Text(
+                                      'General Support',
+                                      style: TextStyle(
+                                        color: Color(0xFF2E683D),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 11,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '24 members',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey.shade600,
+                                      fontFamily: 'Poppins',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              // Latest message
+                              Text(
+                                'Sarah: Thank you all for the support!',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey.shade700,
+                                  fontFamily: 'Poppins',
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Right arrow
+                        const Icon(
+                          Icons.chevron_right,
+                          color: Colors.grey,
+                          size: 24,
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const CommunityGroupsScreen(),
+                          ),
+                        );
+                      },
                       child: Text(loc.translate('exploreCommunityGroups')),
                     ),
                   ),

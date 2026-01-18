@@ -131,7 +131,20 @@ class AuthService with ChangeNotifier {
       }
       
       // Extract user data
-      final userData = response['user'] ?? response;
+      var userData = response['user'] ?? response;
+      
+      // If we only got message and user_id (from OTP response), fetch full profile
+      if (userData is Map && userData.containsKey('user_id') && !userData.containsKey('email')) {
+        debugPrint('OTP response incomplete, fetching full user profile...');
+        try {
+          final profileData = await _apiService.getProfile();
+          userData = profileData['data'] ?? profileData['user'] ?? profileData;
+        } catch (e) {
+          debugPrint('Failed to fetch full profile: $e, using partial data with placeholder');
+          // Keep using the OTP response with placeholder email
+        }
+      }
+      
       _currentUser = User.fromJson(userData);
       await _saveUserToPrefs(_currentUser!);
       _authStateController.add(_currentUser);
@@ -161,7 +174,20 @@ class AuthService with ChangeNotifier {
       }
       
       // Extract user data
-      final userData = response['user'] ?? response;
+      var userData = response['user'] ?? response;
+      
+      // If we only got message and user_id (from OTP response), fetch full profile
+      if (userData is Map && userData.containsKey('user_id') && !userData.containsKey('email')) {
+        debugPrint('OTP response incomplete, fetching full user profile...');
+        try {
+          final profileData = await _apiService.getProfile();
+          userData = profileData['data'] ?? profileData['user'] ?? profileData;
+        } catch (e) {
+          debugPrint('Failed to fetch full profile: $e, using partial data with placeholder');
+          // Keep using the OTP response with placeholder email
+        }
+      }
+      
       _currentUser = User.fromJson(userData);
       await _saveUserToPrefs(_currentUser!);
       _authStateController.add(_currentUser);

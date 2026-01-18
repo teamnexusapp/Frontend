@@ -414,14 +414,36 @@ class _VerifyModalContent extends StatefulWidget {
 class _VerifyModalContentState extends State<_VerifyModalContent> {
   int secondsRemaining = 180;
   bool timerStarted = false;
+  
+  // Focus nodes for OTP fields
+  late FocusNode _focusNode1;
+  late FocusNode _focusNode2;
+  late FocusNode _focusNode3;
+  late FocusNode _focusNode4;
 
   @override
   void initState() {
     super.initState();
+    // Initialize focus nodes
+    _focusNode1 = FocusNode();
+    _focusNode2 = FocusNode();
+    _focusNode3 = FocusNode();
+    _focusNode4 = FocusNode();
+    
     // Start timer when widget is initialized
     Future.delayed(const Duration(milliseconds: 100), () {
       _startTimer();
     });
+  }
+
+  @override
+  void dispose() {
+    // Dispose focus nodes
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
+    super.dispose();
   }
 
   void _startTimer() {
@@ -447,6 +469,58 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
     _startTimer();
   }
 
+  Future<void> _resendOTP() async {
+    try {
+      // Show loading indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Resending OTP...'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      final authService = context.read<AuthService>();
+      
+      // Resend OTP with user data
+      await authService.signUpWithPhone(
+        phoneNumber: widget.phoneNumber,
+        email: widget.email,
+        username: widget.firstName, // Using firstName as username fallback
+        firstName: widget.firstName,
+        lastName: widget.lastName,
+        password: widget.password,
+        preferredLanguage: widget.selectedLanguage,
+      );
+
+      if (mounted) {
+        // Reset timer and clear OTP fields
+        _resetTimer();
+        widget.otp1Controller.clear();
+        widget.otp2Controller.clear();
+        widget.otp3Controller.clear();
+        widget.otp4Controller.clear();
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Verification code resent successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to resend OTP: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    }
+  }
+
   String _formatTime(int seconds) {
     int minutes = seconds ~/ 60;
     int remainingSeconds = seconds % 60;
@@ -463,17 +537,19 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
       ),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.check_circle_outline,
-                  size: 72,
-                  color: Color(0xFF2E683D),
-                ),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.check_circle_outline,
+                      size: 72,
+                      color: Color(0xFF2E683D),
+                    ),
                 const SizedBox(height: 20),
                 const Text(
                   'Verify Your Account',
@@ -501,13 +577,13 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildOTPField(widget.otp1Controller),
+                    _buildOTPField(widget.otp1Controller, _focusNode1, _focusNode2),
                     const SizedBox(width: 8),
-                    _buildOTPField(widget.otp2Controller),
+                    _buildOTPField(widget.otp2Controller, _focusNode2, _focusNode3),
                     const SizedBox(width: 8),
-                    _buildOTPField(widget.otp3Controller),
+                    _buildOTPField(widget.otp3Controller, _focusNode3, _focusNode4),
                     const SizedBox(width: 8),
-                    _buildOTPField(widget.otp4Controller),
+                    _buildOTPField(widget.otp4Controller, _focusNode4, null),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -516,7 +592,7 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: secondsRemaining == 0 ? _resetTimer : null,
+                      onTap: secondsRemaining == 0 ? _resendOTP : null,
                       child: Text(
                         'Resend',
                         style: TextStyle(
@@ -613,15 +689,43 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                   ),
                 ),
                 const SizedBox(height: 10),
-              ],
+                  ],
+                ),
+              ),
             ),
-          ),
+            // Close button
+            Positioned(
+              top: 12,
+              right: 12,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(
+                    Icons.close,
+                    size: 20,
+                    color: Colors.black54,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildOTPField(TextEditingController controller) {
+  Widget _buildOTPField(
+    TextEditingController controller,
+    FocusNode currentFocus,
+    FocusNode? nextFocus,
+  ) {
     return Container(
       width: 60,
       height: 66,
@@ -635,9 +739,27 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
       ),
       child: TextField(
         controller: controller,
+        focusNode: currentFocus,
         maxLength: 1,
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
+        onChanged: (value) {
+          // Move to next field when value is entered
+          if (value.isNotEmpty && nextFocus != null) {
+            FocusScope.of(context).requestFocus(nextFocus);
+          }
+          // Move to previous field on backspace
+          else if (value.isEmpty && controller.text.isEmpty) {
+            // Backspace pressed
+            if (currentFocus == _focusNode2) {
+              FocusScope.of(context).requestFocus(_focusNode1);
+            } else if (currentFocus == _focusNode3) {
+              FocusScope.of(context).requestFocus(_focusNode2);
+            } else if (currentFocus == _focusNode4) {
+              FocusScope.of(context).requestFocus(_focusNode3);
+            }
+          }
+        },
         decoration: const InputDecoration(
           border: InputBorder.none,
           counterText: '',

@@ -209,9 +209,17 @@ class User {
     }
 
     // Validate email is not empty
+    // NOTE: OTP verification may return only {message, user_id}, in which case 
+    // we generate a placeholder email since we can fetch full user data from backend later
     if (emailValue.isEmpty) {
-      debugPrint('ERROR: User.fromJson - Email is empty after parsing. Available data keys: ${json.keys.toList()}');
-      throw Exception('User email is required but was empty. Parsed from: ${json.keys.toList()}');
+      // If we have a user_id from OTP verification, create a placeholder email
+      if (data['user_id'] != null) {
+        emailValue = 'user_${data['user_id']}@placeholder.local';
+        debugPrint('User.fromJson - Using placeholder email for OTP response: $emailValue');
+      } else {
+        debugPrint('ERROR: User.fromJson - Email is empty after parsing. Available data keys: ${json.keys.toList()}');
+        throw Exception('User email is required but was empty. Parsed from: ${json.keys.toList()}');
+      }
     }
 
     debugPrint('User.fromJson - Parsed: id=$id, email="$emailValue", firstName=$firstName, lastName=$lastName, age=$age, cycleLength=$cycleLength');
