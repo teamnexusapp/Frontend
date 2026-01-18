@@ -6,6 +6,7 @@ import '../../services/api_service.dart';
 import '../community/community_groups_screen.dart';
 import '../community/create_group_screen.dart';
 import '../community/group_chat_screen.dart';
+import 'cultural_guidance_screen.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -412,16 +413,37 @@ class _SupportScreenState extends State<SupportScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade200),
-                    ),
-                    child: Text(
-                      'Coping with family pressure and finding peace in community support. Explore recommended readings and groups.',
-                      style: TextStyle(color: Colors.grey.shade700),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CulturalGuidanceScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Coping with family pressure and finding peace in community support. Explore recommended readings and groups.',
+                              style: TextStyle(color: Colors.grey.shade700),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.grey.shade400,
+                            size: 20,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
