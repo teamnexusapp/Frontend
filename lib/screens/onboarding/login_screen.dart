@@ -4,6 +4,8 @@ import 'forget_password_flow.dart';
 import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
 import '../../services/health_check_service.dart';
+import '../../services/api_service.dart';
+import '../../models/user.dart';
 import 'profile_setup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -365,24 +367,44 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (mounted) {
-        // Check if user profile is complete
-        final user = authService.currentUser;
-        final isProfileComplete = user != null && 
-          (user.age != null || 
-           user.cycleLength != null || 
-           user.periodLength != null || 
-           user.audioPreference != null);
-        
-        if (isProfileComplete) {
-          // Profile is already set up, go to home
+        // After login, fetch complete user profile (merge user + profile data)
+        try {
+          final apiService = ApiService();
+          
+          // Fetch both user and profile data
+          final userJson = await apiService.getUser();
+          final profileJson = await apiService.getProfile();
+          
+          // Merge both responses - profile data takes priority
+          final mergedJson = {...userJson, ...profileJson};
+          debugPrint('Login - Merged user data: $mergedJson');
+          
+          // Create complete user object
+          final completeUser = User.fromJson(mergedJson);
+          
+          // Check if user profile is complete
+          final isProfileComplete = completeUser.age != null || 
+            completeUser.cycleLength != null || 
+            completeUser.periodLength != null || 
+            completeUser.audioPreference != null;
+          
+          debugPrint('Login - Profile complete: $isProfileComplete');
+          
+          if (isProfileComplete) {
+            // Profile is already set up, go to home
+            Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+          } else {
+            // Profile not set up, show profile setup screen
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => const ProfileSetupScreen(),
+              ),
+            );
+          }
+        } catch (e) {
+          debugPrint('Error fetching profile after login: $e');
+          // If profile fetch fails, still go to home (user is logged in)
           Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
-        } else {
-          // Profile not set up, show profile setup screen
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => const ProfileSetupScreen(),
-            ),
-          );
         }
       }
     } catch (e) {
