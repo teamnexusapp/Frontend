@@ -257,6 +257,21 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           final String? ttcHistory = userData['ttc_history'] ?? userData['ttcHistory'];
           final String? faithPreference = userData['faith_preference'] ?? userData['faithPreference'];
           final bool? audioPreference = userData['audio_preference'];
+          
+          // Calculate next period days based on last period date and cycle length
+          if (_lastPeriodDate != null && cycleLength != null && periodLength != null) {
+            final lastPeriod = DateTime.parse(_lastPeriodDate!);
+            final nextPeriodStart = lastPeriod.add(Duration(days: cycleLength));
+            final nextPeriodDaysList = List<DateTime>.generate(
+              periodLength,
+              (i) => DateTime(nextPeriodStart.year, nextPeriodStart.month, nextPeriodStart.day + i),
+            );
+            setState(() {
+              _nextPeriodDays = nextPeriodDaysList.toSet();
+            });
+            debugPrint('Calculated next period: ${_nextPeriodDays.map((d) => DateFormat('yyyy-MM-dd').format(d)).join(', ')}');
+          }
+          
           await api.updateProfile(
             age: age,
             cycleLength: cycleLength,
@@ -309,7 +324,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                             SwipeableGreenCalendar(
                               initialMonth: DateTime.now(),
                               selectedDates: _selectedCalendarDays,
-                              nextPeriodDays: const {},
+                              nextPeriodDays: _nextPeriodDays,
                               onDateToggle: _toggleCalendarDate,
                             ),
                           ] else ...[
