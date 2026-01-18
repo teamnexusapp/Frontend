@@ -10,7 +10,6 @@ import '../../services/theme_provider.dart';
 import '../../services/api_service.dart';
 import '../home_screen.dart';
 import '../onboarding/welcome_screen.dart';
-import '../privacy/privacy_screen.dart';
 import '../privacy_and_security/privacy_and_security_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -634,7 +633,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const PrivacyScreen()),
+                  MaterialPageRoute(builder: (_) => const PrivacyAndSecurityScreen()),
                 );
               },
             ),

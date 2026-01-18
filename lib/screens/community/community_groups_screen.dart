@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme.dart';
+import 'group_chat_screen.dart';
 
 class CommunityGroupsScreen extends StatelessWidget {
   const CommunityGroupsScreen({super.key});
@@ -118,7 +119,12 @@ class CommunityGroupsScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => const _CommunityGroupDetailScreen(),
+                            builder: (_) => const GroupChatScreen(
+                              groupName: 'Fertility Circle',
+                              groupDescription: 'A supportive space for those navigating fertility journeys and family building.',
+                              members: ['Sarah', 'Amara', 'Zainab', 'Grace', 'Fatima'],
+                              memberCount: 24,
+                            ),
                           ),
                         );
                       },
