@@ -25,6 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   User? _user;
   User? _userCard;
   bool _isDeleting = false;
+  late final ApiService apiService; // Add as member variable
 
   // Add missing fields for preferences
   String selectedLanguage = 'English';
@@ -34,13 +35,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    apiService = ApiService(); // Initialize in initState
     _loadUserProfile();
     _loadUserCard();
   }
 
   Future<void> _loadUserProfile() async {
     try {
-      final apiService = ApiService();
+      // Use member variable instead of creating local
       
       // Fetch profile data (contains age, cycle_length, etc.)
       final profileJson = await apiService.getProfile();

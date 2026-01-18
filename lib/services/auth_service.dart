@@ -236,17 +236,24 @@ class AuthService with ChangeNotifier {
         await _apiService.saveToken(response['access_token']);
       }
       
-      // Get user profile after login
-      final userResponse = await _apiService.getProfile();
+      // Get both user and profile data after login
+      final userData = await _apiService.getUser();
+      final profileData = await _apiService.getProfile();
       
-      if (userResponse == null) {
-        throw Exception('Failed to fetch user profile');
+      if (userData == null && profileData == null) {
+        throw Exception('Failed to fetch user data');
       }
       
-      _currentUser = User.fromJson(userResponse);
+      // Merge user and profile data - profile takes precedence for overlapping fields
+      final mergedData = {...?userData, ...?profileData};
+      
+      debugPrint('SignIn - Merged user data keys: ${mergedData.keys.toList()}');
+      debugPrint('SignIn - Email in merged data: ${mergedData['email']}');
+      
+      _currentUser = User.fromJson(mergedData);
       
       if (_currentUser == null || (_currentUser!.email.isEmpty)) {
-        throw Exception('Invalid user data: Email is required');
+        throw Exception('Invalid user data: Email is required (got: "${_currentUser?.email}")');
       }
       
       await _saveUserToPrefs(_currentUser!);
