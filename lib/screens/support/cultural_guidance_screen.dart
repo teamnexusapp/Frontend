@@ -35,7 +35,7 @@ class _CulturalGuidanceScreenState extends State<CulturalGuidanceScreen> {
     ),
     GuidanceSection(
       title: 'Community & Stigma',
-      icon: Icons.community_outline,
+      icon: Icons.people_outline,
       content: 'Building strength through community while managing cultural stigma.',
       subsections: [
         'Finding supportive communities that understand your culture',

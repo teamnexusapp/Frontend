@@ -6,8 +6,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../widgets/swipeable_green_calendar.dart';
+import '../widgets/reminder_panel.dart';
 import 'tracking/log_symptom_screen.dart';
 import '../services/api_service.dart';
+import '../services/notification_reminder_service.dart';
 
 class CalendarTabScreen extends StatefulWidget {
   final ValueNotifier<bool>? refreshNotifier;
@@ -32,6 +34,8 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
   String? _lastPeriodDate;
   List<String> _loggedSymptoms = [];
   bool _isSymptomsLoading = false;
+  late NotificationReminderService _reminderService;
+  bool _remindersInitialized = false;
 
   @override
   void initState() {
@@ -39,8 +43,17 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     _calendarScrollController.addListener(_onCalendarScroll);
     _loadTappedDays();
     _fetchLoggedSymptoms();
+    _initializeReminders();
     // Listen for refresh requests from HomeScreen
     widget.refreshNotifier?.addListener(_handleRefreshRequest);
+  }
+
+  Future<void> _initializeReminders() async {
+    _reminderService = NotificationReminderService();
+    await _reminderService.initialize();
+    setState(() {
+      _remindersInitialized = true;
+    });
   }
 
   void _handleRefreshRequest() {
@@ -376,6 +389,9 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Reminder Panel
+                            if (_remindersInitialized)
+                              ReminderPanel(reminderService: _reminderService),
                             Row(
                               children: [
                                 const Text(
