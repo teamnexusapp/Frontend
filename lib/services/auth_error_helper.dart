@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import 'auth_exception.dart';
 
@@ -32,4 +32,6 @@ String getAuthErrorMessage(BuildContext context, dynamic error) {
   // Fallback for other exceptions
   return error.toString().replaceAll('Exception: ', '');
 }
+
+
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../widgets/swipeable_green_calendar.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -7,7 +7,7 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final headerHeight = size.height * 0.42; // calendar visible area
+    final headerHeight = size.height * 0.42; // calendar visible area;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Period Calendar')),
@@ -147,3 +147,6 @@ class _PlaceholderList extends StatelessWidget {
     );
   }
 }
+
+
+

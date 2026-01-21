@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../theme.dart';
 
 class VerificationModal extends StatefulWidget {
@@ -85,3 +85,5 @@ class _VerificationModalState extends State<VerificationModal> {
     );
   }
 }
+
+

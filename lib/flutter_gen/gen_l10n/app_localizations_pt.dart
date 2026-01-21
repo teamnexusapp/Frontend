@@ -1,6 +1,6 @@
-// ignore: unused_import
+﻿import 'app_localizations.dart';
 import 'package:intl/intl.dart' as intl;
-import 'app_localizations.dart';
+// ignore: unused_import
 
 // ignore_for_file: type=lint
 
@@ -39,7 +39,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get german => 'Deutsch';
 
   @override
-  String get next => 'Próximo';
+  String get next => 'PrÃ³ximo';
 
   @override
   String get back => 'Voltar';
@@ -48,7 +48,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get skip => 'Pular';
 
   @override
-  String get done => 'Concluído';
+  String get done => 'ConcluÃ­do';
 
   @override
   String get createAccount => 'Criar Conta';
@@ -60,7 +60,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get email => 'Email';
 
   @override
-  String get phoneNumber => 'Número de Telefone';
+  String get phoneNumber => 'NÃºmero de Telefone';
 
   @override
   String get password => 'Senha';
@@ -107,21 +107,21 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get resendCode => 'Reenviar Código';
+  String get resendCode => 'Reenviar CÃ³digo';
 
   @override
   String codeExpires(String minutes, String seconds) {
-    return 'Código expira em $minutes:$seconds';
+    return 'CÃ³digo expira em $minutes:$seconds';
   }
 
   @override
-  String get invalidEmail => 'Por favor, insira um endereço de email válido';
+  String get invalidEmail => 'Por favor, insira um endereÃ§o de email vÃ¡lido';
 
   @override
-  String get invalidPhone => 'Por favor, insira um número de telefone válido';
+  String get invalidPhone => 'Por favor, insira um nÃºmero de telefone vÃ¡lido';
 
   @override
-  String get passwordMismatch => 'As senhas não coincidem';
+  String get passwordMismatch => 'As senhas nÃ£o coincidem';
 
   @override
   String get passwordTooShort => 'A senha deve ter pelo menos 8 caracteres';
@@ -131,26 +131,26 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get profileSetupComplete =>
-      'A configuração do seu perfil está completa';
+      'A configuraÃ§Ã£o do seu perfil estÃ¡ completa';
 
   @override
-  String get termsAndConditions => 'Concordo com os Termos e Condições';
+  String get termsAndConditions => 'Concordo com os Termos e CondiÃ§Ãµes';
 
   @override
-  String get privacyPolicy => 'Concordo com a Política de Privacidade';
+  String get privacyPolicy => 'Concordo com a PolÃ­tica de Privacidade';
 
   @override
-  String get acceptTerms => 'Por favor, aceite os termos e condições';
+  String get acceptTerms => 'Por favor, aceite os termos e condiÃ§Ãµes';
 
   @override
-  String get emailAlreadyExists => 'Email já registrado';
+  String get emailAlreadyExists => 'Email jÃ¡ registrado';
 
   @override
-  String get phoneAlreadyExists => 'Número de telefone já registrado';
+  String get phoneAlreadyExists => 'NÃºmero de telefone jÃ¡ registrado';
 
   @override
   String get verificationFailed =>
-      'Verificação falhou. Por favor, tente novamente';
+      'VerificaÃ§Ã£o falhou. Por favor, tente novamente';
 
   @override
   String get tryAgain => 'Tentar Novamente';
@@ -183,7 +183,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get genderOther => 'Outro';
 
   @override
-  String get selectGender => 'Selecionar Gênero';
+  String get selectGender => 'Selecionar GÃªnero';
 
   @override
   String get welcomeToJourney => 'Welcome to your journey';
@@ -299,7 +299,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get age => 'Age';
 
   @override
-  String get cycleLength => 'Duração do Ciclo';
+  String get cycleLength => 'DuraÃ§Ã£o do Ciclo';
 
   @override
   String days(Object count) {
@@ -311,22 +311,22 @@ class AppLocalizationsPt extends AppLocalizations {
       'Average number of days between your periods';
 
   @override
-  String get lastPeriodDate => 'Data da Última Menstruação';
+  String get lastPeriodDate => 'Data da Ãšltima MenstruaÃ§Ã£o';
 
   @override
   String get whenLastBleeding => 'When your last menstrual bleeding started';
 
   @override
-  String get ttcHistory => 'Histórico TTC';
+  String get ttcHistory => 'HistÃ³rico TTC';
 
   @override
-  String get faithPreference => 'Preferência de Fé';
+  String get faithPreference => 'PreferÃªncia de FÃ©';
 
   @override
   String get language => 'Language';
 
   @override
-  String get audioGuidance => 'Orientação de Áudio';
+  String get audioGuidance => 'OrientaÃ§Ã£o de Ãudio';
 
   @override
   String get agreeTerms =>
@@ -433,3 +433,6 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get logIn => 'Log In';
 }
+
+
+

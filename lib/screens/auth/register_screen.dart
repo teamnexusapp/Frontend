@@ -1,6 +1,6 @@
-﻿import 'package:flutter/material.dart';
+﻿import '../../services/auth_service.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -58,8 +58,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               if (!_formKey.currentState!.validate()) return;
                               setState(() => _loading = true);
                               try {
-                                final user = await auth.signUpWithEmail(
-                                  email: _emailController.text.trim(),
+                                final user = await auth.signUpWithEmail(;
+                                  email: _emailController.text?.trim() ?? "",
                                   password: _passwordController.text,
                                 );
                                 if (user != null) {
@@ -83,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 12),
               TextButton(
                 onPressed: () async {
-                  final phone = _phoneController.text.trim();
+                  final phone = _phoneController.text?.trim() ?? "";
                   if (phone.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Enter phone number')));
@@ -113,4 +113,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+
+
+
+
+
 

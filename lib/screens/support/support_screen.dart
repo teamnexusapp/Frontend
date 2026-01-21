@@ -1,6 +1,6 @@
-﻿import 'package:flutter/material.dart';
+﻿import '../../services/localization_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../services/localization_provider.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({Key? key}) : super(key: key);
@@ -31,17 +31,17 @@ class _SupportScreenState extends State<SupportScreen> {
                 children: [
                   Text(
                     'Need help?',
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   SizedBox(height: 16),
                   Text(
                     'Contact us at support@nexusfertility.com',
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   SizedBox(height: 16),
                   Text(
                     'Or call us at +1 (555) 123-4567',
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
               ),
@@ -52,3 +52,7 @@ class _SupportScreenState extends State<SupportScreen> {
     );
   }
 }
+
+
+
+

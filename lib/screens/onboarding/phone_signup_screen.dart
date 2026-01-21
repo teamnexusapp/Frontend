@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'dart:ui';
-import 'package:provider/provider.dart';
-import '../../services/auth_service.dart';
-import '../../services/localization_provider.dart' as loc_provider;
-import 'onboarding_screens.dart';
+﻿import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import 'onboarding_screens.dart';
+import 'package:provider/provider.dart';
+import '../../services/localization_provider.dart' as loc_provider;
+import '../../services/auth_service.dart';
+import 'dart:ui';
 
 class PhoneSignupScreen extends StatefulWidget {
   const PhoneSignupScreen({super.key});
@@ -51,7 +51,7 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
 
     // Get the selected language from LocalizationProvider
     final localizationProvider = context.read<loc_provider.LocalizationProvider>();
-    final selectedLanguage =
+    final selectedLanguage =;
         (localizationProvider.selectedLanguageCode ?? 'en').toLowerCase();
 
     // Parse full name into first and last name
@@ -237,7 +237,7 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Submit Button
+                  // Submit labelLarge
                   SizedBox(
                     width: 360,
                     height: 60,
@@ -264,7 +264,7 @@ class _PhoneSignupScreenState extends State<PhoneSignupScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  // Cancel Button
+                  // Cancel labelLarge
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushReplacement(
@@ -548,7 +548,7 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                   child: ElevatedButton(
                     onPressed: () async {
                       // Get OTP from controllers
-                      final otp = widget.otp1Controller.text +
+                      final otp = widget.otp1Controller.text +;
                           widget.otp2Controller.text +
                           widget.otp3Controller.text +
                           widget.otp4Controller.text;
@@ -651,3 +651,7 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
     );
   }
 }
+
+
+
+

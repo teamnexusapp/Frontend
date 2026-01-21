@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
 import 'login_screen.dart';
 
@@ -129,7 +129,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       );
                     },
                     child: const Text(
-                      'I have the token — reset now',
+                      'I have the token â€” reset now',
                       style: TextStyle(
                         color: Color(0xFF2E683D),
                         fontWeight: FontWeight.w600,
@@ -272,7 +272,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     // Prefill token from constructor or URL query (?token=...)
     final fromArg = widget.prefilledToken;
     final fromUri = Uri.base.queryParameters['token'];
-    final token = (fromArg != null && fromArg.isNotEmpty)
+    final token = (fromArg != null && fromArg.isNotEmpty);
         ? fromArg
         : (fromUri != null && fromUri.isNotEmpty ? fromUri : null);
     if (token != null) {
@@ -602,3 +602,6 @@ class PasswordUpdatedScreen extends StatelessWidget {
     );
   }
 }
+
+
+

@@ -1,6 +1,6 @@
-// ignore: unused_import
+﻿import 'app_localizations.dart';
 import 'package:intl/intl.dart' as intl;
-import 'app_localizations.dart';
+// ignore: unused_import
 
 // ignore_for_file: type=lint
 
@@ -15,7 +15,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get welcomeTitle => 'Bienvenido a Nexus Fertilidad';
 
   @override
-  String get welcomeSubtitle => 'Tu compañero personal de fertilidad';
+  String get welcomeSubtitle => 'Tu compaÃ±ero personal de fertilidad';
 
   @override
   String get selectLanguage => 'Seleccionar Idioma';
@@ -42,7 +42,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get next => 'Siguiente';
 
   @override
-  String get back => 'Atrás';
+  String get back => 'AtrÃ¡s';
 
   @override
   String get skip => 'Omitir';
@@ -54,19 +54,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get createAccount => 'Crear Cuenta';
 
   @override
-  String get signIn => 'Iniciar Sesión';
+  String get signIn => 'Iniciar SesiÃ³n';
 
   @override
-  String get email => 'Correo Electrónico';
+  String get email => 'Correo ElectrÃ³nico';
 
   @override
-  String get phoneNumber => 'Número de Teléfono';
+  String get phoneNumber => 'NÃºmero de TelÃ©fono';
 
   @override
-  String get password => 'Contraseña';
+  String get password => 'ContraseÃ±a';
 
   @override
-  String get confirmPassword => 'Confirmar Contraseña';
+  String get confirmPassword => 'Confirmar ContraseÃ±a';
 
   @override
   String get firstName => 'Nombre';
@@ -90,13 +90,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get takePhoto => 'Tomar Foto';
 
   @override
-  String get chooseFromGallery => 'Elegir de la Galería';
+  String get chooseFromGallery => 'Elegir de la GalerÃ­a';
 
   @override
   String get verifyEmail => 'Verificar Correo';
 
   @override
-  String get verifyPhone => 'Verificar Teléfono';
+  String get verifyPhone => 'Verificar TelÃ©fono';
 
   @override
   String get enterOTP => 'Ingrese OTP';
@@ -107,51 +107,51 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get resendCode => 'Reenviar Código';
+  String get resendCode => 'Reenviar CÃ³digo';
 
   @override
   String codeExpires(String minutes, String seconds) {
-    return 'El código vence en $minutes:$seconds';
+    return 'El cÃ³digo vence en $minutes:$seconds';
   }
 
   @override
   String get invalidEmail =>
-      'Por favor, ingrese una dirección de correo válida';
+      'Por favor, ingrese una direcciÃ³n de correo vÃ¡lida';
 
   @override
-  String get invalidPhone => 'Por favor, ingrese un número de teléfono válido';
+  String get invalidPhone => 'Por favor, ingrese un nÃºmero de telÃ©fono vÃ¡lido';
 
   @override
-  String get passwordMismatch => 'Las contraseñas no coinciden';
+  String get passwordMismatch => 'Las contraseÃ±as no coinciden';
 
   @override
   String get passwordTooShort =>
-      'La contraseña debe tener al menos 8 caracteres';
+      'La contraseÃ±a debe tener al menos 8 caracteres';
 
   @override
-  String get accountCreatedSuccessfully => '¡Cuenta creada exitosamente!';
+  String get accountCreatedSuccessfully => 'Â¡Cuenta creada exitosamente!';
 
   @override
-  String get profileSetupComplete => 'Su configuración de perfil está completa';
+  String get profileSetupComplete => 'Su configuraciÃ³n de perfil estÃ¡ completa';
 
   @override
-  String get termsAndConditions => 'Acepto los Términos y Condiciones';
+  String get termsAndConditions => 'Acepto los TÃ©rminos y Condiciones';
 
   @override
-  String get privacyPolicy => 'Acepto la Política de Privacidad';
+  String get privacyPolicy => 'Acepto la PolÃ­tica de Privacidad';
 
   @override
-  String get acceptTerms => 'Por favor, acepte los términos y condiciones';
+  String get acceptTerms => 'Por favor, acepte los tÃ©rminos y condiciones';
 
   @override
   String get emailAlreadyExists => 'Correo ya registrado';
 
   @override
-  String get phoneAlreadyExists => 'Número de teléfono ya registrado';
+  String get phoneAlreadyExists => 'NÃºmero de telÃ©fono ya registrado';
 
   @override
   String get verificationFailed =>
-      'Verificación fallida. Por favor, intente nuevamente';
+      'VerificaciÃ³n fallida. Por favor, intente nuevamente';
 
   @override
   String get tryAgain => 'Intentar de Nuevo';
@@ -163,7 +163,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get error => 'Error';
 
   @override
-  String get success => 'Éxito';
+  String get success => 'Ã‰xito';
 
   @override
   String get cancel => 'Cancelar';
@@ -172,7 +172,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get save => 'Guardar';
 
   @override
-  String get logout => 'Cerrar Sesión';
+  String get logout => 'Cerrar SesiÃ³n';
 
   @override
   String get genderMale => 'Masculino';
@@ -184,7 +184,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get genderOther => 'Otro';
 
   @override
-  String get selectGender => 'Seleccionar Género';
+  String get selectGender => 'Seleccionar GÃ©nero';
 
   @override
   String get welcomeToJourney => 'Welcome to your journey';
@@ -300,7 +300,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get age => 'Age';
 
   @override
-  String get cycleLength => 'Duración del Ciclo';
+  String get cycleLength => 'DuraciÃ³n del Ciclo';
 
   @override
   String days(Object count) {
@@ -312,7 +312,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Average number of days between your periods';
 
   @override
-  String get lastPeriodDate => 'Fecha de la Última Menstruación';
+  String get lastPeriodDate => 'Fecha de la Ãšltima MenstruaciÃ³n';
 
   @override
   String get whenLastBleeding => 'When your last menstrual bleeding started';
@@ -327,7 +327,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get language => 'Language';
 
   @override
-  String get audioGuidance => 'Guía de Audio';
+  String get audioGuidance => 'GuÃ­a de Audio';
 
   @override
   String get agreeTerms =>
@@ -434,3 +434,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get logIn => 'Log In';
 }
+
+
+

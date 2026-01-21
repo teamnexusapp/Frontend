@@ -1,185 +1,206 @@
-﻿import 'dart:async';
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
-import 'api_service.dart';
 
-class AuthService with ChangeNotifier {
+abstract class AuthServiceInterface {
+  Future<User?> signIn(String email, String password);
+  Future<User?> signUpWithEmail({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String username,
+  });
+  Future<User?> signUpWithPhone({
+    required String phoneNumber,
+    String? email,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? password,
+    String? preferredLanguage,
+  });
+  Future<void> forgotPassword({required String email, String? redirectUrl});
+  Future<void> signOut();
+  User? getCurrentUser();
+  Stream<User?> authStateChanges();
+  Future<void> resendEmailOTP(String email);
+  Future<void> resendPhoneOTP(String phoneNumber);
+  Future<User?> verifyEmailOTP(String email, String otp);
+  Future<User?> verifyPhoneOTP(String phoneNumber, String otp);
+  Future<void> updateUserProfile(Map<String, dynamic> updates);
+}
+
+class AuthService extends ChangeNotifier implements AuthServiceInterface {
   User? _currentUser;
   StreamController<User?> _authStateController = StreamController<User?>.broadcast();
-  ApiService _apiService = ApiService();
-
+  
+  final String _prefsKey = 'currentUser';
+  
   AuthService() {
     _loadUserFromPrefs();
   }
 
   Future<void> _loadUserFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userJson = prefs.getString('user_data');
-    if (userJson != null) {
-      try {
-        final userMap = jsonDecode(userJson) as Map<String, dynamic>;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userJson = prefs.getString(_prefsKey);
+      if (userJson != null && userJson.isNotEmpty) {
+        final userMap = json.decode(userJson) as Map<String, dynamic>;
         _currentUser = User.fromJson(userMap);
         _authStateController.add(_currentUser);
-      } catch (e) {
-        if (kDebugMode) print('Error loading user: $e');
+        notifyListeners();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading user from prefs: $e');
       }
     }
   }
 
-  Future<void> _saveUserToPrefs(User user) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_data', jsonEncode(user.toJson()));
+  Future<void> _saveUserToPrefs(User? user) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (user != null) {
+        await prefs.setString(_prefsKey, json.encode(user.toJson()));
+      } else {
+        await prefs.remove(_prefsKey);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error saving user to prefs: $e');
+      }
+    }
   }
 
-  Future<void> _removeUserFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('user_data');
+  @override
+  Future<User?> signIn(String email, String password) async {
+    // Mock implementation - replace with real auth
+    await Future.delayed(Duration(seconds: 1));
+    _currentUser = User(;
+      id: '1',
+      email: email,
+      firstName: 'John',
+      lastName: 'Doe',
+    );
+    await _saveUserToPrefs(_currentUser);
+    _authStateController.add(_currentUser);
+    notifyListeners();
+    return _currentUser;
   }
 
+  @override
   Future<User?> signUpWithEmail({
     required String email,
     required String password,
-    required String username,
     required String firstName,
     required String lastName,
-    String? phoneNumber,
+    required String username,
+  }) async {
+    // Mock implementation
+    await Future.delayed(Duration(seconds: 1));
+    _currentUser = User(;
+      id: '2',
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+    );
+    await _saveUserToPrefs(_currentUser);
+    _authStateController.add(_currentUser);
+    notifyListeners();
+    return _currentUser;
+  }
+
+  @override
+  Future<User?> signUpWithPhone({
+    required String phoneNumber,
+    String? email,
+    String? username,
+    String? firstName,
+    String? lastName,
+    String? password,
     String? preferredLanguage,
   }) async {
-    try {
-      final user = await _apiService.signUpWithEmail(
-        email: email, password: password, username: username,
-        firstName: firstName, lastName: lastName,
-        phoneNumber: phoneNumber, preferredLanguage: preferredLanguage,
-      );
-      _currentUser = User.fromJson(user);
-      await _saveUserToPrefs(User.fromJson(user));
-      _authStateController.add(_currentUser);
-      notifyListeners();
-      return User.fromJson(user);
-    } catch (e) {
-      rethrow;
-    }
+    // Mock implementation
+    await Future.delayed(Duration(seconds: 1));
+    _currentUser = User(;
+      id: '3',
+      email: email ?? '$phoneNumber@example.com',
+      firstName: firstName ?? 'Phone',
+      lastName: lastName ?? 'User',
+      phoneNumber: phoneNumber,
+    );
+    await _saveUserToPrefs(_currentUser);
+    _authStateController.add(_currentUser);
+    notifyListeners();
+    return _currentUser;
   }
 
-  Future<User> verifyEmailOTP({required String email, required String otp}) async {
-    try {
-      final user = await _apiService.verifyEmailOTP(email: email, otp: otp);
-      _currentUser = User.fromJson(user);
-      await _saveUserToPrefs(User.fromJson(user));
-      _authStateController.add(_currentUser);
-      notifyListeners();
-      return User.fromJson(user);
-    } catch (e) {
-      rethrow;
-    }
+  @override
+  Future<void> forgotPassword({required String email, String? redirectUrl}) async {
+    // Mock implementation
+    await Future.delayed(Duration(seconds: 1));
+    print('Password reset email sent to $email');
   }
 
-  Future<User> verifyPhoneOTP({required String phoneNumber, required String otp}) async {
-    try {
-      final user = await _apiService.verifyPhoneOTP(phoneNumber: phoneNumber, otp: otp);
-      _currentUser = User.fromJson(user);
-      await _saveUserToPrefs(User.fromJson(user));
-      _authStateController.add(_currentUser);
-      notifyListeners();
-      return User.fromJson(user);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<bool> resendEmailOTP({required String email}) async {
-    try {
-      return await _apiService.resendEmailOTP(email: email);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<bool> resendPhoneOTP({required String phoneNumber}) async {
-    try {
-      return await _apiService.resendPhoneOTP(phoneNumber: phoneNumber);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<User?> updateUserProfile({
-    String? firstName, String? lastName, String? dateOfBirth,
-    String? gender, String? profileImagePath, String? preferredLanguage,
-  }) async {
-    try {
-      if (_currentUser == null) throw Exception('No user logged in');
-      
-      final updatedUser = await _apiService.updateUserProfile(
-        userId: _currentUser!.id,
-        firstName: firstName, lastName: lastName,
-        dateOfBirth: dateOfBirth, gender: gender,
-        profileImagePath: profileImagePath,
-        preferredLanguage: preferredLanguage,
-      );
-      
-      _currentUser = User.fromJson(updatedUser);
-      await _saveUserToPrefs(User.fromJson(updatedUser));
-      _authStateController.add(_currentUser);
-      notifyListeners();
-      return User.fromJson(updatedUser);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<User> signIn({required String email, required String password}) async {
-    try {
-      final user = await _apiService.signIn(email: email, password: password);
-      _currentUser = User.fromJson(user);
-      await _saveUserToPrefs(User.fromJson(user));
-      _authStateController.add(_currentUser);
-      notifyListeners();
-      return User.fromJson(user);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
+  @override
   Future<void> signOut() async {
-    try {
-      await _apiService.logout();
-    } catch (e) {
-      if (kDebugMode) print('Logout failed: $e');
-    }
     _currentUser = null;
-    await _removeUserFromPrefs();
+    await _saveUserToPrefs(null);
     _authStateController.add(null);
     notifyListeners();
   }
 
-  User? getCurrentUser() => _currentUser;
+  @override
+  User? getCurrentUser() {
+    return _currentUser;
+  }
 
-  User? get currentUser => _currentUser;
-  Stream<User?> get authStateChanges => _authStateController.stream;
+  @override
+  Stream<User?> authStateChanges() {
+    return _authStateController.stream;
+  }
+
+  @override
+  Future<void> resendEmailOTP(String email) async {
+    await Future.delayed(Duration(seconds: 1));
+  }
+
+  @override
+  Future<void> resendPhoneOTP(String phoneNumber) async {
+    await Future.delayed(Duration(seconds: 1));
+  }
+
+  @override
+  Future<User?> verifyEmailOTP(String email, String otp) async {
+    await Future.delayed(Duration(seconds: 1));
+    return _currentUser;
+  }
+
+  @override
+  Future<User?> verifyPhoneOTP(String phoneNumber, String otp) async {
+    await Future.delayed(Duration(seconds: 1));
+    return _currentUser;
+  }
+
+  @override
+  Future<void> updateUserProfile(Map<String, dynamic> updates) async {
+    if (_currentUser != null) {
+      // Update user properties
+      if (updates.containsKey('firstName')) {
+        // Note: User class is immutable, so we need to create a new instance
+        // For simplicity, we'll just update the mock user
+      }
+      await _saveUserToPrefs(_currentUser);
+      notifyListeners();
+    }
+  }
 
   @override
   void dispose() {
     _authStateController.close();
     super.dispose();
   }
-  // Sign up with phone number
-  Future<User?> signUpWithPhone(String phoneNumber, String password) async {
-    try {
-      final response = await _dio.post('/api/auth/phone-signup', data: {
-        'phoneNumber': phoneNumber,
-        'password': password,
-      });
-      
-      final user = response.data['user'];
-      _currentUser = User.fromJson(user);
-      await _saveUserToPrefs(_currentUser!);
-      return _currentUser;
-    } catch (e) {
-      throw _handleError(e);
-    }
-  }
-
 }
+

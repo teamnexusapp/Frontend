@@ -1,14 +1,14 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
-import '../services/auth_service.dart';
 import '../models/user.dart';
-import 'profile/profile_screen.dart';
-import 'support/support_screen.dart';
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import 'tracking/log_symptom_screen.dart';
-import 'onboarding/welcome_screen.dart';
-import 'educational/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
+import 'package:provider/provider.dart';
+import 'educational/educational_hub_screen.dart';
+import '../services/auth_service.dart';
+import 'profile/profile_screen.dart';
+import 'onboarding/welcome_screen.dart';
+import 'support/support_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -210,11 +210,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProfileCard(User? user) {
-    final fullName = [user?.firstName, user?.lastName]
+    final fullName = [user?.firstName, user?.lastName];
         .where((part) => part != null && part!.trim().isNotEmpty)
         .map((part) => part!.trim())
         .join(' ');
-    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty)
+    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty);
         ? user.username!.trim()
         : ((user?.email != null && user!.email.trim().isNotEmpty)
             ? user.email.split('@').first
@@ -314,11 +314,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAvatar(User? user, {double radius = 18}) {
-    final fullName = [user?.firstName, user?.lastName]
+    final fullName = [user?.firstName, user?.lastName];
       .where((part) => part != null && part!.trim().isNotEmpty)
       .map((part) => part!.trim())
       .join(' ');
-    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty)
+    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty);
       ? user.username!.trim()
       : ((user?.email != null && user!.email.trim().isNotEmpty)
         ? user.email.split('@').first
@@ -351,13 +351,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHomeTab() {
     final size = MediaQuery.of(context).size;
     final heroHeight = size.height * 0.45;
-    const buttonHeight = 64.0;
+    const labelLargeHeight = 64.0;
     
     return SingleChildScrollView(
       child: Column(
         children: [
           SizedBox(
-            height: heroHeight + (buttonHeight / 2),
+            height: heroHeight + (labelLargeHeight / 2),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -433,13 +433,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Positioned(
-                  top: heroHeight - (buttonHeight / 2),
+                  top: heroHeight - (labelLargeHeight / 2),
                   left: 0,
                   right: 0,
                   child: Center(
                     child: SizedBox(
                       width: 320,
-                      height: buttonHeight,
+                      height: labelLargeHeight,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).push(
@@ -629,5 +629,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+
+
+
 
 

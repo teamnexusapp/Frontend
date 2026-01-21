@@ -1,7 +1,7 @@
+﻿import '../../services/tts_service.dart';
+import '../../services/localization_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../services/tts_service.dart';
-import '../../services/localization_provider.dart';
 
 class AudioHubScreen extends StatelessWidget {
   const AudioHubScreen({super.key});
@@ -17,7 +17,7 @@ class AudioHubScreen extends StatelessWidget {
     },
     {
       'title': 'Fertility in your 20s, 30s and 40s',
-      'content': 'Fertility changes with age — learn how to plan and prepare.'
+      'content': 'Fertility changes with age â€” learn how to plan and prepare.'
     },
   ];
 
@@ -78,3 +78,9 @@ class AudioHubScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalizationProvider extends ChangeNotifier {
@@ -49,3 +49,5 @@ class LocalizationProvider extends ChangeNotifier {
     }
   }
 }
+
+

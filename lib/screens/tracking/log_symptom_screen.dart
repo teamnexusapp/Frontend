@@ -1,10 +1,13 @@
-﻿import 'package:flutter/material.dart';
+﻿import '../../services/localization_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../theme.dart';
 
 class LogSymptomScreen extends StatefulWidget {
   const LogSymptomScreen({Key? key}) : super(key: key);
 
   @override
-  State<LogSymptomScreen> createState() => _LogSymptomScreenState();
+  _LogSymptomScreenState createState() => _LogSymptomScreenState();
 }
 
 class _LogSymptomScreenState extends State<LogSymptomScreen> {
@@ -12,11 +15,14 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Log Symptom'),
+        title: Text('Log Symptoms'),
       ),
-      body: const Center(
-        child: Text('Symptom logging screen - Basic version'),
+      body: Center(
+        child: Text('Log Symptom Screen - Under Construction'),
       ),
     );
   }
 }
+
+
+

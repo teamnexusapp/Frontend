@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color primary = Color(0xFF2E7D32);
@@ -13,11 +13,14 @@ final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary, brightness: Brightness.light),
   appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent, elevation: 0, foregroundColor: Colors.black),
   scaffoldBackgroundColor: AppColors.background,
-  elevatedButtonTheme: ElevatedButtonThemeData(
+  ElevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
   ),
-  outlinedButtonTheme: OutlinedButtonThemeData(
+  OutlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(side: const BorderSide(color: AppColors.primary), foregroundColor: AppColors.primary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
   ),
   inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Color(0xFFF6F8F6), border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),
 );
+
+
+

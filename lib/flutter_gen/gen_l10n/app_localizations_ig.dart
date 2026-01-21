@@ -1,6 +1,6 @@
-// ignore: unused_import
+﻿import 'app_localizations.dart';
 import 'package:intl/intl.dart' as intl;
-import 'app_localizations.dart';
+// ignore: unused_import
 
 // ignore_for_file: type=lint
 
@@ -12,13 +12,13 @@ class AppLocalizationsIg extends AppLocalizations {
   String get appTitle => 'Nexus Fertility';
 
   @override
-  String get welcomeTitle => 'Nnọọ na Nexus Fertility';
+  String get welcomeTitle => 'Nná»á» na Nexus Fertility';
 
   @override
-  String get welcomeSubtitle => 'Onye enyemaka ọmụmụ gị nke onwe gị';
+  String get welcomeSubtitle => 'Onye enyemaka á»má»¥má»¥ gá»‹ nke onwe gá»‹';
 
   @override
-  String get selectLanguage => 'Họrọ Asụsụ';
+  String get selectLanguage => 'Há»rá» Asá»¥sá»¥';
 
   @override
   String get english => 'English';
@@ -42,7 +42,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get next => 'Osote';
 
   @override
-  String get back => 'Laghachi Azụ';
+  String get back => 'Laghachi Azá»¥';
 
   @override
   String get skip => 'Mafee';
@@ -51,7 +51,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get done => 'Emechaa';
 
   @override
-  String get createAccount => 'Mepụta Akaụntụ';
+  String get createAccount => 'Mepá»¥ta Akaá»¥ntá»¥';
 
   @override
   String get signIn => 'Banye';
@@ -60,28 +60,28 @@ class AppLocalizationsIg extends AppLocalizations {
   String get email => 'Email';
 
   @override
-  String get phoneNumber => 'Nọmba Ekwentị';
+  String get phoneNumber => 'Ná»mba Ekwentá»‹';
 
   @override
-  String get password => 'Paswọọdụ';
+  String get password => 'Paswá»á»dá»¥';
 
   @override
-  String get confirmPassword => 'Kwenye Paswọọdụ';
+  String get confirmPassword => 'Kwenye Paswá»á»dá»¥';
 
   @override
-  String get firstName => 'Aha Mbụ';
+  String get firstName => 'Aha Mbá»¥';
 
   @override
-  String get lastName => 'Aha Ikpeazụ';
+  String get lastName => 'Aha Ikpeazá»¥';
 
   @override
-  String get dateOfBirth => 'Ụbọchị Ọmụmụ';
+  String get dateOfBirth => 'á»¤bá»chá»‹ á»Œmá»¥má»¥';
 
   @override
-  String get selectDate => 'Họrọ ụbọchị';
+  String get selectDate => 'Há»rá» á»¥bá»chá»‹';
 
   @override
-  String get profilePicture => 'Foto Profaịlụ';
+  String get profilePicture => 'Foto Profaá»‹lá»¥';
 
   @override
   String get uploadPhoto => 'Bulite Foto';
@@ -90,13 +90,13 @@ class AppLocalizationsIg extends AppLocalizations {
   String get takePhoto => 'See Foto';
 
   @override
-  String get chooseFromGallery => 'Họrọ Site na Gallery';
+  String get chooseFromGallery => 'Há»rá» Site na Gallery';
 
   @override
   String get verifyEmail => 'Kwenye Email';
 
   @override
-  String get verifyPhone => 'Kwenye Ekwentị';
+  String get verifyPhone => 'Kwenye Ekwentá»‹';
 
   @override
   String get enterOTP => 'Tinye OTP';
@@ -107,52 +107,52 @@ class AppLocalizationsIg extends AppLocalizations {
   }
 
   @override
-  String get resendCode => 'Zigharia Koodu Ọzọ';
+  String get resendCode => 'Zigharia Koodu á»Œzá»';
 
   @override
   String codeExpires(String minutes, String seconds) {
-    return 'Koodu ga-agwụ na $minutes:$seconds';
+    return 'Koodu ga-agwá»¥ na $minutes:$seconds';
   }
 
   @override
-  String get invalidEmail => 'Biko tinye adreesị email ziri ezi';
+  String get invalidEmail => 'Biko tinye adreesá»‹ email ziri ezi';
 
   @override
-  String get invalidPhone => 'Biko tinye nọmba ekwentị ziri ezi';
+  String get invalidPhone => 'Biko tinye ná»mba ekwentá»‹ ziri ezi';
 
   @override
-  String get passwordMismatch => 'Paswọọdụ adabaghị';
+  String get passwordMismatch => 'Paswá»á»dá»¥ adabaghá»‹';
 
   @override
   String get passwordTooShort =>
-      'Paswọọdụ ga-abụrịrị opekata mpe mkpụrụedemede 8';
+      'Paswá»á»dá»¥ ga-abá»¥rá»‹rá»‹ opekata mpe mkpá»¥rá»¥edemede 8';
 
   @override
-  String get accountCreatedSuccessfully => 'E mepụtara akaụntụ nke ọma!';
+  String get accountCreatedSuccessfully => 'E mepá»¥tara akaá»¥ntá»¥ nke á»ma!';
 
   @override
-  String get profileSetupComplete => 'Ntọala profaịlụ zuru oke!';
+  String get profileSetupComplete => 'Ntá»ala profaá»‹lá»¥ zuru oke!';
 
   @override
-  String get termsAndConditions => 'Ekwenyere m na Usoro na Ọnọdụ';
+  String get termsAndConditions => 'Ekwenyere m na Usoro na á»Œná»dá»¥';
 
   @override
   String get privacyPolicy => 'Ekwenyere m na Iwu Nzuzo';
 
   @override
-  String get acceptTerms => 'Biko nabata usoro na ọnọdụ';
+  String get acceptTerms => 'Biko nabata usoro na á»ná»dá»¥';
 
   @override
   String get emailAlreadyExists => 'E debanyela email aha';
 
   @override
-  String get phoneAlreadyExists => 'E debanyela nọmba ekwentị aha';
+  String get phoneAlreadyExists => 'E debanyela ná»mba ekwentá»‹ aha';
 
   @override
-  String get verificationFailed => 'Nkwenye dara ada. Biko nwaa ọzọ';
+  String get verificationFailed => 'Nkwenye dara ada. Biko nwaa á»zá»';
 
   @override
-  String get tryAgain => 'Nwaa Ọzọ';
+  String get tryAgain => 'Nwaa á»Œzá»';
 
   @override
   String get loading => 'Na-ebu...';
@@ -161,7 +161,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get error => 'Njehie';
 
   @override
-  String get success => 'Ihe Ịga Nke Ọma';
+  String get success => 'Ihe á»Šga Nke á»Œma';
 
   @override
   String get cancel => 'Kagbuo';
@@ -170,86 +170,86 @@ class AppLocalizationsIg extends AppLocalizations {
   String get save => 'Chekwa';
 
   @override
-  String get logout => 'Pụọ';
+  String get logout => 'Pá»¥á»';
 
   @override
   String get genderMale => 'Nwoke';
 
   @override
-  String get genderFemale => 'Nwanyị';
+  String get genderFemale => 'Nwanyá»‹';
 
   @override
-  String get genderOther => 'Ndị Ọzọ';
+  String get genderOther => 'Ndá»‹ á»Œzá»';
 
   @override
-  String get selectGender => 'Họrọ Okike';
+  String get selectGender => 'Há»rá» Okike';
 
   @override
-  String get welcomeToJourney => 'Nnọọ na njem gị';
+  String get welcomeToJourney => 'Nná»á» na njem gá»‹';
 
   @override
-  String get choosePreferredLanguage => 'Họrọ asụsụ ịchọrọ';
+  String get choosePreferredLanguage => 'Há»rá» asá»¥sá»¥ á»‹chá»rá»';
 
   @override
-  String get choosePreferredMethod => 'Họrọ ụzọ ịchọrọ';
+  String get choosePreferredMethod => 'Há»rá» á»¥zá» á»‹chá»rá»';
 
   @override
-  String get createAccountWithEmail => 'Mepụta akaụntụ site na email';
+  String get createAccountWithEmail => 'Mepá»¥ta akaá»¥ntá»¥ site na email';
 
   @override
-  String get createAccountWithPhone => 'Mepụta akaụntụ site na ekwentị';
+  String get createAccountWithPhone => 'Mepá»¥ta akaá»¥ntá»¥ site na ekwentá»‹';
 
   @override
-  String get emailSignupTitle => 'Mepụta Akaụntụ site na Email';
+  String get emailSignupTitle => 'Mepá»¥ta Akaá»¥ntá»¥ site na Email';
 
   @override
-  String get emailSignupSubtitle => 'Tinye email na paswọọdụ gị';
+  String get emailSignupSubtitle => 'Tinye email na paswá»á»dá»¥ gá»‹';
 
   @override
-  String get emailAddressLabel => 'Adreesị Email';
+  String get emailAddressLabel => 'Adreesá»‹ Email';
 
   @override
   String get emailHint => 'gi@example.com';
 
   @override
-  String get emailRequired => 'Email dị mkpa';
+  String get emailRequired => 'Email dá»‹ mkpa';
 
   @override
   String get invalidEmailFormat => 'Usoro email ezighi ezi';
 
   @override
-  String get passwordHint => 'Tinye paswọọdụ';
+  String get passwordHint => 'Tinye paswá»á»dá»¥';
 
   @override
-  String get passwordRequired => 'Paswọọdụ dị mkpa';
+  String get passwordRequired => 'Paswá»á»dá»¥ dá»‹ mkpa';
 
   @override
-  String get confirmPasswordHint => 'Kwenye paswọọdụ';
+  String get confirmPasswordHint => 'Kwenye paswá»á»dá»¥';
 
   @override
-  String get confirmPasswordRequired => 'Biko kwenye paswọọdụ';
+  String get confirmPasswordRequired => 'Biko kwenye paswá»á»dá»¥';
 
   @override
-  String get phoneSignupTitle => 'Mepụta Akaụntụ site na Ekwentị';
+  String get phoneSignupTitle => 'Mepá»¥ta Akaá»¥ntá»¥ site na Ekwentá»‹';
 
   @override
-  String get phoneSignupSubtitle => 'Anyị ga-ezigara gị OTP koodu';
+  String get phoneSignupSubtitle => 'Anyá»‹ ga-ezigara gá»‹ OTP koodu';
 
   @override
-  String get phoneNumberLabel => 'Nọmba Ekwentị';
+  String get phoneNumberLabel => 'Ná»mba Ekwentá»‹';
 
   @override
-  String get phoneNumberHint => 'Nọmba ekwentị';
+  String get phoneNumberHint => 'Ná»mba ekwentá»‹';
 
   @override
-  String get phoneRequired => 'Ekwentị dị mkpa';
+  String get phoneRequired => 'Ekwentá»‹ dá»‹ mkpa';
 
   @override
-  String get invalidPhoneForCountry => 'Nọmba ekwentị ezighi ezi maka obodo a';
+  String get invalidPhoneForCountry => 'Ná»mba ekwentá»‹ ezighi ezi maka obodo a';
 
   @override
   String get otpInfoMessage =>
-      'Anyị ga-ezigara gị OTP koodu iji kwenye nọmba ekwentị gị';
+      'Anyá»‹ ga-ezigara gá»‹ OTP koodu iji kwenye ná»mba ekwentá»‹ gá»‹';
 
   @override
   String get continueText => 'Gaa n\'ihu';
@@ -258,115 +258,115 @@ class AppLocalizationsIg extends AppLocalizations {
   String get verifyEmailTitle => 'Kwenye Email';
 
   @override
-  String get verifyPhoneTitle => 'Kwenye Nọmba Ekwentị';
+  String get verifyPhoneTitle => 'Kwenye Ná»mba Ekwentá»‹';
 
   @override
   String codeSentToEmail(String email) {
-    return 'Tinye koodu anyị zigara $email';
+    return 'Tinye koodu anyá»‹ zigara $email';
   }
 
   @override
   String codeSentToPhone(String phone) {
-    return 'Tinye koodu anyị zigara $phone';
+    return 'Tinye koodu anyá»‹ zigara $phone';
   }
 
   @override
   String codeExpiresIn(String time) {
-    return 'Koodu ga-agwụ na $time';
+    return 'Koodu ga-agwá»¥ na $time';
   }
 
   @override
   String get verify => 'Kwenye';
 
   @override
-  String get didntReceiveCode => 'Ị nataghị koodu? Zigharia ọzọ';
+  String get didntReceiveCode => 'á»Š nataghá»‹ koodu? Zigharia á»zá»';
 
   @override
-  String get enterAll6Digits => 'Biko tinye ọnụọgụgụ 6 niile';
+  String get enterAll6Digits => 'Biko tinye á»ná»¥á»gá»¥gá»¥ 6 niile';
 
   @override
-  String get profile => 'Profaịlụ';
+  String get profile => 'Profaá»‹lá»¥';
 
   @override
-  String get completeProfile => 'Ka mejue profaịlụ gị';
+  String get completeProfile => 'Ka mejue profaá»‹lá»¥ gá»‹';
 
   @override
   String get personalizeGuide =>
-      'Nke a ga-enyere anyị aka ime ka ntuziaka gburugburu gị bụrụ nke gị';
+      'Nke a ga-enyere anyá»‹ aka ime ka ntuziaka gburugburu gá»‹ bá»¥rá»¥ nke gá»‹';
 
   @override
-  String get age => 'Afọ';
+  String get age => 'Afá»';
 
   @override
   String get cycleLength => 'Ogologo okirikiri';
 
   @override
   String days(Object count) {
-    return 'Ụbọchị $count';
+    return 'á»¤bá»chá»‹ $count';
   }
 
   @override
-  String get averageDaysBetweenPeriods => 'Ọnụọgụgụ ụbọchị n\'etiti nsọ gị';
+  String get averageDaysBetweenPeriods => 'á»Œná»¥á»gá»¥gá»¥ á»¥bá»chá»‹ n\'etiti nsá» gá»‹';
 
   @override
-  String get lastPeriodDate => 'Ụbọchị nsọ ikpeazụ';
+  String get lastPeriodDate => 'á»¤bá»chá»‹ nsá» ikpeazá»¥';
 
   @override
-  String get whenLastBleeding => 'Mgbe ọbara nsọ gị ikpeazụ malitere';
+  String get whenLastBleeding => 'Mgbe á»bara nsá» gá»‹ ikpeazá»¥ malitere';
 
   @override
-  String get ttcHistory => 'Akụkọ TTC';
+  String get ttcHistory => 'Aká»¥ká» TTC';
 
   @override
-  String get faithPreference => 'Nhọrọ okwukwe';
+  String get faithPreference => 'Nhá»rá» okwukwe';
 
   @override
-  String get language => 'Asụsụ';
+  String get language => 'Asá»¥sá»¥';
 
   @override
-  String get audioGuidance => 'Ntuziaka ọdịyo';
+  String get audioGuidance => 'Ntuziaka á»dá»‹yo';
 
   @override
   String get agreeTerms => 'Ekwenyere m na Usoro na Iwu Nzuzo';
 
   @override
-  String get selectOption => 'Họrọ nhọrọ';
+  String get selectOption => 'Há»rá» nhá»rá»';
 
   @override
-  String get home => 'Ụlọ';
+  String get home => 'á»¤lá»';
 
   @override
   String get calendar => 'Kalenda';
 
   @override
-  String get learn => 'Mụta';
+  String get learn => 'Má»¥ta';
 
   @override
-  String get todaysFertilityInsight => 'Nghọta ịmụ nwa taa';
+  String get todaysFertilityInsight => 'Nghá»ta á»‹má»¥ nwa taa';
 
   @override
   String get nextFertilityWindow =>
-      'Windo ịmụ nwa gị na-esote sitere na Dec 23';
+      'Windo á»‹má»¥ nwa gá»‹ na-esote sitere na Dec 23';
 
   @override
   String get trackingBenefits =>
-      'Site n\'ịchọpụta ịmụ nwa gị, ị na-enweta nghọta ka mma banyere okirikiri gị.';
+      'Site n\'á»‹chá»pá»¥ta á»‹má»¥ nwa gá»‹, á»‹ na-enweta nghá»ta ka mma banyere okirikiri gá»‹.';
 
   @override
   String get stayPositive =>
-      'Ị na-eme nke ọma! Nọrọ na-adị mma ma lekwasị anya!';
+      'á»Š na-eme nke á»ma! Ná»rá» na-adá»‹ mma ma lekwasá»‹ anya!';
 
   @override
-  String get learnHub => 'Ebe mmụta';
+  String get learnHub => 'Ebe mmá»¥ta';
 
   @override
-  String get logSymptoms => 'Debanye aha ihe mgbaàmà';
+  String get logSymptoms => 'Debanye aha ihe mgbaÃ mÃ ';
 
   @override
-  String get bleeding => 'Ọbara';
+  String get bleeding => 'á»Œbara';
 
   @override
-  String get mood => 'Ọnọdụ obi';
+  String get mood => 'á»Œná»dá»¥ obi';
 
   @override
   String get cervicalMucus => 'Mmiri cervical';
@@ -378,42 +378,42 @@ class AppLocalizationsIg extends AppLocalizations {
   String get notes => 'Ndetu';
 
   @override
-  String get loggedSymptoms => 'Ihe mgbaàmà edebanyere aha';
+  String get loggedSymptoms => 'Ihe mgbaÃ mÃ  edebanyere aha';
 
   @override
   String get educationalContentComingSoon =>
-      'Ọdịnaya mmụta na-abịa n\'oge adịghị anya';
+      'á»Œdá»‹naya mmá»¥ta na-abá»‹a n\'oge adá»‹ghá»‹ anya';
 
   @override
   String get authInvalidEmail => 'Usoro email ezighi ezi';
 
   @override
-  String get authInvalidPhone => 'Usoro nọmba ekwentị ezighi ezi';
+  String get authInvalidPhone => 'Usoro ná»mba ekwentá»‹ ezighi ezi';
 
   @override
   String get authPasswordTooShort =>
-      'Paswọọdụ ga-abụrịrị opekata mpe mkpụrụedemede 8';
+      'Paswá»á»dá»¥ ga-abá»¥rá»‹rá»‹ opekata mpe mkpá»¥rá»¥edemede 8';
 
   @override
   String get authEmailAlreadyRegistered => 'E debanyela email aha';
 
   @override
-  String get authPhoneAlreadyRegistered => 'E debanyela nọmba ekwentị aha';
+  String get authPhoneAlreadyRegistered => 'E debanyela ná»mba ekwentá»‹ aha';
 
   @override
   String get authInvalidOtpFormat => 'Usoro OTP ezighi ezi';
 
   @override
-  String get authUserNotFound => 'Achọtaghị onye ọrụ';
+  String get authUserNotFound => 'Achá»taghá»‹ onye á»rá»¥';
 
   @override
-  String get authNoUserLoggedIn => 'Onweghị onye ọrụ banyere';
+  String get authNoUserLoggedIn => 'Onweghá»‹ onye á»rá»¥ banyere';
 
   @override
-  String get welcomeBack => 'Nnọọ azụ';
+  String get welcomeBack => 'Nná»á» azá»¥';
 
   @override
-  String get logInToAccount => 'Banye na akawụntụ gị';
+  String get logInToAccount => 'Banye na akawá»¥ntá»¥ gá»‹';
 
   @override
   String get emailAddress => 'Adreesi email';
@@ -422,14 +422,17 @@ class AppLocalizationsIg extends AppLocalizations {
   String get emailHintLogin => 'gi@example.com';
 
   @override
-  String get passwordLabel => 'Paswọọdụ';
+  String get passwordLabel => 'Paswá»á»dá»¥';
 
   @override
-  String get enterPassword => 'Tinye paswọọdụ';
+  String get enterPassword => 'Tinye paswá»á»dá»¥';
 
   @override
-  String get forgotPassword => 'Ị chefuru paswọọdụ?';
+  String get forgotPassword => 'á»Š chefuru paswá»á»dá»¥?';
 
   @override
   String get logIn => 'Banye';
 }
+
+
+

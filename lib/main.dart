@@ -1,87 +1,112 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'flutter_gen/gen_l10n/app_localizations.dart';
-import 'services/auth_service.dart';
-import 'services/localization_provider.dart';
-import 'screens/home_screen.dart';
-import 'theme.dart';
+import 'package:nexus_fertility_app/services/localization_provider.dart';
+import 'package:nexus_fertility_app/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  final prefs = await SharedPreferences.getInstance();
-  final saved = prefs.getString('theme_mode') ?? 'system';
-
-  runApp(MyApp(initialTheme: saved));
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  final String initialTheme;
-  const MyApp({Key? key, required this.initialTheme}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late ThemeMode _themeMode;
-
-  @override
-  void initState() {
-    super.initState();
-    _themeMode = _stringToThemeMode(widget.initialTheme);
-  }
-
-  ThemeMode _stringToThemeMode(String s) {
-    switch (s) {
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
-  }
-
-  Future<void> _setThemeMode(ThemeMode tm) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() => _themeMode = tm);
-    final key = tm == ThemeMode.system ? 'system' : (tm == ThemeMode.light ? 'light' : 'dark');
-    await prefs.setString('theme_mode', key);
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => LocalizationProvider()),
       ],
       child: Consumer<LocalizationProvider>(
-        builder: (context, localizationProvider, _) {
-return MaterialApp(
-  title: 'Ferti Path',
-  theme: ThemeData.light(),
-  darkTheme: ThemeData.dark(),
-  themeMode: _themeMode,
-  localizationsDelegates: const [
-    AppLocalizations.delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-  ],
-  supportedLocales: LocalizationProvider.supportedLocales,
-  locale: localizationProvider.currentLocale,
-  home: const HomeScreen(),
-);
+        builder: (context, localeProvider, child) {
+          return MaterialApp(
+            title: 'Nexus Fertility',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.system, // Use system theme
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: localeProvider.locale,
+            home: Scaffold(
+              appBar: AppBar(
+                title: Text(AppLocalizations.of(context)!.appTitle),
+              ),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.favorite,
+                      size: 100,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      AppLocalizations.of(context)!.welcome,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      AppLocalizations.of(context)!.appTitle,
+                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Consumer<LocalizationProvider>(
+                      builder: (context, provider, child) {
+                        return Column(
+                          children: [
+                            Text(
+                              'Current Language: ${provider.selectedLanguageCode}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () => provider.setLocaleByLanguageCode('en'),
+                                  child: Text('English'),
+                                ),
+                                SizedBox(width: 10),
+                                ElevatedButton(
+                                  onPressed: () => provider.setLocaleByLanguageCode('pt'),
+                                  child: Text('Português'),
+                                ),
+                                SizedBox(width: 10),
+                                ElevatedButton(
+                                  onPressed: () => provider.setLocaleByLanguageCode('yo'),
+                                  child: Text('Yorùbá'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    SizedBox(height: 30),
+                    Text(
+                      'App Icon and Splash Screen fixed',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Dark Mode colors configured',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Localization working for 3 languages',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 }
-

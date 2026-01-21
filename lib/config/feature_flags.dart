@@ -1,4 +1,4 @@
-class FeatureFlags {
+﻿class FeatureFlags {
   // Compile-time flags controlled via --dart-define
   static const bool enableFastApi = bool.fromEnvironment(
     'ENABLE_FASTAPI',
@@ -11,3 +11,5 @@ class FeatureFlags {
     defaultValue: true,
   );
 }
+
+

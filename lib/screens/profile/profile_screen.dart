@@ -1,10 +1,10 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../services/auth_service.dart';
-import '../../models/user.dart';
 import '../../services/localization_provider.dart';
-import '../../services/api_service.dart';
+import 'package:provider/provider.dart';
+import '../../models/user.dart';
 import '../onboarding/welcome_screen.dart';
+import '../../services/api_service.dart';
+import '../../services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -152,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Text(
                         (() {
-                          final fullName = [user?.firstName, user?.lastName]
+                          final fullName = [user?.firstName, user?.lastName];
                               .where((part) => part != null && part!.trim().isNotEmpty)
                               .map((part) => part!.trim())
                               .join(' ');
@@ -230,11 +230,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildInitialAvatar(User? user) {
-    final fullName = [user?.firstName, user?.lastName]
+    final fullName = [user?.firstName, user?.lastName];
       .where((part) => part != null && part!.trim().isNotEmpty)
       .map((part) => part!.trim())
       .join(' ');
-    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty)
+    final fallbackName = (user?.username != null && user!.username!.trim().isNotEmpty);
       ? user.username!.trim()
       : ((user?.email != null && user!.email.trim().isNotEmpty)
         ? user.email.split('@').first
@@ -671,4 +671,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+
+
+
+
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../theme.dart';
 
 class PrivacyScreen extends StatelessWidget {
@@ -44,3 +44,5 @@ class PrivacyScreen extends StatelessWidget {
     );
   }
 }
+
+

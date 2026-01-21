@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../theme.dart';
 
 class SettingsProfileSetupScreen extends StatelessWidget {
@@ -25,7 +25,7 @@ class SettingsProfileSetupScreen extends StatelessWidget {
             const SizedBox(height: 12),
             const Text('Password'),
             const SizedBox(height: 8),
-            const TextField(obscureText: true, decoration: InputDecoration(hintText: '••••••••')),
+            const TextField(obscureText: true, decoration: InputDecoration(hintText: 'â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢')),
             const SizedBox(height: 12),
             const Text('Profile Picture'),
             const SizedBox(height: 8),
@@ -44,3 +44,5 @@ class SettingsProfileSetupScreen extends StatelessWidget {
     );
   }
 }
+
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:nexus_fertility_app/services/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -26,11 +26,11 @@ class ProfileScreen extends StatelessWidget {
             children: [
               ListTile(
                 title: const Text('Name'),
-                subtitle: Text('${user.firstName} ${user.lastName}'),
+                subtitle: Text('${(user as User?)?.firstName} ${(user as User?)?.lastName}'),
               ),
               ListTile(
                 title: const Text('Email'),
-                subtitle: Text(user.email),
+                subtitle: Text((user as User?)?.email),
               ),
               // Add more profile fields as needed
             ],
@@ -40,3 +40,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
+
+

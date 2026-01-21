@@ -1,6 +1,6 @@
-// ignore: unused_import
+﻿import 'app_localizations.dart';
 import 'package:intl/intl.dart' as intl;
-import 'app_localizations.dart';
+// ignore: unused_import
 
 // ignore_for_file: type=lint
 
@@ -18,7 +18,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get welcomeSubtitle => 'Mataimaki na haihuwa na sirri';
 
   @override
-  String get selectLanguage => 'Zaɓi Harshe';
+  String get selectLanguage => 'ZaÉ“i Harshe';
 
   @override
   String get english => 'English';
@@ -51,7 +51,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get done => 'An gama';
 
   @override
-  String get createAccount => 'Ƙirƙiri Asusun';
+  String get createAccount => 'Æ˜irÆ™iri Asusun';
 
   @override
   String get signIn => 'Shiga';
@@ -78,7 +78,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get dateOfBirth => 'Ranar Haihuwa';
 
   @override
-  String get selectDate => 'Zaɓi ranar';
+  String get selectDate => 'ZaÉ“i ranar';
 
   @override
   String get profilePicture => 'Hoton Bayanan Martaba';
@@ -87,10 +87,10 @@ class AppLocalizationsHa extends AppLocalizations {
   String get uploadPhoto => 'Loda Hoto';
 
   @override
-  String get takePhoto => 'Ɗauki Hoto';
+  String get takePhoto => 'ÆŠauki Hoto';
 
   @override
-  String get chooseFromGallery => 'Zaɓa Daga Gallery';
+  String get chooseFromGallery => 'ZaÉ“a Daga Gallery';
 
   @override
   String get verifyEmail => 'Tabbatar da Imel';
@@ -111,7 +111,7 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String codeExpires(String minutes, String seconds) {
-    return 'Lambar za ta ƙare a $minutes:$seconds';
+    return 'Lambar za ta Æ™are a $minutes:$seconds';
   }
 
   @override
@@ -125,22 +125,22 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get passwordTooShort =>
-      'Kalmar sirri dole ta kasance aƙalla haruffa 8';
+      'Kalmar sirri dole ta kasance aÆ™alla haruffa 8';
 
   @override
-  String get accountCreatedSuccessfully => 'An ƙirƙiri asusun nasara!';
+  String get accountCreatedSuccessfully => 'An Æ™irÆ™iri asusun nasara!';
 
   @override
   String get profileSetupComplete => 'An kammala saita bayanan!';
 
   @override
-  String get termsAndConditions => 'Na yarda da Sharuɗɗa da Yanayi';
+  String get termsAndConditions => 'Na yarda da SharuÉ—É—a da Yanayi';
 
   @override
   String get privacyPolicy => 'Na yarda da Manufar Sirri';
 
   @override
-  String get acceptTerms => 'Don Allah karɓi sharuɗɗa da yanayi';
+  String get acceptTerms => 'Don Allah karÉ“i sharuÉ—É—a da yanayi';
 
   @override
   String get emailAlreadyExists => 'An riga an yi rajistar imel';
@@ -155,7 +155,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get tryAgain => 'Sake Gwadawa';
 
   @override
-  String get loading => 'Ana Ɗorawa...';
+  String get loading => 'Ana ÆŠorawa...';
 
   @override
   String get error => 'Kuskure';
@@ -182,25 +182,25 @@ class AppLocalizationsHa extends AppLocalizations {
   String get genderOther => 'Wani';
 
   @override
-  String get selectGender => 'Zaɓi Jinsi';
+  String get selectGender => 'ZaÉ“i Jinsi';
 
   @override
   String get welcomeToJourney => 'Barka da zuwa tafiyarku';
 
   @override
-  String get choosePreferredLanguage => 'Zaɓi harshen da kake so';
+  String get choosePreferredLanguage => 'ZaÉ“i harshen da kake so';
 
   @override
-  String get choosePreferredMethod => 'Zaɓi hanyar da kake so';
+  String get choosePreferredMethod => 'ZaÉ“i hanyar da kake so';
 
   @override
-  String get createAccountWithEmail => 'Ƙirƙiri asusu da imel';
+  String get createAccountWithEmail => 'Æ˜irÆ™iri asusu da imel';
 
   @override
-  String get createAccountWithPhone => 'Ƙirƙiri asusu da waya';
+  String get createAccountWithPhone => 'Æ˜irÆ™iri asusu da waya';
 
   @override
-  String get emailSignupTitle => 'Ƙirƙiri Asusu da Imel';
+  String get emailSignupTitle => 'Æ˜irÆ™iri Asusu da Imel';
 
   @override
   String get emailSignupSubtitle => 'Shigar da imel da kalmar sirri';
@@ -230,7 +230,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get confirmPasswordRequired => 'Don Allah tabbatar da kalmar sirri';
 
   @override
-  String get phoneSignupTitle => 'Ƙirƙiri Asusu da Waya';
+  String get phoneSignupTitle => 'Æ˜irÆ™iri Asusu da Waya';
 
   @override
   String get phoneSignupSubtitle => 'Za mu aika muku OTP lambar';
@@ -245,7 +245,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get phoneRequired => 'Waya dole ne';
 
   @override
-  String get invalidPhoneForCountry => 'Lambar waya bai dace ba ga wannan ƙasa';
+  String get invalidPhoneForCountry => 'Lambar waya bai dace ba ga wannan Æ™asa';
 
   @override
   String get otpInfoMessage =>
@@ -272,7 +272,7 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String codeExpiresIn(String time) {
-    return 'Lambar za ta ƙare a $time';
+    return 'Lambar za ta Æ™are a $time';
   }
 
   @override
@@ -292,7 +292,7 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get personalizeGuide =>
-      'Wannan zai taimaka mana mu keɓanta jagorar zagayowar ku';
+      'Wannan zai taimaka mana mu keÉ“anta jagorar zagayowar ku';
 
   @override
   String get age => 'Shekaru';
@@ -310,16 +310,16 @@ class AppLocalizationsHa extends AppLocalizations {
       'Matsakaicin adadin kwanaki tsakanin al\'adunku';
 
   @override
-  String get lastPeriodDate => 'Ranar al\'ada ta ƙarshe';
+  String get lastPeriodDate => 'Ranar al\'ada ta Æ™arshe';
 
   @override
-  String get whenLastBleeding => 'Lokacin da zubar jininku na ƙarshe ya fara';
+  String get whenLastBleeding => 'Lokacin da zubar jininku na Æ™arshe ya fara';
 
   @override
   String get ttcHistory => 'Tarihin TTC';
 
   @override
-  String get faithPreference => 'Zaɓin addini';
+  String get faithPreference => 'ZaÉ“in addini';
 
   @override
   String get language => 'Harshe';
@@ -328,10 +328,10 @@ class AppLocalizationsHa extends AppLocalizations {
   String get audioGuidance => 'Jagorar sauti';
 
   @override
-  String get agreeTerms => 'Na yarda da Sharuɗɗa da Manufar Sirri';
+  String get agreeTerms => 'Na yarda da SharuÉ—É—a da Manufar Sirri';
 
   @override
-  String get selectOption => 'Zaɓi zaɓi';
+  String get selectOption => 'ZaÉ“i zaÉ“i';
 
   @override
   String get home => 'Gida';
@@ -392,7 +392,7 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get authPasswordTooShort =>
-      'Kalmar sirri dole ta kasance aƙalla haruffa 8';
+      'Kalmar sirri dole ta kasance aÆ™alla haruffa 8';
 
   @override
   String get authEmailAlreadyRegistered =>
@@ -435,3 +435,6 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get logIn => 'Shiga';
 }
+
+
+

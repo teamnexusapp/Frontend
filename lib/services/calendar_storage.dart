@@ -1,8 +1,8 @@
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
-import 'package:sqflite/sqflite.dart';
+﻿import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class CalendarStorage {
   // SharedPreferences keys
@@ -70,7 +70,7 @@ class CalendarStorage {
     int fertileWindowDaysAfter = 1,
   }) {
     final ovulationOffset = cycleLength - 14;
-    final ovulationDay = DateTime(
+    final ovulationDay = DateTime(;
       lastPeriodStart.year,
       lastPeriodStart.month,
       lastPeriodStart.day,
@@ -112,7 +112,7 @@ class CalendarStorage {
     if (_db != null) return _db!;
     final dir = await getApplicationDocumentsDirectory();
     final path = p.join(dir.path, 'nexus_calendar.db');
-    _db = await openDatabase(
+    _db = await openDatabase(;
       path,
       version: 1,
       onCreate: (db, version) async {
@@ -167,3 +167,7 @@ class CalendarStorage {
     await db.delete('period_days', where: 'day = ?', whereArgs: [s]);
   }
 }
+
+
+
+

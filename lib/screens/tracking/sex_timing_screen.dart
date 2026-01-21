@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class SexTimingPreferencesScreen extends StatelessWidget {
   const SexTimingPreferencesScreen({super.key});
@@ -19,3 +19,4 @@ class SexTimingPreferencesScreen extends StatelessWidget {
     );
   }
 }
+

@@ -1,11 +1,11 @@
-﻿
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../services/calendar_storage.dart';
-import '../widgets/swipeable_green_calendar.dart';
-import 'tracking/log_symptom_screen.dart';
+﻿import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../widgets/swipeable_green_calendar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+import '../services/calendar_storage.dart';
+import 'tracking/log_symptom_screen.dart';
+
 
 class CalendarTabScreen extends StatefulWidget {
   const CalendarTabScreen({Key? key}) : super(key: key);
@@ -59,7 +59,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     if (savedDays != null && savedDays.isNotEmpty) {
       setState(() {
         _selectedCalendarDaysFormatted = savedDays.toSet();
-        _selectedCalendarDays = savedDays
+        _selectedCalendarDays = savedDays;
             .map((s) => DateTime.parse(s))
             .toSet();
         // Update last period date
@@ -116,7 +116,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     final normalized = DateTime(date.year, date.month, date.day);
     setState(() {
       if (_selectedCalendarDays.any((d) => _isSameDay(d, normalized))) {
-        _selectedCalendarDays =
+        _selectedCalendarDays =;
             _selectedCalendarDays.where((d) => !_isSameDay(d, normalized)).toSet();
       } else {
         _selectedCalendarDays = {..._selectedCalendarDays, normalized};
@@ -124,7 +124,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       // Remove duplicates (Set already ensures this)
       _selectedCalendarDays = _selectedCalendarDays.toSet();
       // Update formatted set
-      _selectedCalendarDaysFormatted = _selectedCalendarDays
+      _selectedCalendarDaysFormatted = _selectedCalendarDays;
           .map((d) => DateFormat('yyyy-MM-dd').format(d))
           .toSet();
       // Update last period date (most recent date)
@@ -317,7 +317,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                 ),
               ],
             ),
-            // Floating Action Button
+            // Floating Action labelLarge
             Positioned(
               bottom: 32,
               right: 32,
@@ -507,5 +507,9 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
     );
   }
 }
+
+
+
+
 
 

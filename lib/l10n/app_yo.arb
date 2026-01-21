@@ -1,70 +1,20 @@
-{
+﻿{
   "@@locale": "yo",
   "appTitle": "Nexus Fertility",
-  "welcome": "Kaabọ",
+  "welcome": "Kaabo",
   "home": "Ile",
-  "settings": "Ọn ìseto",
-  "language": "Ede",
-  "english": "Ede Gẹẹsi",
-  "yoruba": "Yoruba",
-  "igbo": "Igbo",
-  "hausa": "Hausa",
-  "pidgin": "Pidgin",
-  "selectLanguage": "Yan ede rẹ",
-  "next": "Atẹle",
-  "back": "Pada sile",
-  "skip": "Fọwọsi",
-  "done": "Ti pari",
-  "createAccount": "Ṣẹda Akọọlẹ",
-  "signIn": "Wọdle",
-  "email": "Imel",
-  "phoneNumber": "Nomba Foonu",
-  "password": "Ọrọ Siri",
-  "confirmPassword": "Tẹnumọ Ọrọ Siri",
-  "firstName": "Oruko Akọkọ",
-  "lastName": "Oruko Ekejii",
-  "profile": "Bayanin Ara",
+  "learn": "Kọ",
+  "insights": "Ikọkọ",
+  "support": "Atilẹyin",
+  "profile": "Profaili",
+  "settings": "Eto",
+  "login": "Wọle",
+  "signup": "Forukọsilẹ",
   "logout": "Jade",
-  "save": "Tọju",
-  "cancel": "Fagile",
-  "ok": "O",
-  "error": "Asiṣe",
-  "success": "Aṣeyọri",
-  "loading": "Nlo...",
-  "tryAgain": "Gbiyanju Eyi Paapaa",
-  "selectOption": "Jọ̀wọ́ yan ọkan",
-  "verifyPhoneTitle": "Ṣe Àyẹ̀wò Nomba Foonu",
-  "codeSentToPhone": "A ti firanṣẹ koodu ṣayẹ̀wò si {phone}",
-  "@codeSentToPhone": {
-    "description": "Message indicating a code was sent",
-    "placeholders": {
-      "phone": {
-        "type": "String",
-        "example": "+234803..."
-      }
-    }
-  },
-  "codeExpiresIn": "Koodu yoo pari ni {minutes} akoko",
-  "@codeExpiresIn": {
-    "description": "Message showing code expiration time",
-    "placeholders": {
-      "minutes": {
-        "type": "int",
-        "example": "5"
-      }
-    }
-  },
-  "verify": "Ṣe Àyẹ̀wò",
-  "didntReceiveCode": "Ṣe o ko ba ri koodu naa?",
-  "choosePreferredMethod": "Yan ọna yoo fi fe lati kọ akawo nyin",
-  "createAccountWithEmail": "Ṣe akawo pẹlu Imel",
-  "createAccountWithPhone": "Ṣe akawo pẹlu Foonu",
-  "selectDate": "Yan Ọjọ́",
-  "continueText": "Tẹ̀siwaju",
-  "profileSetupComplete": "Ṣiṣẹ bayanin ara gba ipari!",
-  "supportHub": "Ile Iranlowu",
-  "dailyAffirmation": "Ifẹ Ojoojumo",
-  "stayPositive": "Dúró ninu ero rere ati igboya fun ara e",
-  "exploreCommunityGroups": "Ṣe Ayeye Awujo Ibilẹ",
-  "chooseSupportMode": "Yan Ọna Iranlowu"
+  "continue": "Tesiwaju",
+  "cancel": "Fagilee",
+  "save": "Fipamọ",
+  "delete": "Paarẹ",
+  "edit": "Ṣatunkọ",
+  "loading": "O nṣiṣẹ lọwọ..."
 }

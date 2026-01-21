@@ -5,7 +5,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Widget? leading;
   final bool centerTitle;
-  final bool showBackButton;
+  final bool showBacklabelLarge;
 
   const CustomAppBar({
     super.key,
@@ -13,7 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.leading,
     this.centerTitle = true,
-    this.showBackButton = true,
+    this.showBacklabelLarge = true,
   });
 
   @override
@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title),
       centerTitle: centerTitle,
-      leading: showBackButton
+      leading: showBacklabelLarge
           ? (leading ?? (ModalRoute.of(context)?.canPop == true
               ? IconButton(
                   icon: const Icon(Icons.arrow_back),
@@ -36,3 +36,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
+
+

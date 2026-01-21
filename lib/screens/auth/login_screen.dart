@@ -1,6 +1,6 @@
-﻿import 'package:flutter/material.dart';
+﻿import '../../services/auth_service.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       setState(() => _loading = true);
                       try {
-                        final user = await auth.signIn(
+                        final user = await auth.signIn(;
                           email: _emailController.text.trim(),
                           password: _passwordController.text,
                         );
@@ -66,4 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+
+
+
 

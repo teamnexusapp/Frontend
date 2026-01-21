@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>App Icon Check</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .image-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 20px; 
+            margin: 20px 0; 
+        }
+        .image-box { 
+            border: 2px solid #ccc; 
+            padding: 10px; 
+            border-radius: 5px; 
+            text-align: center;
+            background: #f9f9f9;
+        }
+        img { 
+            max-width: 200px; 
+            max-height: 200px; 
+            border: 1px solid #ddd; 
+        }
+        .success { color: green; font-weight: bold; }
+        .failure { color: red; font-weight: bold; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>App Icon Verification</h1>
+    <p class="info">Please check the images below and report what you see.</p>
+    
+    <div class="image-container">
+        <div class="image-box">
+            <h3>1. Correct Logo (app_logo.png)</h3>
+            <p>This should be the <span class="success">GREEN Nexus Fertility</span> logo</p>
+            <img src="file:///C:\Users\hp\OneDrive\Documents\nexus-fertility-app\assets\images\app_logo.png" 
+                 alt="Correct Logo"
+                 onerror="this.alt='Image not found'">
+        </div>
+        
+        <div class="image-box">
+            <h3>2. Android Icon (ic_launcher.png)</h3>
+            <p>This should match the logo above.</p>
+            <p>If it shows <span class="failure">blue Flutter 'f'</span>, it's wrong!</p>
+            <img src="file:///C:\Users\hp\OneDrive\Documents\nexus-fertility-app\android\app\src\main\res\mipmap-xxhdpi\ic_launcher.png" 
+                 alt="Android Icon"
+                 onerror="this.alt='Image not found'">
+        </div>
+    </div>
+    
+    <h2>What do you see?</h2>
+    <ul>
+        <li><span class="success">✓ Both show GREEN Nexus logo</span> = SUCCESS</li>
+        <li><span class="failure">✗ One/both show BLUE Flutter 'f'</span> = FAILURE</li>
+        <li><span class="failure">✗ Images don't load</span> = File missing/corrupt</li>
+    </ul>
+    
+    <p><strong>Please report what you see in the images above.</strong></p>
+</body>
+</html>

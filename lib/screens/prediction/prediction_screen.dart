@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import '../../theme.dart';
 
 class PredictionScreen extends StatelessWidget {
   const PredictionScreen({Key? key}) : super(key: key);
@@ -36,5 +37,7 @@ class PredictionScreen extends StatelessWidget {
   }
 }
 
-import '../../theme.dart';
+
+
+
 

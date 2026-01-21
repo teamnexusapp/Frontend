@@ -1,0 +1,20 @@
+﻿{
+  "@@locale": "pt",
+  "appTitle": "Nexus Fertility",
+  "home": "Início",
+  "learn": "Aprender",
+  "createAccount": "Criar Conta",
+  "choosePreferredMethod": "Escolha o método preferido",
+  "email": "E-mail",
+  "createAccountWithEmail": "Criar conta com e-mail",
+  "phoneNumber": "Número de telefone",
+  "createAccountWithPhone": "Criar conta com telefone",
+  "selectOption": "Selecione a opção",
+  "verifyPhoneTitle": "Verificar Telefone",
+  "verify": "Verificar",
+  "didntReceiveCode": "Não recebeu o código?",
+  "profile": "Perfil",
+  "selectDate": "Selecionar data",
+  "continueText": "Continuar",
+  "profileSetupComplete": "Configuração de perfil concluída"
+}

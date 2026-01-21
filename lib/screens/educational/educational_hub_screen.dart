@@ -9,7 +9,7 @@ class EducationalHubScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Educational Hub',
-        showBackButton: true,
+        showBacklabelLarge: true,
       ),
       body: ListView(
         children: const [
@@ -34,4 +34,6 @@ class EducationalHubScreen extends StatelessWidget {
     );
   }
 }
+
+
 

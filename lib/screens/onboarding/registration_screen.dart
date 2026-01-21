@@ -1,5 +1,5 @@
+﻿import '../../theme.dart';
 import 'package:flutter/material.dart';
-import '../../theme.dart';
 import 'verification_modal.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -96,3 +96,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 }
+
+
+

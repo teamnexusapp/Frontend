@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
-import '../../services/auth_service.dart';
-import '../../services/auth_error_helper.dart';
-import 'profile_setup_screen.dart';
+﻿import '../../services/auth_error_helper.dart';
 import 'dart:async';
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import 'profile_setup_screen.dart';
+import 'package:provider/provider.dart';
+import '../../services/auth_service.dart';
+import 'package:flutter/material.dart';
 
 class PhoneOTPVerificationScreen extends StatefulWidget {
   final String phoneNumber;
@@ -35,7 +35,7 @@ class _PhoneOTPVerificationScreenState
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {;
       setState(() {
         if (_secondsRemaining > 0) {
           _secondsRemaining--;
@@ -165,7 +165,7 @@ class _PhoneOTPVerificationScreenState
                 ),
                 const SizedBox(height: 32),
 
-                // Verify Button
+                // Verify labelLarge
                 SizedBox(
                   width: double.infinity,
                   height: 56,
@@ -201,7 +201,7 @@ class _PhoneOTPVerificationScreenState
                 ),
                 const SizedBox(height: 16),
 
-                // Resend Button
+                // Resend labelLarge
                 Center(
                   child: TextButton(
                     onPressed: _secondsRemaining == 0 ? _handleResend : null,
@@ -318,3 +318,7 @@ class _PhoneOTPVerificationScreenState
     super.dispose();
   }
 }
+
+
+
+

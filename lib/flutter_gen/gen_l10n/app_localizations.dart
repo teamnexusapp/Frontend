@@ -1,17 +1,17 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart' as intl;
-
-import 'app_localizations_en.dart';
-import 'app_localizations_es.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_pt.dart';
 import 'app_localizations_ha.dart';
 import 'app_localizations_ig.dart';
-import 'app_localizations_pt.dart';
+import 'dart:async';
+import 'app_localizations_es.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'app_localizations_en.dart';
 import 'app_localizations_yo.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart' as intl;
+
+
 
 // ignore_for_file: type=lint
 
@@ -51,12 +51,12 @@ import 'app_localizations_yo.dart';
 ///
 /// iOS applications define key application metadata, including supported
 /// locales, in an Info.plist file that is built into the application bundle.
-/// To configure the locales supported by your app, you’ll need to edit this
+/// To configure the locales supported by your app, youâ€™ll need to edit this
 /// file.
 ///
-/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// First, open your projectâ€™s ios/Runner.xcworkspace Xcode workspace file.
 /// Then, in the Project Navigator, open the Info.plist file under the Runner
-/// project’s Runner folder.
+/// projectâ€™s Runner folder.
 ///
 /// Next, select the Information Property List item, select Add Item from the
 /// Editor menu, then select Localizations from the pop-up menu.
@@ -968,3 +968,6 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       'on GitHub with a reproducible sample app and the gen-l10n configuration '
       'that was used.');
 }
+
+
+

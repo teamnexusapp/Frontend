@@ -1,4 +1,4 @@
-import 'package:http/http.dart' as http;
+﻿import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
 class HealthCheckService {
@@ -11,7 +11,7 @@ class HealthCheckService {
       debugPrint('Checking backend health at: $baseUrl');
       
       // Try to reach the root endpoint or a health endpoint
-      final response = await http.get(
+      final response = await http.get(;
         Uri.parse('$baseUrl/'),
       ).timeout(
         const Duration(seconds: 10),
@@ -51,3 +51,6 @@ class HealthCheckService {
     return false;
   }
 }
+
+
+

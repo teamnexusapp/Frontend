@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../services/localization_provider.dart' as loc_provider;
-import 'language_selection_screen.dart';
+﻿import 'language_selection_screen.dart';
 import 'phone_signup_screen.dart';
+import 'package:flutter/material.dart';
+import '../../services/localization_provider.dart' as loc_provider;
+import 'package:provider/provider.dart';
 
 class OnboardingScreens extends StatefulWidget {
   const OnboardingScreens({super.key});
@@ -119,7 +119,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
               ),
             ),
 
-            // Next Button
+            // Next labelLarge
             Padding(
               padding: const EdgeInsets.only(bottom: 70),
               child: SizedBox(
@@ -379,3 +379,6 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
     );
   }
 }
+
+
+

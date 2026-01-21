@@ -1,5 +1,5 @@
+﻿import 'package:local_auth/local_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _authenticateWithBiometrics() async {
     setState(() => _isAuthenticating = true);
     try {
-      final didAuthenticate = await _localAuth.authenticate(
+      final didAuthenticate = await _localAuth.authenticate(;
         localizedReason: 'Sign in to Ferti Path',
         options: const AuthenticationOptions(biometricOnly: true),
       );
@@ -96,3 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+
+
+

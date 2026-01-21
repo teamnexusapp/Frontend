@@ -1,4 +1,4 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 enum FaithMode { neutral, christian, muslim }
 
@@ -7,18 +7,18 @@ class EncouragementService {
 
   static const List<String> _neutralMessages = [
     'Your journey is unique and valid. Every step forward is a victory.',
-    'Small steps matter — celebrate progress each day.',
+    'Small steps matter â€” celebrate progress each day.',
     'Breathe. You are resilient and loved.',
   ];
 
   static const List<String> _christianQuotes = [
-    '"Be still, and know that I am God." — Psalm 46:10',
-    '"Cast all your anxiety on him because he cares for you." — 1 Peter 5:7',
-    'Pray, trust, and continue — God is beside you.',
+    '"Be still, and know that I am God." â€” Psalm 46:10',
+    '"Cast all your anxiety on him because he cares for you." â€” 1 Peter 5:7',
+    'Pray, trust, and continue â€” God is beside you.',
   ];
 
   static const List<String> _muslimQuotes = [
-    '"Indeed, with hardship will be ease." — Quran 94:6',
+    '"Indeed, with hardship will be ease." â€” Quran 94:6',
     'Turn to prayer and patience in times of difficulty.',
     'Place your trust in Allah and take gentle steps forward.',
   ];
@@ -47,3 +47,5 @@ class EncouragementService {
     }
   }
 }
+
+

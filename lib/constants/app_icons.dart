@@ -6,3 +6,5 @@ class AppIcons {
   // Or use a custom icon from a package like font_awesome_flutter
   // static const IconData pregnancy = FontAwesomeIcons.baby;
 }
+
+

@@ -1,4 +1,4 @@
-class AuthState {
+﻿class AuthState {
   final bool isLoading;
   final bool isAuthenticated;
   final String? errorMessage;
@@ -25,3 +25,5 @@ class AuthState {
     );
   }
 }
+
+

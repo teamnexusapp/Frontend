@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../theme.dart';
 
 class CommunityGroupsScreen extends StatelessWidget {
@@ -32,3 +32,5 @@ class CommunityGroupsScreen extends StatelessWidget {
     );
   }
 }
+
+

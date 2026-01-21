@@ -1,0 +1,20 @@
+﻿{
+  "@@locale": "pt",
+  "appTitle": "Nexus Fertility",
+  "welcome": "Bem-vindo",
+  "home": "Início",
+  "learn": "Aprender",
+  "insights": "Insights",
+  "support": "Suporte",
+  "profile": "Perfil",
+  "settings": "Configurações",
+  "login": "Entrar",
+  "signup": "Cadastrar",
+  "logout": "Sair",
+  "continue": "Continuar",
+  "cancel": "Cancelar",
+  "save": "Salvar",
+  "delete": "Excluir",
+  "edit": "Editar",
+  "loading": "Carregando..."
+}

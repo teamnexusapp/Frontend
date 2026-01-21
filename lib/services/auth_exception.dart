@@ -1,4 +1,4 @@
-// Auth exception with error codes for localization
+﻿// Auth exception with error codes for localization
 class AuthException implements Exception {
   final String code;
   final String? details;
@@ -23,4 +23,6 @@ class AuthErrorCodes {
   static const String accountDisabled = 'AUTH_ACCOUNT_DISABLED';
   static const String serverError = 'AUTH_SERVER_ERROR';
 }
+
+
 

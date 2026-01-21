@@ -1,6 +1,6 @@
-// ignore: unused_import
+﻿import 'app_localizations.dart';
 import 'package:intl/intl.dart' as intl;
-import 'app_localizations.dart';
+// ignore: unused_import
 
 // ignore_for_file: type=lint
 
@@ -9,16 +9,16 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'Nexus Fertilité';
+  String get appTitle => 'Nexus FertilitÃ©';
 
   @override
-  String get welcomeTitle => 'Bienvenue sur Nexus Fertilité';
+  String get welcomeTitle => 'Bienvenue sur Nexus FertilitÃ©';
 
   @override
-  String get welcomeSubtitle => 'Votre compagnon personnel de fertilité';
+  String get welcomeSubtitle => 'Votre compagnon personnel de fertilitÃ©';
 
   @override
-  String get selectLanguage => 'Sélectionner la Langue';
+  String get selectLanguage => 'SÃ©lectionner la Langue';
 
   @override
   String get english => 'English';
@@ -48,10 +48,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get skip => 'Passer';
 
   @override
-  String get done => 'Terminé';
+  String get done => 'TerminÃ©';
 
   @override
-  String get createAccount => 'Créer un Compte';
+  String get createAccount => 'CrÃ©er un Compte';
 
   @override
   String get signIn => 'Se Connecter';
@@ -60,7 +60,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get email => 'Email';
 
   @override
-  String get phoneNumber => 'Numéro de Téléphone';
+  String get phoneNumber => 'NumÃ©ro de TÃ©lÃ©phone';
 
   @override
   String get password => 'Mot de Passe';
@@ -69,7 +69,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirmPassword => 'Confirmer le Mot de Passe';
 
   @override
-  String get firstName => 'Prénom';
+  String get firstName => 'PrÃ©nom';
 
   @override
   String get lastName => 'Nom';
@@ -78,13 +78,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dateOfBirth => 'Date de Naissance';
 
   @override
-  String get selectDate => 'Sélectionner la Date';
+  String get selectDate => 'SÃ©lectionner la Date';
 
   @override
   String get profilePicture => 'Photo de Profil';
 
   @override
-  String get uploadPhoto => 'Télécharger une Photo';
+  String get uploadPhoto => 'TÃ©lÃ©charger une Photo';
 
   @override
   String get takePhoto => 'Prendre une Photo';
@@ -93,17 +93,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get chooseFromGallery => 'Choisir depuis la Galerie';
 
   @override
-  String get verifyEmail => 'Vérifier l\'Email';
+  String get verifyEmail => 'VÃ©rifier l\'Email';
 
   @override
-  String get verifyPhone => 'Vérifier le Téléphone';
+  String get verifyPhone => 'VÃ©rifier le TÃ©lÃ©phone';
 
   @override
   String get enterOTP => 'Entrez l\'OTP';
 
   @override
   String otpSentTo(String email) {
-    return 'OTP envoyé à $email';
+    return 'OTP envoyÃ© Ã  $email';
   }
 
   @override
@@ -118,42 +118,42 @@ class AppLocalizationsFr extends AppLocalizations {
   String get invalidEmail => 'Veuillez entrer une adresse email valide';
 
   @override
-  String get invalidPhone => 'Veuillez entrer un numéro de téléphone valide';
+  String get invalidPhone => 'Veuillez entrer un numÃ©ro de tÃ©lÃ©phone valide';
 
   @override
   String get passwordMismatch => 'Les mots de passe ne correspondent pas';
 
   @override
   String get passwordTooShort =>
-      'Le mot de passe doit contenir au moins 8 caractères';
+      'Le mot de passe doit contenir au moins 8 caractÃ¨res';
 
   @override
-  String get accountCreatedSuccessfully => 'Compte créé avec succès!';
+  String get accountCreatedSuccessfully => 'Compte crÃ©Ã© avec succÃ¨s!';
 
   @override
   String get profileSetupComplete =>
-      'Votre configuration de profil est complète';
+      'Votre configuration de profil est complÃ¨te';
 
   @override
-  String get termsAndConditions => 'J\'accepte les Conditions Générales';
+  String get termsAndConditions => 'J\'accepte les Conditions GÃ©nÃ©rales';
 
   @override
-  String get privacyPolicy => 'J\'accepte la Politique de Confidentialité';
+  String get privacyPolicy => 'J\'accepte la Politique de ConfidentialitÃ©';
 
   @override
-  String get acceptTerms => 'Veuillez accepter les conditions générales';
+  String get acceptTerms => 'Veuillez accepter les conditions gÃ©nÃ©rales';
 
   @override
-  String get emailAlreadyExists => 'Email déjà enregistré';
+  String get emailAlreadyExists => 'Email dÃ©jÃ  enregistrÃ©';
 
   @override
-  String get phoneAlreadyExists => 'Numéro de téléphone déjà enregistré';
+  String get phoneAlreadyExists => 'NumÃ©ro de tÃ©lÃ©phone dÃ©jÃ  enregistrÃ©';
 
   @override
-  String get verificationFailed => 'Vérification échouée. Veuillez réessayer';
+  String get verificationFailed => 'VÃ©rification Ã©chouÃ©e. Veuillez rÃ©essayer';
 
   @override
-  String get tryAgain => 'Réessayer';
+  String get tryAgain => 'RÃ©essayer';
 
   @override
   String get loading => 'Chargement...';
@@ -162,7 +162,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get error => 'Erreur';
 
   @override
-  String get success => 'Succès';
+  String get success => 'SuccÃ¨s';
 
   @override
   String get cancel => 'Annuler';
@@ -171,19 +171,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get save => 'Enregistrer';
 
   @override
-  String get logout => 'Déconnexion';
+  String get logout => 'DÃ©connexion';
 
   @override
   String get genderMale => 'Masculin';
 
   @override
-  String get genderFemale => 'Féminin';
+  String get genderFemale => 'FÃ©minin';
 
   @override
   String get genderOther => 'Autre';
 
   @override
-  String get selectGender => 'Sélectionner le Genre';
+  String get selectGender => 'SÃ©lectionner le Genre';
 
   @override
   String get welcomeToJourney => 'Welcome to your journey';
@@ -299,7 +299,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get age => 'Age';
 
   @override
-  String get cycleLength => 'Durée du Cycle';
+  String get cycleLength => 'DurÃ©e du Cycle';
 
   @override
   String days(Object count) {
@@ -311,7 +311,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Average number of days between your periods';
 
   @override
-  String get lastPeriodDate => 'Date de la Dernière Menstruation';
+  String get lastPeriodDate => 'Date de la DerniÃ¨re Menstruation';
 
   @override
   String get whenLastBleeding => 'When your last menstrual bleeding started';
@@ -320,7 +320,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ttcHistory => 'Historique TTC';
 
   @override
-  String get faithPreference => 'Préférence religieuse';
+  String get faithPreference => 'PrÃ©fÃ©rence religieuse';
 
   @override
   String get language => 'Language';
@@ -433,3 +433,6 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get logIn => 'Log In';
 }
+
+
+
