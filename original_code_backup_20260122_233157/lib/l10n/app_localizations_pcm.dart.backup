@@ -4,15 +4,15 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for Nigerian Pidgin (`pcm`).
+class AppLocalizationsPcm extends AppLocalizations {
+  AppLocalizationsPcm([String locale = 'pcm']) : super(locale);
 
   @override
-  String get appTitle => 'Nexus Fertility';
+  String get appTitle => 'Nexus Fertility App';
 
   @override
-  String get welcome => 'Welcome';
+  String get welcome => 'Welcome!';
 
   @override
   String get home => 'Home';
@@ -36,13 +36,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Login';
 
   @override
-  String get signup => 'Sign Up';
+  String get signup => 'Sign up';
 
   @override
   String get logout => 'Logout';
 
   @override
-  String get continueText => 'Continue';
+  String get continue => 'Continue';
 
   @override
   String get cancel => 'Cancel';
@@ -81,16 +81,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
-  String get forgotPassword => 'Forgot Password?';
+  String get forgotPassword => 'Forget password?';
 
   @override
-  String get alreadyHaveAccount => 'Already have an account?';
+  String get alreadyHaveAccount => 'Already get account?';
 
   @override
-  String get dontHaveAccount => 'Don\'t have an account?';
+  String get dontHaveAccount => 'No get account?';
 
   @override
-  String get calendar => 'Calendar';
+  String get calendar => 'Kaleda';
 
   @override
   String get today => 'Today';
@@ -104,7 +104,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get period => 'Period';
 
   @override
-  String get fertileWindow => 'Fertile Window';
+  String get fertileWindow => 'Fertile window';
 
   @override
   String get ovulation => 'Ovulation';
@@ -185,7 +185,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get serverError => 'Server Error';
 
   @override
-  String get tryAgain => 'Try Again';
+  String get tryAgain => 'Try again';
 
   @override
   String get invalidEmail => 'Invalid email address';

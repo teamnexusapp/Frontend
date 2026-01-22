@@ -4,60 +4,60 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Portuguese (`pt`).
-class AppLocalizationsPt extends AppLocalizations {
-  AppLocalizationsPt([String locale = 'pt']) : super(locale);
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
   String get appTitle => 'Nexus Fertility';
 
   @override
-  String get welcome => 'Bem-vindo';
+  String get welcome => 'Welcome';
 
   @override
-  String get home => 'Início';
+  String get home => 'Home';
 
   @override
-  String get learn => 'Aprender';
+  String get learn => 'Learn';
 
   @override
   String get insights => 'Insights';
 
   @override
-  String get support => 'Suporte';
+  String get support => 'Support';
 
   @override
-  String get profile => 'Perfil';
+  String get profile => 'Profile';
 
   @override
-  String get settings => 'Configurações';
+  String get settings => 'Settings';
 
   @override
-  String get login => 'Entrar';
+  String get login => 'Login';
 
   @override
-  String get signup => 'Cadastrar';
+  String get signup => 'Sign Up';
 
   @override
-  String get logout => 'Sair';
+  String get logout => 'Logout';
 
   @override
-  String get continueText => 'Continuar';
+  String get continue => 'Continue';
 
   @override
-  String get cancel => 'Cancelar';
+  String get cancel => 'Cancel';
 
   @override
-  String get save => 'Salvar';
+  String get save => 'Save';
 
   @override
-  String get delete => 'Excluir';
+  String get delete => 'Delete';
 
   @override
-  String get edit => 'Editar';
+  String get edit => 'Edit';
 
   @override
-  String get loading => 'Carregando...';
+  String get loading => 'Loading...';
 
   @override
   String get email => 'Email';

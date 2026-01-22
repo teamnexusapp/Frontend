@@ -4,81 +4,81 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Hausa (`ha`).
-class AppLocalizationsHa extends AppLocalizations {
-  AppLocalizationsHa([String locale = 'ha']) : super(locale);
+/// The translations for Portuguese (`pt`).
+class AppLocalizationsPt extends AppLocalizations {
+  AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
   String get appTitle => 'Nexus Fertility';
 
   @override
-  String get welcome => 'Barka da zuwa';
+  String get welcome => 'Bem-vindo';
 
   @override
-  String get home => 'Gida';
+  String get home => 'Início';
 
   @override
-  String get learn => 'Learn';
+  String get learn => 'Aprender';
 
   @override
   String get insights => 'Insights';
 
   @override
-  String get support => 'Support';
+  String get support => 'Suporte';
 
   @override
-  String get profile => 'Bayanin Martaba';
+  String get profile => 'Perfil';
 
   @override
-  String get settings => 'Saituna';
+  String get settings => 'Configurações';
 
   @override
-  String get login => 'Login';
+  String get login => 'Entrar';
 
   @override
-  String get signup => 'Sign Up';
+  String get signup => 'Cadastrar';
 
   @override
-  String get logout => 'Fita';
+  String get logout => 'Sair';
 
   @override
-  String get continueText => 'Ci gaba';
+  String get continue => 'Continuar';
 
   @override
-  String get cancel => 'Soke';
+  String get cancel => 'Cancelar';
 
   @override
-  String get save => 'Ajiye';
+  String get save => 'Salvar';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Excluir';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'Editar';
 
   @override
-  String get loading => 'Yana lodini...';
+  String get loading => 'Carregando...';
 
   @override
-  String get email => 'Imel';
+  String get email => 'Email';
 
   @override
-  String get password => 'Kalmar Sirri';
+  String get password => 'Password';
 
   @override
-  String get confirmPassword => 'Tabbatar da Kalmar Sirri';
+  String get confirmPassword => 'Confirm Password';
 
   @override
-  String get firstName => 'Suna na Gida';
+  String get firstName => 'First Name';
 
   @override
-  String get lastName => 'Suna Dangida';
+  String get lastName => 'Last Name';
 
   @override
-  String get phoneNumber => 'Lambar Waya';
+  String get phoneNumber => 'Phone Number';
 
   @override
-  String get createAccount => 'Ƙirƙiri Asusu';
+  String get createAccount => 'Create Account';
 
   @override
   String get forgotPassword => 'Forgot Password?';
@@ -176,7 +176,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get communityGuidance => 'Community Guidance';
 
   @override
-  String get error => 'Kuskure';
+  String get error => 'Error';
 
   @override
   String get networkError => 'Network Error';
@@ -185,7 +185,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get serverError => 'Server Error';
 
   @override
-  String get tryAgain => 'Gwada Sake';
+  String get tryAgain => 'Try Again';
 
   @override
   String get invalidEmail => 'Invalid email address';

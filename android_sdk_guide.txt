@@ -1,0 +1,35 @@
+﻿# Android SDK Setup Guide
+
+To fix the Android embedding errors and build for Android devices:
+
+## Option 1: Install Android Studio (Recommended)
+1. Download Android Studio from: https://developer.android.com/studio
+2. Run the installer
+3. During setup, it will install:
+   - Android SDK
+   - Android Emulator
+   - Required tools
+
+## Option 2: Install SDK manually
+1. Download command line tools from: https://developer.android.com/studio#command-tools
+2. Set environment variables:
+   - ANDROID_HOME = C:\Users\hp\AppData\Local\Android\Sdk
+   - Add to PATH: %ANDROID_HOME%\platform-tools
+
+## After installing Android SDK:
+1. Open PowerShell as Administrator
+2. Run: flutter doctor --android-licenses
+3. Accept all licenses
+4. Run: flutter doctor
+5. It should show Android toolchain as [✓]
+
+## To test your app on Android:
+1. Connect an Android device via USB
+2. Enable Developer Options and USB Debugging
+3. Run: flutter run
+
+## For now (without Android SDK):
+You can develop for web:
+1. Run: flutter run -d chrome
+2. Or: flutter run -d edge
+

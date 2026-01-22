@@ -1,0 +1,21 @@
+﻿{
+  "@@locale": "yo",
+  "appTitle": "Nexus Fertility",
+  "welcome": "Kaabo",
+  "home": "Ile",
+  "learn": "Kọ",
+  "insights": "Ikọkọ",
+  "support": "Atilẹyin",
+  "profile": "Profaili",
+  "settings": "Eto",
+  "login": "Wọle",
+  "signup": "Forukọsilẹ",
+  "logout": "Jade",
+  "continueText": "Tesiwaju",
+  "cancel": "Fagilee",
+  "save": "Fipamọ",
+  "delete": "Paarẹ",
+  "edit": "Ṣatunkọ",
+  "loading": "O nṣiṣẹ lọwọ..."
+}
+

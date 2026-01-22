@@ -4,18 +4,18 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Nigerian Pidgin (`pcm`).
-class AppLocalizationsPcm extends AppLocalizations {
-  AppLocalizationsPcm([String locale = 'pcm']) : super(locale);
+/// The translations for Igbo (`ig`).
+class AppLocalizationsIg extends AppLocalizations {
+  AppLocalizationsIg([String locale = 'ig']) : super(locale);
 
   @override
-  String get appTitle => 'Nexus Fertility App';
+  String get appTitle => 'Nexus Fertility';
 
   @override
-  String get welcome => 'Welcome!';
+  String get welcome => 'Nnọọ';
 
   @override
-  String get home => 'Home';
+  String get home => 'Ụlọ';
 
   @override
   String get learn => 'Learn';
@@ -27,28 +27,28 @@ class AppLocalizationsPcm extends AppLocalizations {
   String get support => 'Support';
 
   @override
-  String get profile => 'Profile';
+  String get profile => 'Profaịlụ';
 
   @override
-  String get settings => 'Settings';
+  String get settings => 'Ntọgharịba';
 
   @override
   String get login => 'Login';
 
   @override
-  String get signup => 'Sign up';
+  String get signup => 'Sign Up';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'Pụta';
 
   @override
-  String get continueText => 'Continue';
+  String get continue => 'Continue';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Kagbuo';
 
   @override
-  String get save => 'Save';
+  String get save => 'Zọọ';
 
   @override
   String get delete => 'Delete';
@@ -57,40 +57,40 @@ class AppLocalizationsPcm extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
-  String get loading => 'Loading...';
+  String get loading => 'Na-eloadụ...';
 
   @override
-  String get email => 'Email';
+  String get email => 'Imel';
 
   @override
-  String get password => 'Password';
+  String get password => 'Okwu Nzuzo';
 
   @override
-  String get confirmPassword => 'Confirm Password';
+  String get confirmPassword => 'Kuume Okwu Nzuzo';
 
   @override
-  String get firstName => 'First Name';
+  String get firstName => 'Aha Mbu';
 
   @override
-  String get lastName => 'Last Name';
+  String get lastName => 'Aha Nke Abụọ';
 
   @override
-  String get phoneNumber => 'Phone Number';
+  String get phoneNumber => 'Nọ́mba Ekwentị';
 
   @override
-  String get createAccount => 'Create Account';
+  String get createAccount => 'Mepụta Akụ́ọtụ';
 
   @override
-  String get forgotPassword => 'Forget password?';
+  String get forgotPassword => 'Forgot Password?';
 
   @override
-  String get alreadyHaveAccount => 'Already get account?';
+  String get alreadyHaveAccount => 'Already have an account?';
 
   @override
-  String get dontHaveAccount => 'No get account?';
+  String get dontHaveAccount => 'Don\'t have an account?';
 
   @override
-  String get calendar => 'Kaleda';
+  String get calendar => 'Calendar';
 
   @override
   String get today => 'Today';
@@ -104,7 +104,7 @@ class AppLocalizationsPcm extends AppLocalizations {
   String get period => 'Period';
 
   @override
-  String get fertileWindow => 'Fertile window';
+  String get fertileWindow => 'Fertile Window';
 
   @override
   String get ovulation => 'Ovulation';
@@ -176,7 +176,7 @@ class AppLocalizationsPcm extends AppLocalizations {
   String get communityGuidance => 'Community Guidance';
 
   @override
-  String get error => 'Error';
+  String get error => 'Njehie';
 
   @override
   String get networkError => 'Network Error';
@@ -185,7 +185,7 @@ class AppLocalizationsPcm extends AppLocalizations {
   String get serverError => 'Server Error';
 
   @override
-  String get tryAgain => 'Try again';
+  String get tryAgain => 'Nwaa Ọzọ';
 
   @override
   String get invalidEmail => 'Invalid email address';

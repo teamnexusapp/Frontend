@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Test - Nexus Fertility App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .audio-test {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Test for Nexus Fertility App</h1>
+    
+    <div class="audio-test">
+        <h2>Test Audio Playback</h2>
+        <p>This tests if audio can play in the browser.</p>
+        
+        <audio id="testAudio" controls>
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="document.getElementById('testAudio').play()">Play Audio</button>
+            <button onclick="document.getElementById('testAudio').pause()">Pause Audio</button>
+            <button onclick="document.getElementById('testAudio').volume += 0.1">Volume Up</button>
+            <button onclick="document.getElementById('testAudio').volume -= 0.1">Volume Down</button>
+        </div>
+    </div>
+    
+    <div class="audio-test">
+        <h2>Notes:</h2>
+        <ul>
+            <li>If you can hear audio, your browser supports audio playback</li>
+            <li>For your Flutter app, use the <code>audioplayers</code> package</li>
+            <li>Add audio files to <code>assets/audio/</code> folder</li>
+            <li>Update <code>pubspec.yaml</code> to include audio assets</li>
+        </ul>
+    </div>
+    
+    <script>
+        // Simple audio test
+        console.log("Audio test page loaded");
+        
+        // Test Web Audio API
+        function testWebAudio() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log("Web Audio API is supported");
+                return true;
+            } catch (e) {
+                console.log("Web Audio API is not supported:", e);
+                return false;
+            }
+        }
+        
+        // Run test on load
+        window.addEventListener('load', function() {
+            const supportsAudio = testWebAudio();
+            console.log("Browser audio support:", supportsAudio ? "Yes" : "No");
+        });
+    </script>
+</body>
+</html>
