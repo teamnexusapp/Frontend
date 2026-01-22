@@ -1,4 +1,4 @@
-{
+﻿{
   "@@locale": "pcm",
   "appTitle": "Nexus Fertility App",
   "insights": "Insights",
@@ -112,7 +112,7 @@
   "next": "Next",
   "finish": "Finish",
   "skip": "Skip",
-  "continue": "Continue",
+  "continueText": "Continue",
   "start": "Start",
   "pause": "Pause",
   "stop": "Stop",

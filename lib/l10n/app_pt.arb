@@ -11,10 +11,11 @@
   "login": "Entrar",
   "signup": "Cadastrar",
   "logout": "Sair",
-  "continue": "Continuar",
+  "continueText": "Continuar",
   "cancel": "Cancelar",
   "save": "Salvar",
   "delete": "Excluir",
   "edit": "Editar",
   "loading": "Carregando..."
 }
+

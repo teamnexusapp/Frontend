@@ -1,0 +1,72 @@
+﻿# Flutter/Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.fvm/
+*.dill
+*.dill.track.dill
+.generated/
+
+# Android
+**/android/**/build/
+**/android/**/.gradle/
+**/android/**/local.properties
+*.apk
+*.ap_
+*.aab
+*.aar
+*.keystore
+
+# iOS
+**/ios/**/build/
+**/ios/**/.symlinks/
+**/ios/**/Pods/
+*.ipa
+*.p12
+*.mobileprovision
+
+# Web
+**/web/**/canvaskit/
+
+# Windows
+**/windows/**/flutter/generated/
+**/windows/**/Runner/Build/
+
+# Linux
+**/linux/**/flutter/generated/
+
+# macOS
+**/macos/**/Flutter/Generated/
+
+# Coverage
+coverage/
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+flutter_*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# User-specific
+login.json

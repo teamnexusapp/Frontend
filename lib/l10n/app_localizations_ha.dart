@@ -42,7 +42,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get logout => 'Fita';
 
   @override
-  String get continue => 'Continue';
+  String get continueText => 'Ci gaba';
 
   @override
   String get cancel => 'Soke';

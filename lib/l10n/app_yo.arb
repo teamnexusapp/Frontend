@@ -11,10 +11,11 @@
   "login": "Wọle",
   "signup": "Forukọsilẹ",
   "logout": "Jade",
-  "continue": "Tesiwaju",
+  "continueText": "Tesiwaju",
   "cancel": "Fagilee",
   "save": "Fipamọ",
   "delete": "Paarẹ",
   "edit": "Ṣatunkọ",
   "loading": "O nṣiṣẹ lọwọ..."
 }
+

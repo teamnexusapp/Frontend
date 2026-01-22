@@ -42,7 +42,7 @@ class AppLocalizationsYo extends AppLocalizations {
   String get logout => 'Jade';
 
   @override
-  String get continue => 'Tesiwaju';
+  String get continueText => 'Tesiwaju';
 
   @override
   String get cancel => 'Fagilee';

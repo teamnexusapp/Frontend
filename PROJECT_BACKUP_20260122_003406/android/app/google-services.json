@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "293422244200",
+    "project_id": "fertility-app-backend-5578a",
+    "storage_bucket": "fertility-app-backend-5578a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293422244200:android:c4dbca6b3222871eadb6dd",
+        "android_client_info": {
+          "package_name": "com.fertpath.fertilityapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1VNI1fON-XfBvFszUTt0oZwHtsgaqcYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

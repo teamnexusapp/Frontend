@@ -12,7 +12,7 @@
   "login": "Login",
   "signup": "Sign Up",
   "logout": "Logout",
-  "continue": "Continue",
+  "continueText": "Continue",
   "cancel": "Cancel",
   "save": "Save",
   "delete": "Delete",
@@ -77,3 +77,4 @@
   "passwordTooShort": "Password must be at least 8 characters",
   "passwordsDontMatch": "Passwords don't match"
 }
+

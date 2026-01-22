@@ -42,7 +42,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get logout => 'Sair';
 
   @override
-  String get continue => 'Continuar';
+  String get continueText => 'Continuar';
 
   @override
   String get cancel => 'Cancelar';

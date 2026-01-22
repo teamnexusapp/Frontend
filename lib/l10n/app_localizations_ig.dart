@@ -42,7 +42,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get logout => 'Pụta';
 
   @override
-  String get continue => 'Continue';
+  String get continueText => 'Gaa n\'ihu';
 
   @override
   String get cancel => 'Kagbuo';
