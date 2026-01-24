@@ -4,18 +4,18 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Igbo (`ig`).
-class AppLocalizationsIg extends AppLocalizations {
-  AppLocalizationsIg([String locale = 'ig']) : super(locale);
+/// The translations for Nigerian Pidgin (`pg`).
+class AppLocalizationsPg extends AppLocalizations {
+  AppLocalizationsPg([String locale = 'pg']) : super(locale);
 
   @override
-  String get appTitle => 'Nexus Fertility';
+  String get appTitle => 'Nexus Fertility App';
 
   @override
-  String get welcome => 'Nnọọ';
+  String get welcome => 'Welcome!';
 
   @override
-  String get home => 'Ụlọ';
+  String get home => 'Home';
 
   @override
   String get learn => 'Learn';
@@ -27,28 +27,28 @@ class AppLocalizationsIg extends AppLocalizations {
   String get support => 'Support';
 
   @override
-  String get profile => 'Profaịlụ';
+  String get profile => 'Profile';
 
   @override
-  String get settings => 'Ntọgharịba';
+  String get settings => 'Settings';
 
   @override
   String get login => 'Login';
 
   @override
-  String get signup => 'Sign Up';
+  String get signup => 'Sign up';
 
   @override
-  String get logout => 'Pụta';
+  String get logout => 'Logout';
 
   @override
   String get continue => 'Continue';
 
   @override
-  String get cancel => 'Kagbuo';
+  String get cancel => 'Cancel';
 
   @override
-  String get save => 'Zọọ';
+  String get save => 'Save';
 
   @override
   String get delete => 'Delete';
@@ -57,40 +57,40 @@ class AppLocalizationsIg extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
-  String get loading => 'Na-eloadụ...';
+  String get loading => 'Loading...';
 
   @override
-  String get email => 'Imel';
+  String get email => 'Email';
 
   @override
-  String get password => 'Okwu Nzuzo';
+  String get password => 'Password';
 
   @override
-  String get confirmPassword => 'Kuume Okwu Nzuzo';
+  String get confirmPassword => 'Confirm Password';
 
   @override
-  String get firstName => 'Aha Mbu';
+  String get firstName => 'First Name';
 
   @override
-  String get lastName => 'Aha Nke Abụọ';
+  String get lastName => 'Last Name';
 
   @override
-  String get phoneNumber => 'Nọ́mba Ekwentị';
+  String get phoneNumber => 'Phone Number';
 
   @override
-  String get createAccount => 'Mepụta Akụ́ọtụ';
+  String get createAccount => 'Create Account';
 
   @override
-  String get forgotPassword => 'Forgot Password?';
+  String get forgotPassword => 'Forget password?';
 
   @override
-  String get alreadyHaveAccount => 'Already have an account?';
+  String get alreadyHaveAccount => 'Already get account?';
 
   @override
-  String get dontHaveAccount => 'Don\'t have an account?';
+  String get dontHaveAccount => 'No get account?';
 
   @override
-  String get calendar => 'Calendar';
+  String get calendar => 'Kaleda';
 
   @override
   String get today => 'Today';
@@ -104,7 +104,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get period => 'Period';
 
   @override
-  String get fertileWindow => 'Fertile Window';
+  String get fertileWindow => 'Fertile window';
 
   @override
   String get ovulation => 'Ovulation';
@@ -176,7 +176,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get communityGuidance => 'Community Guidance';
 
   @override
-  String get error => 'Njehie';
+  String get error => 'Error';
 
   @override
   String get networkError => 'Network Error';
@@ -185,7 +185,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get serverError => 'Server Error';
 
   @override
-  String get tryAgain => 'Nwaa Ọzọ';
+  String get tryAgain => 'Try again';
 
   @override
   String get invalidEmail => 'Invalid email address';

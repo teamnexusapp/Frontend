@@ -19,7 +19,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
         {'code': 'ig', 'name': 'Igbo'},
         {'code': 'yo', 'name': 'Yoruba'},
         {'code': 'ha', 'name': 'Hausa'},
-        {'code': 'pcm', 'name': 'Pidgin'},
+        {'code': 'pg', 'name': 'Pidgin'},
       ];
 
   void _handleSelect(String code) {

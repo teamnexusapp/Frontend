@@ -21,7 +21,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   int _cycleLength = 28;
   int _periodLength = 5;
   DateTime? _lastPeriodDate;
-  String? _ttcHistory;
+  List<String> _ttcHistory = [];
   String? _faithPreference;
 
   String _language = 'English';
@@ -72,7 +72,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           if (user.lastPeriodDate != null) {
             _lastPeriodDate = user.lastPeriodDate;
           }
-          _ttcHistory = user.ttcHistory ?? [];
+          _ttcHistory = user.ttcHistory;
           _faithPreference = user.faithPreference;
           _language = _getLanguageDisplayName(user.preferredLanguage ?? 'en');
         });
@@ -252,9 +252,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               // TTC History
               _buildFieldLabel('TTC History'),
               _buildDropdown(
-                value: _ttcHistory,
+                value: _ttcHistory.isNotEmpty ? _ttcHistory.first : null,
                 items: _ttcHistories,
-                onChanged: (value) => setState(() => _ttcHistory = value),
+                onChanged: (value) => setState(() => _ttcHistory = value != null ? [value] : []),
               ),
               const SizedBox(height: 20),
 
@@ -476,7 +476,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         return 'Igbo';
       case 'ha':
         return 'Hausa';
-      case 'pcm':
+      case 'pg':
         return 'Pidgin';
       default:
         return 'English';
@@ -519,7 +519,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         lastPeriodDate: _lastPeriodDate != null
             ? _lastPeriodDate!.toIso8601String().split('T')[0]
             : null,
-        ttcHistory: _ttcHistory ?? '',
+        ttcHistory: _ttcHistory.isNotEmpty ? _ttcHistory.first : '',
         faithPreference: _faithPreference ?? '',
         audioPreference: _audioGuidance,
       );
