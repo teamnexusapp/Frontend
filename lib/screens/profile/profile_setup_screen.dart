@@ -476,7 +476,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         return 'Igbo';
       case 'ha':
         return 'Hausa';
-      case 'pg':
+      case 'pcm':
         return 'Pidgin';
       default:
         return 'English';

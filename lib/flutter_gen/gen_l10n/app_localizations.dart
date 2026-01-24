@@ -8,7 +8,7 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_en.dart';
 import 'app_localizations_ha.dart';
 import 'app_localizations_ig.dart';
-import 'app_localizations_pg.dart';
+import 'app_localizations_pcm.dart';
 import 'app_localizations_pt.dart';
 import 'app_localizations_yo.dart';
 
@@ -98,7 +98,7 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('ha'),
     Locale('ig'),
-    Locale('pg'),
+    Locale('pcm'),
     Locale('pt'),
     Locale('yo')
   ];
@@ -491,7 +491,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'ha', 'ig', 'pg', 'pt', 'yo'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'ha', 'ig', 'pcm', 'pt', 'yo'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -505,7 +505,7 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     case 'en': return AppLocalizationsEn();
     case 'ha': return AppLocalizationsHa();
     case 'ig': return AppLocalizationsIg();
-    case 'pg': return AppLocalizationsPg();
+    case 'pcm': return AppLocalizationsPcm();
     case 'pt': return AppLocalizationsPt();
     case 'yo': return AppLocalizationsYo();
   }

@@ -6,7 +6,7 @@ class LocalizationProvider extends ChangeNotifier {
   static const List<Locale> supportedLocales = [
     Locale('en'),
     Locale('ha'),
-    Locale('pg'),
+    Locale('pcm'),
     Locale('yo'),
     Locale('ig'),
   ];
@@ -38,7 +38,7 @@ class LocalizationProvider extends ChangeNotifier {
         return 'English';
       case 'ha':
         return 'Hausa';
-      case 'pg':
+      case 'pcm':
         return 'Pidgin';
       case 'yo':
         return 'Yoruba';

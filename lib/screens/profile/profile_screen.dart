@@ -101,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case 'ig': return 'Igbo';
       case 'ha': return 'Hausa';
       case 'yo': return 'Yoruba';
-      case 'pg': return 'Pidgin';
+      case 'pcm': return 'Pidgin';
       default: return 'English';
     }
   }
