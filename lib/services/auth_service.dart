@@ -1,4 +1,5 @@
-﻿import 'dart:convert';
+﻿import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
@@ -78,7 +79,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
   Future<User?> signIn(String email, String password) async {
     // Mock implementation - replace with real auth
     await Future.delayed(Duration(seconds: 1));
-    _currentUser = User(;
+    _currentUser = User(
       id: '1',
       email: email,
       firstName: 'John',
@@ -100,7 +101,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
   }) async {
     // Mock implementation
     await Future.delayed(Duration(seconds: 1));
-    _currentUser = User(;
+    _currentUser = User(
       id: '2',
       email: email,
       firstName: firstName,
@@ -124,7 +125,7 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
   }) async {
     // Mock implementation
     await Future.delayed(Duration(seconds: 1));
-    _currentUser = User(;
+    _currentUser = User(
       id: '3',
       email: email ?? '$phoneNumber@example.com',
       firstName: firstName ?? 'Phone',
@@ -156,6 +157,9 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
   User? getCurrentUser() {
     return _currentUser;
   }
+
+  // Getter for convenience
+  User? get currentUser => _currentUser;
 
   @override
   Stream<User?> authStateChanges() {

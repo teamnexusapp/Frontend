@@ -13,10 +13,10 @@ final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary, brightness: Brightness.light),
   appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent, elevation: 0, foregroundColor: Colors.black),
   scaffoldBackgroundColor: AppColors.background,
-  ElevatedButtonTheme: ElevatedButtonThemeData(
+  elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
   ),
-  OutlinedButtonTheme: OutlinedButtonThemeData(
+  outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(side: const BorderSide(color: AppColors.primary), foregroundColor: AppColors.primary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
   ),
   inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Color(0xFFF6F8F6), border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12)))),

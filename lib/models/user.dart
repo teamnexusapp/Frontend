@@ -1,5 +1,8 @@
 ﻿import 'dart:convert';
 
+// Alias for backward compatibility
+typedef User = AppUser;
+
 class AppUser {
   final String id;
   final String email;
@@ -13,6 +16,7 @@ class AppUser {
   final String? lastName;
   final String? displayName;
   final String? photoUrl;
+  final String? preferredLanguage;
   
   AppUser({
     required this.id,
@@ -27,6 +31,7 @@ class AppUser {
     this.lastName,
     this.displayName,
     this.photoUrl,
+    this.preferredLanguage,
   }) : ttcHistory = ttcHistory ?? [];
   
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -49,6 +54,7 @@ class AppUser {
       lastName: json['lastName']?.toString(),
       displayName: json['displayName']?.toString(),
       photoUrl: json['photoUrl']?.toString(),
+      preferredLanguage: json['preferredLanguage']?.toString(),
     );
   }
   
@@ -63,6 +69,12 @@ class AppUser {
       'cycleLength': cycleLength,
       'lastPeriodDate': lastPeriodDate?.toIso8601String(),
       'firstName': firstName,
+      'lastName': lastName,
+      'displayName': displayName,
+      'photoUrl': photoUrl,
+      'preferredLanguage': preferredLanguage,
+    };
+  }
       'lastName': lastName,
       'displayName': displayName,
       'photoUrl': photoUrl,

@@ -11,6 +11,7 @@ class SwipeableGreenCalendar extends StatefulWidget {
     this.ovulationDates,
     this.periodDates,
     this.nextPeriodDate,
+    this.nextPeriodDays,
   });
 
   final DateTime initialMonth;
@@ -19,6 +20,7 @@ class SwipeableGreenCalendar extends StatefulWidget {
   final Set<DateTime>? ovulationDates;
   final Set<DateTime>? periodDates;
   final DateTime? nextPeriodDate;
+  final Set<DateTime>? nextPeriodDays;
 
   @override
   State<SwipeableGreenCalendar> createState() => _SwipeableGreenCalendarState();
@@ -198,7 +200,8 @@ class _MonthGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firstWeekday = month.weekday % 7; // 0=Sunday ... 6=Saturday;
+    final firstWeekday = month.weekday % 7; // 0=Sunday ... 6=Saturday
+;
     final daysInMonth = DateUtils.getDaysInMonth(month.year, month.month);
     final prevMonth = DateTime(month.year, month.month - 1, 1);
     final nextMonth = DateTime(month.year, month.month + 1, 1);
@@ -219,7 +222,7 @@ class _MonthGrid extends StatelessWidget {
         ),
         itemCount: totalCells,
         itemBuilder: (context, index) {
-          final dayInfo = _resolveDay(;
+          final dayInfo = _resolveDay(
             index: index,
             firstWeekday: firstWeekday,
             daysInMonth: daysInMonth,
@@ -248,7 +251,7 @@ class _MonthGrid extends StatelessWidget {
             txtColor = const Color(0xFF2E683D);
           }
 
-          final boxDecoration = BoxDecoration(;
+          final boxDecoration = BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
             border: isNextPeriod ? Border.all(color: Colors.orange, width: 2) : null,

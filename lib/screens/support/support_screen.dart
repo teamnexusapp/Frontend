@@ -613,7 +613,7 @@ class _SupportScreenState extends State<SupportScreen> {
                           ),
                         );
                       },
-                      child: Text(loc.translate('exploreCommunityGroups')),
+                      child: const Text('Explore Community Groups'),
                     ),
                   ),
                 ],

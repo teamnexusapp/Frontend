@@ -520,7 +520,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
 }
-
 class PasswordUpdatedScreen extends StatelessWidget {
   const PasswordUpdatedScreen({super.key});
 
