@@ -363,9 +363,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                             ),
                           ),
                         )
-                      : Text(
-                          AppLocalizations.of(context)!.continueText,
-                          style: const TextStyle(
+                        : const Text(
+                          'Continue',
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -500,8 +500,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.profileSetupComplete),
+          const SnackBar(
+            content: Text('Profile setup complete!'),
             backgroundColor: Colors.green,
           ),
         );

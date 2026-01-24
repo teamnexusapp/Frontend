@@ -558,9 +558,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    loc.todaysFertilityInsight,
-                                    style: const TextStyle(
+                                  const Text(
+                                    "Today's Fertility Insight",
+                                    style: TextStyle(
                                       fontSize: 28,
                                       color: Color(0xFFA8D497),
                                       fontFamily: 'Poppins',
