@@ -4,21 +4,21 @@ import 'package:intl/intl.dart' as intl;
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for Portuguese (`pt`).
+class AppLocalizationsPt extends AppLocalizations {
+  AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
-  String get appTitle => 'Nexus Fertility';
+  String get appTitle => 'Nexus Fertilidade';
 
   @override
-  String get welcomeTitle => 'Welcome to Nexus Fertility';
+  String get welcomeTitle => 'Bem-vindo ao Nexus Fertilidade';
 
   @override
-  String get welcomeSubtitle => 'Your personal fertility companion';
+  String get welcomeSubtitle => 'Seu companheiro pessoal de fertilidade';
 
   @override
-  String get selectLanguage => 'Select Language';
+  String get selectLanguage => 'Selecionar Idioma';
 
   @override
   String get english => 'English';
@@ -39,149 +39,151 @@ class AppLocalizationsEn extends AppLocalizations {
   String get german => 'Deutsch';
 
   @override
-  String get next => 'Next';
+  String get next => 'PrÃ³ximo';
 
   @override
-  String get back => 'Back';
+  String get back => 'Voltar';
 
   @override
-  String get skip => 'Skip';
+  String get skip => 'Pular';
 
   @override
-  String get done => 'Done';
+  String get done => 'ConcluÃ­do';
 
   @override
-  String get createAccount => 'Create Account';
+  String get createAccount => 'Criar Conta';
 
   @override
-  String get signIn => 'Sign In';
+  String get signIn => 'Entrar';
 
   @override
   String get email => 'Email';
 
   @override
-  String get phoneNumber => 'Phone Number';
+  String get phoneNumber => 'NÃºmero de Telefone';
 
   @override
-  String get password => 'Password';
+  String get password => 'Senha';
 
   @override
-  String get confirmPassword => 'Confirm Password';
+  String get confirmPassword => 'Confirmar Senha';
 
   @override
-  String get firstName => 'First Name';
+  String get firstName => 'Primeiro Nome';
 
   @override
-  String get lastName => 'Last Name';
+  String get lastName => 'Sobrenome';
 
   @override
-  String get dateOfBirth => 'Date of Birth';
+  String get dateOfBirth => 'Data de Nascimento';
 
   @override
-  String get selectDate => 'Select date';
+  String get selectDate => 'Selecionar Data';
 
   @override
-  String get profilePicture => 'Profile Picture';
+  String get profilePicture => 'Foto de Perfil';
 
   @override
-  String get uploadPhoto => 'Upload Photo';
+  String get uploadPhoto => 'Carregar Foto';
 
   @override
-  String get takePhoto => 'Take Photo';
+  String get takePhoto => 'Tirar Foto';
 
   @override
-  String get chooseFromGallery => 'Choose from Gallery';
+  String get chooseFromGallery => 'Escolher da Galeria';
 
   @override
-  String get verifyEmail => 'Verify Email';
+  String get verifyEmail => 'Verificar Email';
 
   @override
-  String get verifyPhone => 'Verify Phone';
+  String get verifyPhone => 'Verificar Telefone';
 
   @override
-  String get enterOTP => 'Enter OTP';
+  String get enterOTP => 'Digite o OTP';
 
   @override
   String otpSentTo(String email) {
-    return 'OTP sent to $email';
+    return 'OTP enviado para $email';
   }
 
   @override
-  String get resendCode => 'Resend Code';
+  String get resendCode => 'Reenviar CÃ³digo';
 
   @override
   String codeExpires(String minutes, String seconds) {
-    return 'Code expires in $minutes:$seconds';
+    return 'CÃ³digo expira em $minutes:$seconds';
   }
 
   @override
-  String get invalidEmail => 'Please enter a valid email address';
+  String get invalidEmail => 'Por favor, insira um endereÃ§o de email vÃ¡lido';
 
   @override
-  String get invalidPhone => 'Please enter a valid phone number';
+  String get invalidPhone => 'Por favor, insira um nÃºmero de telefone vÃ¡lido';
 
   @override
-  String get passwordMismatch => 'Passwords do not match';
+  String get passwordMismatch => 'As senhas nÃ£o coincidem';
 
   @override
-  String get passwordTooShort => 'Password must be at least 8 characters';
+  String get passwordTooShort => 'A senha deve ter pelo menos 8 caracteres';
 
   @override
-  String get accountCreatedSuccessfully => 'Account created successfully!';
+  String get accountCreatedSuccessfully => 'Conta criada com sucesso!';
 
   @override
-  String get profileSetupComplete => 'Profile setup complete!';
+  String get profileSetupComplete =>
+      'A configuraÃ§Ã£o do seu perfil estÃ¡ completa';
 
   @override
-  String get termsAndConditions => 'I agree to the Terms and Conditions';
+  String get termsAndConditions => 'Concordo com os Termos e CondiÃ§Ãµes';
 
   @override
-  String get privacyPolicy => 'I agree to the Privacy Policy';
+  String get privacyPolicy => 'Concordo com a PolÃ­tica de Privacidade';
 
   @override
-  String get acceptTerms => 'Please accept the terms and conditions';
+  String get acceptTerms => 'Por favor, aceite os termos e condiÃ§Ãµes';
 
   @override
-  String get emailAlreadyExists => 'Email already registered';
+  String get emailAlreadyExists => 'Email jÃ¡ registrado';
 
   @override
-  String get phoneAlreadyExists => 'Phone number already registered';
+  String get phoneAlreadyExists => 'NÃºmero de telefone jÃ¡ registrado';
 
   @override
-  String get verificationFailed => 'Verification failed. Please try again';
+  String get verificationFailed =>
+      'VerificaÃ§Ã£o falhou. Por favor, tente novamente';
 
   @override
-  String get tryAgain => 'Try Again';
+  String get tryAgain => 'Tentar Novamente';
 
   @override
-  String get loading => 'Loading...';
+  String get loading => 'Carregando...';
 
   @override
-  String get error => 'Error';
+  String get error => 'Erro';
 
   @override
-  String get success => 'Success';
+  String get success => 'Sucesso';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Cancelar';
 
   @override
-  String get save => 'Save';
+  String get save => 'Salvar';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'Sair';
 
   @override
-  String get genderMale => 'Male';
+  String get genderMale => 'Masculino';
 
   @override
-  String get genderFemale => 'Female';
+  String get genderFemale => 'Feminino';
 
   @override
-  String get genderOther => 'Other';
+  String get genderOther => 'Outro';
 
   @override
-  String get selectGender => 'Select Gender';
+  String get selectGender => 'Selecionar GÃªnero';
 
   @override
   String get welcomeToJourney => 'Welcome to your journey';
@@ -297,7 +299,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get age => 'Age';
 
   @override
-  String get cycleLength => 'Cycle Length';
+  String get cycleLength => 'DuraÃ§Ã£o do Ciclo';
 
   @override
   String days(Object count) {
@@ -309,22 +311,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'Average number of days between your periods';
 
   @override
-  String get lastPeriodDate => 'Last Period Date';
+  String get lastPeriodDate => 'Data da Ãšltima MenstruaÃ§Ã£o';
 
   @override
   String get whenLastBleeding => 'When your last menstrual bleeding started';
 
   @override
-  String get ttcHistory => 'TTC History';
+  String get ttcHistory => 'HistÃ³rico TTC';
 
   @override
-  String get faithPreference => 'Faith Preference';
+  String get faithPreference => 'PreferÃªncia de FÃ©';
 
   @override
   String get language => 'Language';
 
   @override
-  String get audioGuidance => 'Audio Guidance';
+  String get audioGuidance => 'OrientaÃ§Ã£o de Ãudio';
 
   @override
   String get agreeTerms =>

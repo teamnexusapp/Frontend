@@ -12,190 +12,89 @@ class AppLocalizationsPcm extends AppLocalizations {
   String get appTitle => 'Nexus Fertility App';
 
   @override
-  String get welcome => 'Welcome!';
-
-  @override
   String get home => 'Home';
 
   @override
   String get learn => 'Learn';
 
   @override
-  String get insights => 'Insights';
+  String get createAccount => 'Create Account';
 
   @override
-  String get support => 'Support';
-
-  @override
-  String get profile => 'Profile';
-
-  @override
-  String get settings => 'Settings';
-
-  @override
-  String get login => 'Login';
-
-  @override
-  String get signup => 'Sign up';
-
-  @override
-  String get logout => 'Logout';
-
-  @override
-  String get continue => 'Continue';
-
-  @override
-  String get cancel => 'Cancel';
-
-  @override
-  String get save => 'Save';
-
-  @override
-  String get delete => 'Delete';
-
-  @override
-  String get edit => 'Edit';
-
-  @override
-  String get loading => 'Loading...';
+  String get choosePreferredMethod => 'Choose Preferred Method';
 
   @override
   String get email => 'Email';
 
   @override
-  String get password => 'Password';
-
-  @override
-  String get confirmPassword => 'Confirm Password';
-
-  @override
-  String get firstName => 'First Name';
-
-  @override
-  String get lastName => 'Last Name';
+  String get createAccountWithEmail => 'Create Account with Email';
 
   @override
   String get phoneNumber => 'Phone Number';
 
   @override
-  String get createAccount => 'Create Account';
+  String get createAccountWithPhone => 'Create Account with Phone';
 
   @override
-  String get forgotPassword => 'Forget password?';
+  String get selectOption => 'Select Option';
 
   @override
-  String get alreadyHaveAccount => 'Already get account?';
+  String get verifyPhoneTitle => 'Verify Phone';
 
   @override
-  String get dontHaveAccount => 'No get account?';
+  String get verify => 'Verify';
 
   @override
-  String get calendar => 'Kaleda';
+  String get didntReceiveCode => 'Didn\'t receive code?';
 
   @override
-  String get today => 'Today';
+  String get profile => 'Profile';
 
   @override
-  String cycleDay(Object day) {
-    return 'Cycle Day $day';
-  }
+  String get selectDate => 'Select date';
 
   @override
-  String get period => 'Period';
+  String get continueText => 'Continue';
 
   @override
-  String get fertileWindow => 'Fertile window';
+  String get profileSetupComplete => 'Profile Setup Complete';
 
   @override
-  String get ovulation => 'Ovulation';
+  String get authInvalidEmail => 'Invalid email address';
 
   @override
-  String get symptoms => 'Symptoms';
+  String get authInvalidPhone => 'Invalid phone number';
 
   @override
-  String get mood => 'Mood';
+  String get authPasswordTooShort => 'Password too short';
 
   @override
-  String get energy => 'Energy';
+  String get authEmailAlreadyRegistered => 'Email already registered';
 
   @override
-  String get notes => 'Notes';
+  String get authPhoneAlreadyRegistered => 'Phone already registered';
 
   @override
-  String get articles => 'Articles';
+  String get authInvalidOtpFormat => 'Invalid OTP format';
 
   @override
-  String get readArticle => 'Read Article';
+  String get authUserNotFound => 'User not found';
 
   @override
-  String get playAudio => 'Play Audio';
+  String get authNoUserLoggedIn => 'No user logged in';
 
   @override
-  String get pauseAudio => 'Pause Audio';
+  String get support => 'Support';
 
   @override
-  String get articleCategoryHealth => 'Health & Wellness';
+  String get helpCenter => 'Help Center';
 
   @override
-  String get articleCategoryFertility => 'Fertility Education';
+  String get contactUs => 'Contact Us';
 
   @override
-  String get articleCategoryNutrition => 'Nutrition';
+  String get feedback => 'Feedback';
 
   @override
-  String get articleCategoryMentalHealth => 'Mental Health';
-
-  @override
-  String get chat => 'Chat';
-
-  @override
-  String get typeMessage => 'Type a message...';
-
-  @override
-  String get send => 'Send';
-
-  @override
-  String get online => 'Online';
-
-  @override
-  String get offline => 'Offline';
-
-  @override
-  String get typing => 'typing...';
-
-  @override
-  String get culturalTips => 'Cultural Tips';
-
-  @override
-  String get religiousConsiderations => 'Religious Considerations';
-
-  @override
-  String get traditionalPractices => 'Traditional Practices';
-
-  @override
-  String get communityGuidance => 'Community Guidance';
-
-  @override
-  String get error => 'Error';
-
-  @override
-  String get networkError => 'Network Error';
-
-  @override
-  String get serverError => 'Server Error';
-
-  @override
-  String get tryAgain => 'Try again';
-
-  @override
-  String get invalidEmail => 'Invalid email address';
-
-  @override
-  String get invalidPhone => 'Invalid phone number';
-
-  @override
-  String get passwordTooShort => 'Password must be at least 8 characters';
-
-  @override
-  String get passwordsDontMatch => 'Passwords don\'t match';
+  String get logout => 'Logout';
 }
