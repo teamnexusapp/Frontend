@@ -16,25 +16,4 @@ services:
     staticPublishPath: build/web
     envVars:
       - key: API_URL
-        value: "https://fertipath-backend.onrender.com"
-
-
-# Flutter Mobile Service (Android) - iOS coming soon
-#  - type: web
-#    name: fertility-android-frontend
-#    runtime: static
-#    rootDir: .
-#    plan: free
-#    autoDeploy: true
-#    branch: main
-#    buildCommand: |
-#      curl -L https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.35.0-stable.tar.xz -o flutter.tar.xz &&
-#      tar xf flutter.tar.xz &&
-#      export PATH="$PATH:$(pwd)/flutter/bin" &&
-#      flutter pub get &&
-#      flutter build apk --release &&
-#      echo "APK built at: build/app/outputs/flutter-apk/app-release.apk"
-#    envVars:
-#      - key: API_URL
-#        value: "https://team-nexus.onrender.com"
-
+        value: "https://fertipath-backend.onrender.com" 
