@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../services/auth_service.dart';
 import '../services/api_service.dart';
@@ -147,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IndexedStack(
             index: _selectedIndex,
             children: [
-               _buildHomeTab(AppLocalizations.of(context)!),
+               _buildHomeTab(),
               const EducationalHubScreen(),
               const CalendarTabScreen(),
               const SupportScreen(),
@@ -268,11 +267,11 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: _selectedIndex == 0 ? AppLocalizations.of(context)!.home : '',
+            label: _selectedIndex == 0 ? 'Home' : '',
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.school),
-            label: _selectedIndex == 1 ? AppLocalizations.of(context)!.learn : '',
+            label: _selectedIndex == 1 ? 'Learn' : '',
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.timeline),
@@ -486,7 +485,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHomeTab(AppLocalizations loc) {
+  Widget _buildHomeTab() {
     final size = MediaQuery.of(context).size;
     final heroHeight = size.height * 0.5;
     const buttonHeight = 64.0;

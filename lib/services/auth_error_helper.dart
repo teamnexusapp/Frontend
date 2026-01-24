@@ -1,29 +1,26 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'auth_exception.dart';
 
-/// Helper function to translate auth error codes to localized messages
+/// Helper function to translate auth error codes to error messages
 String getAuthErrorMessage(BuildContext context, dynamic error) {
-  final localizations = AppLocalizations.of(context)!;
-  
   if (error is AuthException) {
     switch (error.code) {
       case AuthErrorCodes.invalidEmail:
-        return localizations.authInvalidEmail;
+        return 'Invalid email address';
       case AuthErrorCodes.invalidPhone:
-        return localizations.authInvalidPhone;
+        return 'Invalid phone number';
       case AuthErrorCodes.passwordTooShort:
-        return localizations.authPasswordTooShort;
+        return 'Password is too short';
       case AuthErrorCodes.emailAlreadyRegistered:
-        return localizations.authEmailAlreadyRegistered;
+        return 'Email already registered';
       case AuthErrorCodes.phoneAlreadyRegistered:
-        return localizations.authPhoneAlreadyRegistered;
+        return 'Phone number already registered';
       case AuthErrorCodes.invalidOtpFormat:
-        return localizations.authInvalidOtpFormat;
+        return 'Invalid OTP format';
       case AuthErrorCodes.userNotFound:
-        return localizations.authUserNotFound;
+        return 'User not found';
       case AuthErrorCodes.noUserLoggedIn:
-        return localizations.authNoUserLoggedIn;
+        return 'No user logged in';
       default:
         return error.toString();
     }

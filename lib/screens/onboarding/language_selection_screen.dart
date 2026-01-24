@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/localization_provider.dart' as loc_provider;
 import 'onboarding_screens.dart';
 
@@ -29,7 +28,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   Future<void> _handleNext(BuildContext context) async {
     if (_selectedCode == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.selectOption)),
+        const SnackBar(content: Text('Please select a language')),
       );
       return;
     }

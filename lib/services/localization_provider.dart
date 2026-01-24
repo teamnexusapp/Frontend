@@ -1,5 +1,4 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalizationProvider extends ChangeNotifier {
@@ -49,18 +48,5 @@ class LocalizationProvider extends ChangeNotifier {
 
   Future<void> setLocaleByLanguageCode(String code) async {
     await setLocale(Locale(code));
-  }
-
-  static AppLocalizations? of(BuildContext context) {
-    return AppLocalizations.of(context);
-  }
-
-  // Helper method to get translated text
-  static String translate(BuildContext context, String Function(AppLocalizations) translation) {
-    final localizations = AppLocalizations.of(context);
-    if (localizations != null) {
-      return translation(localizations);
-    }
-    return '';
   }
 }

@@ -1,7 +1,6 @@
 ﻿import 'phone_signup_screen.dart';
 import 'email_signup_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountTypeSelectionScreen extends StatelessWidget {
   const AccountTypeSelectionScreen({super.key});
@@ -34,9 +33,9 @@ class AccountTypeSelectionScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  AppLocalizations.of(context)!.createAccount,
-                  style: const TextStyle(
+                const Text(
+                  'Create Account',
+                  style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.deepPurple,
@@ -44,7 +43,7 @@ class AccountTypeSelectionScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  AppLocalizations.of(context)!.choosePreferredMethod,
+                  'Choose your preferred method',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey.shade600,
@@ -55,8 +54,8 @@ class AccountTypeSelectionScreen extends StatelessWidget {
                 // Email Option
                 _AccountTypeCard(
                   icon: Icons.email_outlined,
-                  title: AppLocalizations.of(context)!.email,
-                  subtitle: AppLocalizations.of(context)!.createAccountWithEmail,
+                  title: 'Email',
+                  subtitle: 'Create account with email',
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -70,8 +69,8 @@ class AccountTypeSelectionScreen extends StatelessWidget {
                 // Phone Option
                 _AccountTypeCard(
                   icon: Icons.phone_outlined,
-                  title: AppLocalizations.of(context)!.phoneNumber,
-                  subtitle: AppLocalizations.of(context)!.createAccountWithPhone,
+                  title: 'Phone Number',
+                  subtitle: 'Create account with phone',
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

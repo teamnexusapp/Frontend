@@ -1,6 +1,5 @@
 ﻿import '../../services/auth_error_helper.dart';
 import 'dart:async';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'profile_setup_screen.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
@@ -79,9 +78,9 @@ class _PhoneOTPVerificationScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 24),
-                Text(
-                  AppLocalizations.of(context)!.verifyPhoneTitle,
-                  style: const TextStyle(
+                const Text(
+                  'Verify Phone Number',
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.deepPurple,
@@ -89,7 +88,7 @@ class _PhoneOTPVerificationScreenState
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  AppLocalizations.of(context)!.codeSentToPhone(widget.phoneNumber),
+                  'Code sent to ${widget.phoneNumber}',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade600,
@@ -152,9 +151,7 @@ class _PhoneOTPVerificationScreenState
                 // Timer
                 Center(
                   child: Text(
-                    AppLocalizations.of(context)!.codeExpiresIn(
-                      '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}'
-                    ),
+                    'Code expires in ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
                     style: TextStyle(
                       fontSize: 14,
                       color: _secondsRemaining < 60
@@ -190,9 +187,9 @@ class _PhoneOTPVerificationScreenState
                               ),
                             ),
                           )
-                        : Text(
-                            AppLocalizations.of(context)!.verify,
-                            style: const TextStyle(
+                        : const Text(
+                            'Verify',
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -207,7 +204,7 @@ class _PhoneOTPVerificationScreenState
                   child: TextButton(
                     onPressed: _secondsRemaining == 0 ? _handleResend : null,
                     child: Text(
-                      AppLocalizations.of(context)!.didntReceiveCode,
+                      'Didn\'t receive code? Resend',
                       style: TextStyle(
                         fontSize: 14,
                         color: _secondsRemaining == 0

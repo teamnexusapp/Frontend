@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/auth_service.dart';
 import '../../services/auth_error_helper.dart';
 import '../../services/localization_provider.dart';
