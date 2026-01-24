@@ -16,7 +16,7 @@ services:
     staticPublishPath: build/web
     envVars:
       - key: API_URL
-        value: "https://fertipath-backend.onrender.com" 
+        value: "https://fertipath-backend.onrender.com"
 
 
 # Flutter Mobile Service (Android) - iOS coming soon
