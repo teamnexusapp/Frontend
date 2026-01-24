@@ -1,6 +1,6 @@
 ﻿import '../../services/auth_error_helper.dart';
 import 'dart:async';
-import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'profile_setup_screen.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
@@ -35,7 +35,8 @@ class _PhoneOTPVerificationScreenState
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+;
       setState(() {
         if (_secondsRemaining > 0) {
           _secondsRemaining--;

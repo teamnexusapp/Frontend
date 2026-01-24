@@ -1,7 +1,7 @@
 ﻿import 'phone_signup_screen.dart';
 import 'email_signup_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountTypeSelectionScreen extends StatelessWidget {
   const AccountTypeSelectionScreen({super.key});

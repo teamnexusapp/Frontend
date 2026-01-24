@@ -10,7 +10,7 @@ import "screens/onboarding/forget_password_flow.dart"
 import "screens/home_screen.dart";
 import "services/auth_service.dart";
 import "theme/app_theme.dart";
-import "flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 void main() {
   runApp(const MyApp());
