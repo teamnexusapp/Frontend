@@ -1,8 +1,8 @@
-﻿import 'language_selection_screen.dart';
-import 'phone_signup_screen.dart';
 import 'package:flutter/material.dart';
-import '../../services/localization_provider.dart' as loc_provider;
 import 'package:provider/provider.dart';
+import '../../services/localization_provider.dart' as loc_provider;
+import 'language_selection_screen.dart';
+import 'login_screen.dart';
 
 class OnboardingScreens extends StatefulWidget {
   const OnboardingScreens({super.key});
@@ -33,9 +33,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
   }
 
   void _navigateToRegister() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const PhoneSignupScreen()),
-    );
+    Navigator.of(context).pushReplacementNamed('/register');
   }
 
   String _getSelectedLanguageName(BuildContext context) {
@@ -119,7 +117,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
               ),
             ),
 
-            // Next labelLarge
+            // Next Button
             Padding(
               padding: const EdgeInsets.only(bottom: 70),
               child: SizedBox(
@@ -379,6 +377,3 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
     );
   }
 }
-
-
-

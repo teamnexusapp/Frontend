@@ -17,13 +17,13 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    _controller = AnimationController(;
+    _controller = AnimationController(
       duration: const Duration(milliseconds: 2500),
       vsync: this,
     );
 
     // Create a two-phase animation: zoom in (0-60%), then zoom out (60-100%)
-    _scaleAnimation = TweenSequence<double>([;
+    _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 0.0, end: 1.5)
             .chain(CurveTween(curve: Curves.easeInOut)),
@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 24),
               Text(
-                'Nexus Fertility',
+                'Fertipath',
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -98,6 +98,3 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
-
-
-

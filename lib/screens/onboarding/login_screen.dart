@@ -1,9 +1,11 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'phone_signup_screen.dart';
-import '../../services/auth_error_helper.dart';
-import '../../services/auth_service.dart';
 import 'forget_password_flow.dart';
+import '../../services/auth_service.dart';
+import '../../services/auth_error_helper.dart';
+import '../../services/health_check_service.dart';
+import '../../services/api_service.dart';
+import 'profile_setup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -79,11 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Forget Password
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const ForgotPasswordScreen(),
-                        ),
-                      );
+                      Navigator.of(context).pushReplacementNamed('/forgot-password');
                     },
                     child: const Text(
                       'Forget Password.',
@@ -98,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Login labelLarge
+                  // Login Button
                   SizedBox(
                     width: 360,
                     height: 60,
@@ -150,17 +148,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (_) => const PhoneSignupScreen(),
-                            ),
-                          );
+                          Navigator.of(context).pushReplacementNamed('/register');
                         },
                         child: const Text(
                           'Register',
                           style: TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w600,
                             fontFamily: 'Poppins',
                             color: Color(0xFF2E683D),
                           ),
@@ -360,6 +354,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
+      // Health check disabled - using fertipath-fastapi directly
+      // await HealthCheckService.wakeUpBackend();
+      
       final authService = Provider.of<AuthService>(context, listen: false);
       
       // Users enter their email address for login
@@ -369,7 +366,35 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (mounted) {
-        Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+        // Check if user profile is complete by fetching profile data
+        try {
+          final apiService = ApiService();
+          final profileJson = await apiService.getProfile();
+          
+          // Profile is complete if it has profile-specific fields
+          final isProfileComplete = profileJson.containsKey('age') ||
+            profileJson.containsKey('cycle_length') ||
+            profileJson.containsKey('period_length') ||
+            profileJson.containsKey('audio_preference');
+          
+          debugPrint('Login - Profile complete: $isProfileComplete, keys: ${profileJson.keys}');
+          
+          if (isProfileComplete) {
+            // Profile is already set up, go to home
+            Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+          } else {
+            // Profile not set up, show profile setup screen
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => const ProfileSetupScreen(),
+              ),
+            );
+          }
+        } catch (e) {
+          debugPrint('Error checking profile during login: $e');
+          // If profile check fails, still go to home (user is logged in)
+          Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -390,6 +415,3 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 }
-
-
-

@@ -1,6 +1,6 @@
-﻿import '../../services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,10 +18,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthService>(context, listen: false);
+    final auth = Provider.of<AuthServiceImpl>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(
+        title: const Text('Register'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -58,15 +64,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               if (!_formKey.currentState!.validate()) return;
                               setState(() => _loading = true);
                               try {
-                                final user = await auth.signUpWithEmail(;
-                                  email: _emailController.text?.trim() ?? "",
+                                final user = await auth.signUpWithEmail(
+                                  email: _emailController.text.trim(),
                                   password: _passwordController.text,
                                 );
                                 if (user != null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Registered â€” verify OTP')), 
+                                    const SnackBar(content: Text('Registered — verify OTP')), 
                                   );
-                                  Navigator.pushReplacementNamed(context, '/profile');
+                                  Navigator.pushReplacementNamed(context, '/login');
                                 }
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -83,7 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 12),
               TextButton(
                 onPressed: () async {
-                  final phone = _phoneController.text?.trim() ?? "";
+                  final phone = _phoneController.text.trim();
                   if (phone.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Enter phone number')));
@@ -94,9 +100,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     final user = await auth.signUpWithPhone(phoneNumber: phone);
                     if (user != null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Phone registered â€” verify OTP')),
+                        const SnackBar(content: Text('Phone registered — verify OTP')),
                       );
-                      Navigator.pushReplacementNamed(context, '/profile');
+                      Navigator.pushReplacementNamed(context, '/login');
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
@@ -113,9 +119,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-
-
-
-
-
-

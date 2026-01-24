@@ -1,6 +1,6 @@
-﻿import 'language_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import 'language_selection_screen.dart';
 import 'login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -35,17 +35,13 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 48),
 
-                // Create Account labelLarge
+                // Create Account Button
                 SizedBox(
                   width: 293,
                   height: 70,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LanguageSelectionScreen(),
-                        ),
-                      );
+                      Navigator.of(context).pushReplacementNamed('/language');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E683D),
@@ -67,17 +63,13 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // Log In labelLarge
+                // Log In Button
                 SizedBox(
                   width: 293,
                   height: 70,
                   child: OutlinedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
+                      Navigator.of(context).pushReplacementNamed('/login');
                     },
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.transparent,
@@ -209,12 +201,12 @@ class _BodyPainter extends CustomPainter {
   
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint();
+    final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
     
-    final path = Path();
+    final path = Path()
       ..moveTo(size.width * 0.2, 0)
       ..lineTo(0, size.height)
       ..lineTo(size.width, size.height)
@@ -226,7 +218,3 @@ class _BodyPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
-
-
-

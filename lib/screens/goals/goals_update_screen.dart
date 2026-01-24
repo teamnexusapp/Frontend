@@ -1,12 +1,11 @@
 ﻿import 'package:flutter/material.dart';
-import '../../theme.dart';
 
 class GoalsUpdateScreen extends StatelessWidget {
   const GoalsUpdateScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final inputDecoration = InputDecoration(;
+    final inputDecoration = InputDecoration(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
     );
 
@@ -41,6 +40,8 @@ class GoalsUpdateScreen extends StatelessWidget {
   }
 }
 
+import 'package:flutter/material.dart';
+import '../../theme.dart';
 
 class GoalsUpdateScreen extends StatelessWidget {
   const GoalsUpdateScreen({super.key});
@@ -75,8 +76,4 @@ class GoalsUpdateScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
 

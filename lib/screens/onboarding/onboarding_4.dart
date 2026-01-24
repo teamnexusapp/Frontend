@@ -1,5 +1,5 @@
-﻿import '../../theme.dart';
 import 'package:flutter/material.dart';
+import '../../theme.dart';
 import 'onboarding_5.dart';
 
 class Onboarding4 extends StatelessWidget {
@@ -32,7 +32,7 @@ class Onboarding4 extends StatelessWidget {
               ),
             ),
 
-            // Next labelLarge
+            // Next button
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SizedBox(
@@ -50,6 +50,3 @@ class Onboarding4 extends StatelessWidget {
     );
   }
 }
-
-
-

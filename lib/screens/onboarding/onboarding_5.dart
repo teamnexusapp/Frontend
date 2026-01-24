@@ -1,5 +1,5 @@
-﻿import '../../theme.dart';
 import 'package:flutter/material.dart';
+import '../../theme.dart';
 import 'onboarding_6.dart';
 
 class Onboarding5 extends StatelessWidget {
@@ -49,6 +49,3 @@ class Onboarding5 extends StatelessWidget {
     );
   }
 }
-
-
-

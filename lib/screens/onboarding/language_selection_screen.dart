@@ -1,8 +1,8 @@
-﻿import 'onboarding_screens.dart';
-import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import '../../services/localization_provider.dart' as loc_provider;
 import 'package:provider/provider.dart';
+import 'package:nexus_fertility_app/flutter_gen/gen_l10n/app_localizations.dart';
+import '../../services/localization_provider.dart' as loc_provider;
+import 'onboarding_screens.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -19,6 +19,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
         {'code': 'ig', 'name': 'Igbo'},
         {'code': 'yo', 'name': 'Yoruba'},
         {'code': 'ha', 'name': 'Hausa'},
+        {'code': 'pcm', 'name': 'Pidgin'},
       ];
 
   void _handleSelect(String code) {
@@ -151,6 +152,3 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     );
   }
 }
-
-
-

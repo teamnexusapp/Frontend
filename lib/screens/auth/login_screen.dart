@@ -1,6 +1,6 @@
-﻿import '../../services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +13,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _loading = false;
+
+  bool _isProfileIncomplete(dynamic user) {
+    return user.cycleLength == null ||
+        user.age == null ||
+        user.periodLength == null ||
+        user.lastPeriodDate == null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +48,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       setState(() => _loading = true);
                       try {
-                        final user = await auth.signIn(;
+                        final user = await auth.signIn(
                           email: _emailController.text.trim(),
                           password: _passwordController.text,
                         );
                         if (user != null) {
-                          Navigator.pushReplacementNamed(context, '/profile');
+                          // Check if profile data is incomplete
+                          if (_isProfileIncomplete(user)) {
+                            Navigator.pushReplacementNamed(context, '/profile-setup');
+                          } else {
+                            Navigator.pushReplacementNamed(context, '/profile');
+                          }
                         }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login error: $e')));
@@ -66,8 +78,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-
-
-
-

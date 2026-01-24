@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CycleInputScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class _CycleInputScreenState extends State<CycleInputScreen> {
 
   Future<void> _pickDate() async {
     final now = DateTime.now();
-    final picked = await showDatePicker(;
+    final picked = await showDatePicker(
       context: context,
       initialDate: _startDate ?? now,
       firstDate: DateTime(now.year - 5),
@@ -102,6 +102,3 @@ class _CycleInputScreenState extends State<CycleInputScreen> {
     );
   }
 }
-
-
-
