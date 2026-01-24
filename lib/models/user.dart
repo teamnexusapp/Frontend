@@ -75,11 +75,6 @@ class AppUser {
       'preferredLanguage': preferredLanguage,
     };
   }
-      'lastName': lastName,
-      'displayName': displayName,
-      'photoUrl': photoUrl,
-    };
-  }
   
   @override
   String toString() {

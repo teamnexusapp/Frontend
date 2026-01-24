@@ -635,8 +635,8 @@ class _VerifyModalContentState extends State<_VerifyModalContent> {
                           final authService = context.read<AuthService>();
                           
                           await authService.verifyPhoneOTP(
-                            phoneNumber: widget.phoneNumber,
-                            otp: otp,
+                            widget.phoneNumber,
+                            otp,
                           );
 
                           if (mounted) {

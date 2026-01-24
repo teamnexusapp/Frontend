@@ -69,10 +69,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       if (user != null) {
         setState(() {
           _cycleLength = user.cycleLength ?? 28;
-          if (user.lastPeriodDate != null && user.lastPeriodDate!.isNotEmpty) {
-            _lastPeriodDate = DateTime.tryParse(user.lastPeriodDate!);
+          if (user.lastPeriodDate != null) {
+            _lastPeriodDate = user.lastPeriodDate;
           }
-          _ttcHistory = user.ttcHistory;
+          _ttcHistory = user.ttcHistory ?? [];
           _faithPreference = user.faithPreference;
           _language = _getLanguageDisplayName(user.preferredLanguage ?? 'en');
         });

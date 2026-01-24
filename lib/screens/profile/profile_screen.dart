@@ -373,7 +373,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Icon(Icons.favorite_border, size: 20, color: Colors.grey[700]),
                 const SizedBox(width: 8),
                 Text(
-                  _user?.ttcHistory ?? 'Not set',
+                  (_user?.ttcHistory?.join(', ') ?? 'Not set'),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
