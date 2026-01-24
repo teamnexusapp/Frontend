@@ -5,6 +5,9 @@ import "screens/onboarding/splash_screen.dart";
 import "screens/onboarding/welcome_screen.dart";
 import "screens/onboarding/login_screen.dart";
 import "screens/onboarding/registration_screen.dart";
+import "screens/onboarding/forget_password_flow.dart";
+import "screens/onboarding/reset_password_screen.dart";
+import "screens/onboarding/password_updated_screen.dart";
 import "screens/home_screen.dart";
 import "services/auth_service.dart";
 import "theme/app_theme.dart";
@@ -47,6 +50,9 @@ class MyApp extends StatelessWidget {
           '/welcome': (context) => const WelcomeScreen(),
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegistrationScreen(),
+          '/forgot-password': (context) => const ForgotPasswordScreen(),
+          '/reset-password': (context) => const ResetPasswordScreen(),
+          '/password-updated': (context) => const PasswordUpdatedScreen(),
           '/home': (context) => const HomeScreen(),
         },
       ),
