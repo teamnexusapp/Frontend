@@ -91,8 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() => _loading = true);
                       try {
                         final user = await auth.signIn(
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text,
+                          _emailController.text.trim(),
+                          _passwordController.text,
                         );
                         if (user != null) {
                           // Check if profile data is incomplete
