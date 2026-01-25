@@ -116,7 +116,26 @@ class _SwipeableGreenCalendarState extends State<SwipeableGreenCalendar> {
             },
           ),
         ),
+        const SizedBox(height: 12),
+        _buildLegend(),
       ],
+    );
+  }
+
+  Widget _buildLegend() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 6,
+        alignment: WrapAlignment.center,
+        children: [
+          _LegendItem(color: const Color(0xFFD32F2F), label: 'Period', hasDot: true),
+          _LegendItem(color: const Color(0xFF1976D2), label: 'Ovulation', hasDot: true),
+          _LegendItem(color: const Color(0xFF8E24AA), label: 'Fertile', hasDot: true),
+          _LegendItem(color: const Color(0xFFD32F2F), label: 'Predicted', hasBorder: true),
+        ],
+      ),
     );
   }
 
@@ -248,17 +267,34 @@ class _MonthGrid extends StatelessWidget {
           final isFertile = fertileWindowDates?.any((d) => _isSameDay(d, dayInfo.date)) ?? false;
 
           Color bg = Colors.transparent;
-          Color txtColor = dayInfo.isOutside ? _accent.withOpacity(0.4) : Colors.white;
+          Color txtColor = dayInfo.isOutside ? Colors.white.withOpacity(0.3) : Colors.white;
+          Border? border;
+          Widget? indicator;
 
+          // Priority order: Period > Next Period > Ovulation > Fertile Window
           if (isPeriod) {
-            bg = Colors.red.withOpacity(0.95);
-            txtColor = Colors.white;
+            // Tapped period days: pink/red faded background, red border, red text
+            bg = const Color(0xFFFFB3BA).withOpacity(0.4); // Light pink
+            txtColor = const Color(0xFFD32F2F); // Red text
+            border = Border.all(color: const Color(0xFFD32F2F), width: 1.5);
+            indicator = _buildDot(const Color(0xFFD32F2F)); // Red dot
+          } else if (isNextPeriodWindow || isNextPeriod) {
+            // Next period prediction: red border and red text, transparent bg
+            bg = Colors.transparent;
+            txtColor = const Color(0xFFD32F2F); // Red text
+            border = Border.all(color: const Color(0xFFD32F2F), width: 2);
+            indicator = _buildDot(const Color(0xFFD32F2F).withOpacity(0.6));
           } else if (isOvulation) {
-            bg = const Color(0xFFA8D497);
-            txtColor = const Color(0xFF2E683D);
+            // Ovulation day: blue background and darker blue text
+            bg = const Color(0xFF90CAF9).withOpacity(0.4); // Light blue
+            txtColor = const Color(0xFF1976D2); // Blue text
+            border = Border.all(color: const Color(0xFF1976D2), width: 1.5);
+            indicator = _buildDot(const Color(0xFF1976D2)); // Blue dot
           } else if (isFertile) {
-            bg = const Color(0xFFA8D497).withOpacity(0.35);
-            txtColor = const Color(0xFF2E683D);
+            // Fertile window: light purple/lavender
+            bg = const Color(0xFFCE93D8).withOpacity(0.25); // Light purple
+            txtColor = const Color(0xFF8E24AA); // Purple text
+            indicator = _buildDot(const Color(0xFF8E24AA).withOpacity(0.7)); // Purple dot
           } else if (isSelected) {
             bg = _accent;
             txtColor = const Color(0xFF2E683D);
@@ -267,29 +303,37 @@ class _MonthGrid extends StatelessWidget {
           final boxDecoration = BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
-            border: isNextPeriod || isNextPeriodWindow
-                ? Border.all(color: Colors.orange, width: 2)
-                : null,
+            border: border,
           );
 
           return Center(
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: dayInfo.isOutside ? null : () => onToggle(dayInfo.date),
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: boxDecoration,
+              child: Stack(
                 alignment: Alignment.center,
-                child: Text(
-                  '${dayInfo.date.day}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Poppins',
-                    color: txtColor,
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: boxDecoration,
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${dayInfo.date.day}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                        color: txtColor,
+                      ),
+                    ),
                   ),
-                ),
+                  if (indicator != null)
+                    Positioned(
+                      bottom: 2,
+                      child: indicator,
+                    ),
+                ],
               ),
             ),
           );
@@ -322,6 +366,17 @@ class _MonthGrid extends StatelessWidget {
 
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
+
+  Widget _buildDot(Color color) {
+    return Container(
+      width: 4,
+      height: 4,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+    );
+  }
 }
 
 class _DayDetail {
@@ -331,6 +386,56 @@ class _DayDetail {
   final bool isOutside;
 }
 
+class _LegendItem extends StatelessWidget {
+  final Color color;
+  final String label;
+  final bool hasDot;
+  final bool hasBorder;
 
+  const _LegendItem({
+    required this.color,
+    required this.label,
+    this.hasDot = false,
+    this.hasBorder = false,
+  });
 
-
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 16,
+          height: 16,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: hasBorder ? Colors.transparent : color.withOpacity(0.3),
+            border: hasBorder ? Border.all(color: color, width: 1.5) : null,
+          ),
+          child: hasDot
+              ? Center(
+                  child: Container(
+                    width: 4,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: color,
+                    ),
+                  ),
+                )
+              : null,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Poppins',
+          ),
+        ),
+      ],
+    );
+  }
+}

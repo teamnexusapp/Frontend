@@ -55,9 +55,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Enter your account email. We will send you a secure link to reset your password.',
+                  'Enter your account email and we\'ll send you a link to reset your password.',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Poppins',
                     color: Colors.black54,
@@ -100,38 +100,85 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 16),
                 if (_linkSent)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.check, color: Color(0xFF2E683D), size: 16),
-                      SizedBox(width: 6),
-                      Flexible(
-                        child: Text(
-                          'We emailed you a secure reset link. Open it to continue.',
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFA8D497).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: const Color(0xFF2E683D).withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: const [
+                        Icon(Icons.mark_email_read, color: Color(0xFF2E683D), size: 48),
+                        SizedBox(height: 12),
+                        Text(
+                          'Check Your Email',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Poppins',
+                            color: Color(0xFF2E683D),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'We sent you a password reset link. Click the button in the email to reset your password.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins',
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          '📧 Don\'t forget to check your spam folder',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Poppins',
                             color: Colors.black54,
+                            fontStyle: FontStyle.italic,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 if (_linkSent) ...[
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/reset_password');
+                      setState(() {
+                        _linkSent = false;
+                      });
                     },
                     child: const Text(
-                      'I have the token — reset now',
+                      'Didn\'t receive the email? Resend',
                       style: TextStyle(
                         color: Color(0xFF2E683D),
                         fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      'Back to Login',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
                         fontFamily: 'Poppins',
                       ),
                     ),
@@ -324,23 +371,29 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Paste the token from your email and set a new password.',
+                  'Enter your new password below to secure your account.',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Poppins',
-                    color: Colors.black,
+                    color: Colors.black54,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
-                _buildInputField(
-                  label: 'Token from email',
-                  controller: _tokenController,
-                  keyboardType: TextInputType.text,
-                  isPassword: false,
-                ),
-                const SizedBox(height: 12),
+                // Only show token field if token is not pre-filled from email link
+                if (_tokenController.text.isEmpty)
+                  Column(
+                    children: [
+                      _buildInputField(
+                        label: 'Token from email',
+                        controller: _tokenController,
+                        keyboardType: TextInputType.text,
+                        isPassword: false,
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
                 _buildInputField(
                   label: 'New password',
                   controller: _newPasswordController,
@@ -352,7 +405,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 12),
                 _buildInputField(
                   label: 'Confirm password',
                   controller: _confirmPasswordController,

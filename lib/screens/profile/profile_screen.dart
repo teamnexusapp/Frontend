@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 import '../../models/user.dart';
 import '../../services/localization_provider.dart';
-import '../../services/theme_provider.dart';
 import '../../services/api_service.dart';
 import '../home_screen.dart';
 import '../onboarding/welcome_screen.dart';
@@ -28,7 +27,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Add missing fields for preferences
   String selectedLanguage = 'English';
-  String selectedTheme = 'Light';
 
   @override
   void initState() {
@@ -450,8 +448,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 16),
             _buildLanguageRow(),
-            const Divider(height: 24),
-            _buildThemeRow(),
           ],
         ),
       ),
@@ -549,62 +545,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildThemeRow() {
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFE6F4EA), // light green
-            shape: BoxShape.circle,
-          ),
-          padding: const EdgeInsets.all(8),
-          child: const Icon(Icons.brightness_6_outlined, size: 22, color: Color(0xFF2D5A3A)), // dark green
-        ),
-        const SizedBox(width: 12),
-        const Expanded(
-          child: Text(
-            'App Theme',
-            style: TextStyle(fontSize: 15),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: DropdownButton<String>(
-            value: selectedTheme,
-            underline: const SizedBox(),
-            isDense: true,
-            items: ['Light', 'Dark', 'System']
-                .map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value, style: const TextStyle(fontSize: 14)),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedTheme = newValue!;
-              });
-              final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-              switch (selectedTheme) {
-                case 'Light':
-                  themeProvider.setMode(ThemeMode.light);
-                  break;
-                case 'Dark':
-                  themeProvider.setMode(ThemeMode.dark);
-                  break;
-                default:
-                  themeProvider.setMode(ThemeMode.system);
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
+
 
   Widget _buildPrivacySection() {
     return Card(
