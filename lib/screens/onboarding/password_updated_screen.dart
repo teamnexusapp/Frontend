@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import '../auth/login_screen.dart';
 
 class PasswordUpdatedScreen extends StatelessWidget {
   const PasswordUpdatedScreen({super.key});

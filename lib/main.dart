@@ -2,7 +2,7 @@
 import "package:provider/provider.dart";
 import "screens/onboarding/splash_screen.dart";
 import "screens/onboarding/welcome_screen.dart";
-import "screens/onboarding/login_screen.dart";
+import "screens/auth/login_screen.dart";
 import "screens/onboarding/registration_screen.dart";
 import "screens/onboarding/profile_setup_screen.dart";
 import "screens/onboarding/email_signup_screen.dart";
@@ -11,7 +11,6 @@ import "screens/onboarding/forget_password_flow.dart"
 import "screens/home_screen.dart";
 import "services/auth_service.dart";
 import "services/localization_provider.dart";
-import "services/theme_provider.dart";
 import "theme/app_theme.dart";
 
 void main() {

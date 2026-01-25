@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/localization_provider.dart' as loc_provider;
-import 'onboarding_screens.dart';
+import 'welcome_screen.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -34,7 +34,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     }
     context.read<loc_provider.LocalizationProvider>().setLocaleByLanguageCode(_selectedCode!);
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const OnboardingScreens()),
+      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
     );
   }
 

@@ -5,7 +5,6 @@ import '../../services/localization_provider.dart';
 import '../../services/api_service.dart';
 import '../community/community_groups_screen.dart';
 import '../community/create_group_screen.dart';
-import '../community/group_chat_screen.dart';
 import 'cultural_guidance_screen.dart';
 
 class SupportScreen extends StatefulWidget {
@@ -584,15 +583,8 @@ class _SupportScreenState extends State<SupportScreen> {
                         // Right arrow
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const GroupChatScreen(
-                                  groupName: 'Fertility Circle',
-                                  groupDescription: 'A supportive space for those navigating fertility journeys and family building.',
-                                  members: ['Sarah', 'Amara', 'Zainab', 'Grace', 'Fatima'],
-                                  memberCount: 24,
-                                ),
-                              ),
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Group chat coming soon')),
                             );
                           },
                           child: const Icon(
