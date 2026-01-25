@@ -83,9 +83,11 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
       final apiService = ApiService();
       final loginResponse = await apiService.login(email: email, password: password);
       
-      // Extract user data from response
-      final userData = loginResponse['data'] ?? loginResponse;
-      final user = User.fromJson(userData);
+      // Login response only contains access_token and token_type
+      // Token is already saved by ApiService.login()
+      // Now fetch the user data using the token
+      final userJson = await apiService.getUser();
+      final user = User.fromJson(userJson);
       
       // Save user to preferences
       await _saveUserToPrefs(user);
@@ -159,6 +161,15 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
 
   @override
   Future<void> signOut() async {
+    try {
+      // Clear API token
+      await ApiService().clearToken();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error clearing API token on signOut: $e');
+      }
+    }
+    
     _currentUser = null;
     await _saveUserToPrefs(null);
     _authStateController.add(null);

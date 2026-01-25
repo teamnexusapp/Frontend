@@ -13,9 +13,26 @@ class ApiService {
   // Singleton pattern
   static final ApiService _instance = ApiService._internal();
   factory ApiService() => _instance;
-  ApiService._internal();
+  ApiService._internal() {
+    _initializeToken();
+  }
 
   String? _accessToken;
+  bool _tokenInitialized = false;
+
+  // Initialize token from storage on startup
+  Future<void> _initializeToken() async {
+    if (_tokenInitialized) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _accessToken = prefs.getString('access_token');
+      _tokenInitialized = true;
+      debugPrint('Token initialized: ${_accessToken != null ? 'Token loaded' : 'No token found'}');
+    } catch (e) {
+      debugPrint('Error initializing token: $e');
+      _tokenInitialized = true;
+    }
+  }
 
   // Set access token after login
   void setAccessToken(String token) {
@@ -41,6 +58,7 @@ class ApiService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('access_token', token);
+      debugPrint('Token saved successfully');
     } catch (e) {
       debugPrint('Error saving token: $e');
     }
@@ -52,6 +70,7 @@ class ApiService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('access_token');
+      debugPrint('Token cleared');
     } catch (e) {
       debugPrint('Error clearing token: $e');
     }
@@ -68,7 +87,7 @@ class ApiService {
       final token = await getStoredToken();
       if (token != null) {
         headers['Authorization'] = 'Bearer $token';
-        debugPrint('Using auth token: ${token.substring(0, 20)}...');
+        debugPrint('Adding auth token to request: Bearer ${token.substring(0, 20)}...');
       } else {
         debugPrint('Warning: No auth token available for authenticated request');
       }

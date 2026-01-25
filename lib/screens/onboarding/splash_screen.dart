@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import '../../services/api_service.dart';
 import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,6 +17,9 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+
+    // Initialize API service and load stored token
+    _initializeApp();
 
     _controller = AnimationController(
       duration: const Duration(milliseconds: 2500),
@@ -49,6 +53,13 @@ class _SplashScreenState extends State<SplashScreen>
         });
       }
     });
+  }
+
+  Future<void> _initializeApp() async {
+    // Initialize API service - this loads the token from SharedPreferences
+    final apiService = ApiService();
+    final token = await apiService.getStoredToken();
+    debugPrint('App initialized. Token available: ${token != null}');
   }
 
   @override
