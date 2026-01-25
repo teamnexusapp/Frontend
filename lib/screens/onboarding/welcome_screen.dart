@@ -40,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                   height: 70,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/language');
+                      Navigator.of(context).pushReplacementNamed('/signup-email');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E683D),

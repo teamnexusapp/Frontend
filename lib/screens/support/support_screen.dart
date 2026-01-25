@@ -152,6 +152,8 @@ class _SupportScreenState extends State<SupportScreen> {
     _audioPlayer.dispose();
     super.dispose();
   }
+
+  @override
   Widget build(BuildContext context) {
     final loc = Provider.of<LocalizationProvider>(context);
 

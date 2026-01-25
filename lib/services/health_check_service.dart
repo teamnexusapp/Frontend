@@ -2,7 +2,7 @@
 import 'package:flutter/foundation.dart';
 
 class HealthCheckService {
-  static const String baseUrl = 'https://fertility-fastapi.onrender.com';
+  static const String baseUrl = 'https://fertipath-fastapi.onrender.com';
   
   /// Check if the backend API is reachable and responding
   /// Returns true if healthy, false otherwise
