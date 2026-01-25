@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
+import 'api_service.dart';
 
 abstract class AuthServiceInterface {
   Future<User?> signIn(String email, String password);
@@ -77,18 +78,29 @@ class AuthService extends ChangeNotifier implements AuthServiceInterface {
 
   @override
   Future<User?> signIn(String email, String password) async {
-    // Mock implementation - replace with real auth
-    await Future.delayed(Duration(seconds: 1));
-    _currentUser = User(
-      id: '1',
-      email: email,
-      firstName: 'John',
-      lastName: 'Doe',
-    );
-    await _saveUserToPrefs(_currentUser);
-    _authStateController.add(_currentUser);
-    notifyListeners();
-    return _currentUser;
+    try {
+      // Call the actual API login endpoint
+      final apiService = ApiService();
+      final loginResponse = await apiService.login(email: email, password: password);
+      
+      // Extract user data from response
+      final userData = loginResponse['data'] ?? loginResponse;
+      final user = User.fromJson(userData);
+      
+      // Save user to preferences
+      await _saveUserToPrefs(user);
+      
+      _currentUser = user;
+      _authStateController.add(_currentUser);
+      notifyListeners();
+      
+      return _currentUser;
+    } catch (e) {
+      if (kDebugMode) {
+        print('SignIn error: $e');
+      }
+      rethrow;
+    }
   }
 
   @override
