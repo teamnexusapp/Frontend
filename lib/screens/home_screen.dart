@@ -407,6 +407,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  int? _calculateDaysUntilFertile() {
+    if (_insightData == null || _insightData!['fertile_period_start'] == null) {
+      return null;
+    }
+    try {
+      final fertileStart = DateTime.parse(_insightData!['fertile_period_start'].toString());
+      final today = DateTime.now();
+      final difference = fertileStart.difference(today).inDays;
+      return difference >= 0 ? difference : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Color _colorFromString(String input) {
     if (input.isEmpty) return const Color(0xFF2E683D);
     final hash = input.codeUnits.fold<int>(0, (prev, code) => prev + code);
@@ -415,21 +429,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSummaryRow(String label, String value) {
-    int? _calculateDaysUntilFertile() {
-      if (_insightData == null || _insightData!['fertile_period_start'] == null) {
-        return null;
-      }
-      try {
-        final fertileStart = DateTime.parse(_insightData!['fertile_period_start'].toString());
-        final today = DateTime.now();
-        final difference = fertileStart.difference(today).inDays;
-        return difference >= 0 ? difference : null;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    Widget _buildSummaryRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
