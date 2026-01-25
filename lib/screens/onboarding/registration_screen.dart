@@ -5,6 +5,7 @@ import '../../services/auth_service.dart';
 import '../../services/localization_provider.dart' as loc_provider;
 import 'profile_setup_screen.dart';
 import '../auth/login_screen.dart';
+import 'onboarding_screens.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -268,9 +269,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const OnboardingScreens(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const OnboardingScreens()),
                       );
                     },
                     child: const Text(
