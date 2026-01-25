@@ -35,26 +35,49 @@ class AppUser {
   }) : ttcHistory = ttcHistory ?? [];
   
   factory AppUser.fromJson(Map<String, dynamic> json) {
+    String? _string(dynamic v) => v?.toString();
+    int? _int(dynamic v) => v is int
+        ? v
+        : (v is String ? int.tryParse(v) : null);
+    DateTime? _date(dynamic v) => v != null ? DateTime.tryParse(v.toString()) : null;
+
+    // Normalize keys from snake_case or camelCase
+    final id = _string(json['id'] ?? json['user_id']) ?? '';
+    final firstName = _string(json['firstName'] ?? json['first_name']);
+    final lastName = _string(json['lastName'] ?? json['last_name']);
+    final phone = _string(json['phoneNumber'] ?? json['phone_number']);
+    final faith = _string(json['faithPreference'] ?? json['faith_preference']);
+    final lang = _string(json['preferredLanguage'] ?? json['language_preference']);
+    final cycle = _int(json['cycleLength'] ?? json['cycle_length']);
+    final period = _int(json['periodLength'] ?? json['period_length']); // kept for compatibility
+    final lastPeriod = _date(json['lastPeriodDate'] ?? json['last_period_date']);
+
+    List<String>? ttc;
+    if (json['ttcHistory'] != null) {
+      ttc = List<String>.from(json['ttcHistory']);
+    } else if (json['ttc_history'] != null) {
+      final dynamic v = json['ttc_history'];
+      if (v is List) {
+        ttc = v.map((e) => e.toString()).toList();
+      } else {
+        ttc = [v.toString()];
+      }
+    }
+
     return AppUser(
-      id: json['id']?.toString() ?? '',
-      email: json['email']?.toString() ?? '',
-      username: json['username']?.toString(),
-      phoneNumber: json['phoneNumber']?.toString(),
-      ttcHistory: json['ttcHistory'] != null 
-          ? List<String>.from(json['ttcHistory']) 
-          : null,
-      faithPreference: json['faithPreference']?.toString(),
-      cycleLength: json['cycleLength'] is int 
-          ? json['cycleLength'] 
-          : (json['cycleLength'] is String ? int.tryParse(json['cycleLength']) : null),
-      lastPeriodDate: json['lastPeriodDate'] != null 
-          ? DateTime.tryParse(json['lastPeriodDate'].toString()) 
-          : null,
-      firstName: json['firstName']?.toString(),
-      lastName: json['lastName']?.toString(),
-      displayName: json['displayName']?.toString(),
-      photoUrl: json['photoUrl']?.toString(),
-      preferredLanguage: json['preferredLanguage']?.toString(),
+      id: id,
+      email: _string(json['email']) ?? '',
+      username: _string(json['username']),
+      phoneNumber: phone,
+      ttcHistory: ttc,
+      faithPreference: faith,
+      cycleLength: cycle ?? period,
+      lastPeriodDate: lastPeriod,
+      firstName: firstName,
+      lastName: lastName,
+      displayName: _string(json['displayName']),
+      photoUrl: _string(json['photoUrl']),
+      preferredLanguage: lang,
     );
   }
   

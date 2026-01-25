@@ -14,6 +14,8 @@ import 'educational/educational_hub_screen.dart';
 import 'calendar_tab_screen.dart';
 import 'gender_prediction_screen.dart';
 import 'user_guide_screen.dart';
+import 'specialists/specialist_search_screen.dart';
+import 'specialists/specialist_chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -693,6 +695,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => const GenderPredictionScreen()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildFeatureCard(
+                  icon: Icons.medical_services_outlined,
+                  label: 'Find\nSpecialist',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const SpecialistSearchScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(width: 12),
+                _buildFeatureCard(
+                  icon: Icons.chat_bubble_outline,
+                  label: 'Chat with\nSpecialist',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const SpecialistChatScreen()),
                     );
                   },
                 ),

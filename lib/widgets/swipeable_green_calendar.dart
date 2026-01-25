@@ -12,6 +12,7 @@ class SwipeableGreenCalendar extends StatefulWidget {
     this.periodDates,
     this.nextPeriodDate,
     this.nextPeriodDays,
+    this.fertileWindowDates,
   });
 
   final DateTime initialMonth;
@@ -21,6 +22,7 @@ class SwipeableGreenCalendar extends StatefulWidget {
   final Set<DateTime>? periodDates;
   final DateTime? nextPeriodDate;
   final Set<DateTime>? nextPeriodDays;
+  final Set<DateTime>? fertileWindowDates;
 
   @override
   State<SwipeableGreenCalendar> createState() => _SwipeableGreenCalendarState();
@@ -107,7 +109,9 @@ class _SwipeableGreenCalendarState extends State<SwipeableGreenCalendar> {
                  onToggle: _handleDateToggle,
                  ovulationDates: widget.ovulationDates ?? {},
                  periodDates: widget.periodDates ?? {},
+                 fertileWindowDates: widget.fertileWindowDates ?? {},
                  nextPeriodDate: widget.nextPeriodDate,
+                 nextPeriodDays: widget.nextPeriodDays ?? {},
               );
             },
           ),
@@ -187,6 +191,8 @@ class _MonthGrid extends StatelessWidget {
     this.ovulationDates,
     this.periodDates,
     this.nextPeriodDate,
+    this.nextPeriodDays,
+    this.fertileWindowDates,
   });
 
   final DateTime month;
@@ -195,6 +201,8 @@ class _MonthGrid extends StatelessWidget {
   final Set<DateTime>? ovulationDates;
   final Set<DateTime>? periodDates;
   final DateTime? nextPeriodDate;
+  final Set<DateTime>? nextPeriodDays;
+  final Set<DateTime>? fertileWindowDates;
 
   static const Color _accent = Color(0xFFA8D497);
 
@@ -236,6 +244,8 @@ class _MonthGrid extends StatelessWidget {
           final isPeriod = periodDates?.any((d) => _isSameDay(d, dayInfo.date)) ?? false;
           final isOvulation = ovulationDates?.any((d) => _isSameDay(d, dayInfo.date)) ?? false;
           final isNextPeriod = nextPeriodDate != null && _isSameDay(nextPeriodDate!, dayInfo.date);
+          final isNextPeriodWindow = nextPeriodDays?.any((d) => _isSameDay(d, dayInfo.date)) ?? false;
+          final isFertile = fertileWindowDates?.any((d) => _isSameDay(d, dayInfo.date)) ?? false;
 
           Color bg = Colors.transparent;
           Color txtColor = dayInfo.isOutside ? _accent.withOpacity(0.4) : Colors.white;
@@ -246,6 +256,9 @@ class _MonthGrid extends StatelessWidget {
           } else if (isOvulation) {
             bg = const Color(0xFFA8D497);
             txtColor = const Color(0xFF2E683D);
+          } else if (isFertile) {
+            bg = const Color(0xFFA8D497).withOpacity(0.35);
+            txtColor = const Color(0xFF2E683D);
           } else if (isSelected) {
             bg = _accent;
             txtColor = const Color(0xFF2E683D);
@@ -254,7 +267,9 @@ class _MonthGrid extends StatelessWidget {
           final boxDecoration = BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
-            border: isNextPeriod ? Border.all(color: Colors.orange, width: 2) : null,
+            border: isNextPeriod || isNextPeriodWindow
+                ? Border.all(color: Colors.orange, width: 2)
+                : null,
           );
 
           return Center(

@@ -22,7 +22,8 @@ class CalendarTabScreen extends StatefulWidget {
 class _CalendarTabScreenState extends State<CalendarTabScreen> {
   String? _fertileStart;
   String? _fertileEnd;
-  String? _ovulationDay;
+  Set<DateTime> _ovulationDates = {};
+  Set<DateTime> _fertileWindowDays = {};
   final ScrollController _calendarScrollController = ScrollController();
   bool _isCalendarCollapsed = false;
   double _lastScrollOffset = 0;
@@ -100,10 +101,7 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
           final latestCycle = data.last;
           debugPrint('Latest cycle: $latestCycle');
           if (latestCycle['fertile_period_start'] != null && latestCycle['fertile_period_end'] != null) {
-            setState(() {
-              _fertileStart = latestCycle['fertile_period_start'];
-              _fertileEnd = latestCycle['fertile_period_end'];
-            });
+            _setFertileWindow(latestCycle['fertile_period_start'], latestCycle['fertile_period_end']);
           }
           if (latestCycle['next_period'] != null && latestCycle['period_length'] != null) {
             final nextPeriodStart = DateTime.parse(latestCycle['next_period']);
@@ -127,19 +125,14 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             });
           } else {
             debugPrint('No symptoms found in latest cycle.');
-                    if (latestCycle['ovulation_day'] != null) {
-                      setState(() {
-                        _ovulationDay = latestCycle['ovulation_day'];
-                      });
-                    }
+            if (latestCycle['ovulation_day'] != null) {
+              _setOvulationDay(latestCycle['ovulation_day']);
+            }
           }
         } else if (data is Map) {
           debugPrint('Data is a Map: $data');
           if (data['fertile_period_start'] != null && data['fertile_period_end'] != null) {
-            setState(() {
-              _fertileStart = data['fertile_period_start'];
-              _fertileEnd = data['fertile_period_end'];
-            });
+            _setFertileWindow(data['fertile_period_start'], data['fertile_period_end']);
           }
           if (data['next_period'] != null && data['period_length'] != null) {
             final nextPeriodStart = DateTime.parse(data['next_period']);
@@ -163,11 +156,9 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
             });
           } else {
             debugPrint('No symptoms found in data map.');
-                    }
-                    if (data['ovulation_day'] != null) {
-                      setState(() {
-                        _ovulationDay = data['ovulation_day'];
-                      });
+          }
+          if (data['ovulation_day'] != null) {
+            _setOvulationDay(data['ovulation_day']);
           }
         } else {
           debugPrint('Data is neither List nor Map: $data');
@@ -204,6 +195,35 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
       });
     } catch (e) {
       // Handle parse error or invalid input
+    }
+  }
+
+  void _setFertileWindow(dynamic start, dynamic end) {
+    try {
+      final s = DateTime.parse(start.toString());
+      final e = DateTime.parse(end.toString());
+      final days = <DateTime>{};
+      for (int i = 0; i <= e.difference(s).inDays; i++) {
+        days.add(DateTime(s.year, s.month, s.day + i));
+      }
+      setState(() {
+        _fertileStart = start.toString();
+        _fertileEnd = end.toString();
+        _fertileWindowDays = days;
+      });
+    } catch (e) {
+      debugPrint('Failed to parse fertile window: $e');
+    }
+  }
+
+  void _setOvulationDay(dynamic dateVal) {
+    try {
+      final d = DateTime.parse(dateVal.toString());
+      setState(() {
+        _ovulationDates = {DateTime(d.year, d.month, d.day)};
+      });
+    } catch (e) {
+      debugPrint('Failed to parse ovulation day: $e');
     }
   }
 
@@ -338,6 +358,9 @@ class _CalendarTabScreenState extends State<CalendarTabScreen> {
                               initialMonth: DateTime.now(),
                               selectedDates: _selectedCalendarDays,
                               nextPeriodDays: _nextPeriodDays,
+                              periodDates: _selectedCalendarDays,
+                              ovulationDates: _ovulationDates,
+                              fertileWindowDates: _fertileWindowDays,
                               onDateToggle: _toggleCalendarDate,
                             ),
                           ] else ...[
