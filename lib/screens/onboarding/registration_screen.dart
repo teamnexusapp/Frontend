@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/localization_provider.dart' as loc_provider;
 import 'profile_setup_screen.dart';
-import '../auth/login_screen.dart';
+import 'login_screen.dart';
 import 'onboarding_screens.dart';
 
 class RegistrationScreen extends StatefulWidget {
